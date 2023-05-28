@@ -60,10 +60,11 @@ private:
 	
 	juce::Label reverbMenuLabel;
 	juce::Label roomSizeLabel;
-	juce::Label feedbackLabel;
+	juce::Label decayLabel;
 	juce::Label dampingLabel;
-	juce::Label mixLabel;
-	juce::Label widthLabel;
+	juce::Label preDelayLabel;
+	juce::Label earlyLateMixLabel;
+	juce::Label dryWetMixLabel;
 	
 	juce::ComboBox reverbMenuBox;
 	enum reverbTypes
@@ -73,18 +74,22 @@ private:
 	};
 	
 	juce::Slider roomSizeSlider;
-	juce::Slider feedbackSlider;
+	juce::Slider decaySlider;
 	juce::Slider dampingSlider;
-	juce::Slider mixSlider;
-	juce::Slider widthSlider;
+	juce::Slider preDelaySlider;
+	juce::Slider earlyLateMixSlider;
+	juce::Slider dryWetMixSlider;
 	
 	std::unique_ptr<ComboBoxAttachment> reverbMenuAttachment;
 	std::unique_ptr<SliderAttachment> roomSizeAttachment;
-	std::unique_ptr<SliderAttachment> feedbackAttachment;
+	std::unique_ptr<SliderAttachment> decayAttachment;
 	std::unique_ptr<SliderAttachment> dampingAttachment;
-	std::unique_ptr<SliderAttachment> mixAttachment;
-	std::unique_ptr<SliderAttachment> widthAttachment;
+	std::unique_ptr<SliderAttachment> preDelayAttachment;
+	std::unique_ptr<SliderAttachment> earlyLateMixAttachment;
+	std::unique_ptr<SliderAttachment> dryWetMixAttachment;
 	
+	const int textBoxWidth = 70;
+	const int textBoxHeight = 25;
 	GrayBlueLookAndFeel grayBlueLookAndFeel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RSAlgorithmicVerbAudioProcessorEditor)
