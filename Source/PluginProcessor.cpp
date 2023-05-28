@@ -206,8 +206,17 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	float dryWetMix = static_cast<float>(*dryWetMixParameter);
 	
 	updateGraph();
+	
+	// set parameters
 	ProcessorBase* currentProcessorNode = static_cast<ProcessorBase*>(reverbNode->getProcessor());
 	currentProcessorNode->setSize(size);
+	currentProcessorNode->setDecay(decay);
+	currentProcessorNode->setDampingCutoff(damping);
+	currentProcessorNode->setPreDelay(preDelay);
+	currentProcessorNode->setEarlyLateMix(earlyLateMix);
+	currentProcessorNode->setDryWetMix(dryWetMix);
+	
+	// processing
 	mainProcessor->processBlock(buffer, midiMessages);
 }
 
