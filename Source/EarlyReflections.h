@@ -106,9 +106,9 @@ public:
 	const juce::String getName() const override { return "EarlyReflections"; }
 	
 	//==============================================================================
-	void setPreDelay(float newPreDelay) { mPreDelayTime = newPreDelay; }
-	void setSize(float newSize) { mSize = newSize; }
-	void setDecay(float newDecay) { mDecay = newDecay; }
+	void setSize(float newSize) override { mSize = newSize; }
+	void setDecay(float newDecay) override { mDecay = newDecay; }
+	void setPreDelay(float newPreDelay) override { mPreDelayTime = newPreDelay; }
 	
 private:
 	DelayLineWithSampleAccess<float> earlyReflectionsDelayLine {22050};

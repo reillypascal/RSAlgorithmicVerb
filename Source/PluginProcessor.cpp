@@ -206,6 +206,8 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	float dryWetMix = static_cast<float>(*dryWetMixParameter);
 	
 	updateGraph();
+	ProcessorBase* currentProcessorNode = static_cast<ProcessorBase*>(reverbNode->getProcessor());
+	currentProcessorNode->setSize(size);
 	mainProcessor->processBlock(buffer, midiMessages);
 }
 

@@ -40,6 +40,12 @@ public:
 	void getStateInformation(juce::MemoryBlock&) override {}
 	void setStateInformation(const void*, int) override {}
 	
+	virtual void setSize(float newSize) {}
+	virtual void setDecay(float newDecay) {}
+	virtual void setDampingCutoff(float newCutoff) {}
+	virtual void setPreDelay(float newPreDelay) {}
+	virtual void setEarlyLateMix(float newMix) {}
+	virtual void setDryWetMix(float newMix) {}
 private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ProcessorBase)
 };

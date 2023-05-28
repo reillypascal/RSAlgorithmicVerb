@@ -196,12 +196,12 @@ public:
 	const juce::String getName() const override { return "Freeverb"; }
 	
 	//==============================================================================
-	void setSize(float newSize) { mSize = newSize; }
-	void setDecay(float newDecay) { mDecay = newDecay; }
-	void setDampingCutoff(float newCutoff) { mDampingCutoff = newCutoff; }
-	void setPreDelay(float newPreDelay) { mPreDelayTime = newPreDelay; }
-	void setEarlyLateMix(float newMix) { mEarlyLateMix = newMix; }
-	void setDryWetMix(float newMix) { mDryWetMix = newMix; }
+	void setSize(float newSize) override { mSize = newSize; }
+	void setDecay(float newDecay) override { mDecay = newDecay; }
+	void setDampingCutoff(float newCutoff) override { mDampingCutoff = newCutoff; }
+	void setPreDelay(float newPreDelay) override { mPreDelayTime = newPreDelay; }
+	void setEarlyLateMix(float newMix) override { mEarlyLateMix = newMix; }
+	void setDryWetMix(float newMix) override { mDryWetMix = newMix; }
 	
 private:
 	juce::dsp::DelayLine<float> comb0 {22050};
