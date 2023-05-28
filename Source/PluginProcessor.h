@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "DattorroVerb.h"
+#include "Freeverb.h"
 
 //==============================================================================
 /**

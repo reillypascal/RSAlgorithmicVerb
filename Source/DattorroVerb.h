@@ -63,7 +63,7 @@ public:
 	//==============================================================================
 	void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&) override
 	{
-		// auto totalNumInputChannels = getTotalNumInputChannels();
+		juce::ScopedNoDenormals noDenormals;
 		
 		// initialize input chain parameters
 		preDelay.setDelay(mPreDelayTime);
@@ -85,7 +85,7 @@ public:
 		delay4.setDelay(5505 * mSize);
 		
 		// dry/wet mixer — dry samples
-		dryWetMixer.setWetMixProportion(mMix);
+		dryWetMixer.setWetMixProportion(mDryWetMix);
 		juce::dsp::AudioBlock<float> dryBlock { buffer };
 		dryWetMixer.pushDrySamples(dryBlock);
 		
@@ -269,11 +269,12 @@ public:
 	const juce::String getName() const override { return "DattorroPlate"; }
 	
 	//==============================================================================
-	void setPreDelay(float newPreDelay) { mPreDelayTime = newPreDelay; }
 	void setSize(float newSize) { mSize = newSize; }
 	void setDecay(float newDecay) { mDecay = newDecay; }
 	void setDampingCutoff(float newCutoff) { mDampingCutoff = newCutoff; }
-	void setDryWetMix(float newMix) { mMix = newMix; }
+	void setPreDelay(float newPreDelay) { mPreDelayTime = newPreDelay; }
+	void setEarlyLateMix(float newMix) { mEarlyLateMix = newMix; }
+	void setDryWetMix(float newMix) { mDryWetMix = newMix; }
 	
 private:
 	// allpasses
@@ -311,5 +312,5 @@ private:
 	float mDecay = 0.25;
 	float mDampingCutoff = 6500;
 	float mEarlyLateMix = 1;
-	float mMix = 0.25;
+	float mDryWetMix = 0.25;
 };

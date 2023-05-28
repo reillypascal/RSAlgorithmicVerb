@@ -204,21 +204,9 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	float preDelay = scale(static_cast<float>(*preDelayParameter), 0.0f, 1.0f, 0.0f, 125.0f);
 	float earlyLateMix = static_cast<float>(*earlyLateMixParameter);
 	float dryWetMix = static_cast<float>(*dryWetMixParameter);
-	/*
-	dryWetMixer.setWetMixProportion(dryWetMix);
-	juce::dsp::AudioBlock<float> dryBlock { buffer };
-	dryWetMixer.pushDrySamples(dryBlock);
 	
-	// early/late mixer - still need to implement
-	earlyLateMixer.setWetMixProportion(earlyLateMix);
-	juce::AudioBuffer<float> earlyBuffer { buffer };
-	*/
 	updateGraph();
 	mainProcessor->processBlock(buffer, midiMessages);
-	/*
-	juce::dsp::AudioBlock<float> wetBlock { buffer };
-	dryWetMixer.mixWetSamples(wetBlock);
-	 */
 }
 
 //==============================================================================
@@ -296,6 +284,19 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 			reverbNode = mainProcessor->addNode(std::make_unique<DattorroPlate>());
 			hasChanged = true;
 			
+			break;
+			
+		case 1:
+			if (reverbNode != nullptr)
+			{
+				if (reverbNode->getProcessor()->getName() == "Freeverb")
+					break;
+				
+				mainProcessor->removeNode(reverbNode.get());
+			}
+			
+			reverbNode = mainProcessor->addNode(std::make_unique<Freeverb>());
+			hasChanged = true;
 			break;
 			
 		default:
