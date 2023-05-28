@@ -199,7 +199,7 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	
 	// parameter values
 	float size = scale(static_cast<float>(*roomSizeParameter), 0.0f, 1.0f, 0.01f, 2.0f);
-	float decay = static_cast<float>(*decayParameter);
+	float decayValue = static_cast<float>(*decayParameter);
 	float damping = scale(static_cast<float>(*dampingParameter) * -1 + 1, 0.0f, 1.0f, 200.0f, 20000.0f);
 	float preDelay = scale(static_cast<float>(*preDelayParameter), 0.0f, 1.0f, 0.0f, 125.0f);
 	float earlyLateMix = static_cast<float>(*earlyLateMixParameter);
@@ -210,7 +210,7 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	// set parameters
 	ProcessorBase* currentProcessorNode = static_cast<ProcessorBase*>(reverbNode->getProcessor());
 	currentProcessorNode->setSize(size);
-	currentProcessorNode->setDecay(decay);
+	currentProcessorNode->setDecay(decayValue);
 	currentProcessorNode->setDampingCutoff(damping);
 	currentProcessorNode->setPreDelay(preDelay);
 	currentProcessorNode->setEarlyLateMix(earlyLateMix);
