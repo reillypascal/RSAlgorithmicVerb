@@ -32,7 +32,7 @@ spctl --add "/Library/Application Support/Avid/Audio/Plug-Ins/RSAlgorithmicVerb.
 -->
 - You can also add the file path by typing...
 ```sh
-	spctl --add 
+spctl --add 
 ```
 
 ...(with a space at the end) and dragging the plugin file into the terminal, which will automatically add the file path.
