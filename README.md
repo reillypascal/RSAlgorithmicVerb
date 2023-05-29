@@ -3,7 +3,7 @@ RS Algorithmic Verb
 
 Dependencies
 - JUCE (https://juce.com/download/)
-- Projucer (for creating Xcode/Visual Studio projects in order to build)
+- Projucer (https://docs.juce.com/master/tutorial_new_projucer_project.html) (for creating Xcode/Visual Studio projects in order to build)
 
 <!--
 macOS:
