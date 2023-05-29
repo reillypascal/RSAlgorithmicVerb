@@ -22,7 +22,7 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
 	roomSizeLabel.setJustificationType(juce::Justification::centred);
 	addAndMakeVisible(roomSizeLabel);
 	
-	decayLabel.setText("Decay", juce::dontSendNotification);
+	decayLabel.setText("Decay Time", juce::dontSendNotification);
 	decayLabel.setJustificationType(juce::Justification::centred);
 	addAndMakeVisible(decayLabel);
 	
@@ -47,8 +47,8 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
 	reverbMenuBox.addSectionHeading("Allpass Rings");
 	reverbMenuBox.addItem("Dattorro Plate", dattorro);
 	reverbMenuBox.addSeparator();
-	reverbMenuBox.addSectionHeading("Feedback Delay Networks");
-	reverbMenuBox.addSeparator();
+	//reverbMenuBox.addSectionHeading("Feedback Delay Networks");
+	//reverbMenuBox.addSeparator();
 	reverbMenuBox.addSectionHeading("Schroeder Reverbs");
 	reverbMenuBox.addItem("Freeverb", freeverb);
 	reverbMenuBox.setSelectedId(dattorro);
@@ -63,7 +63,7 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
 	decaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
 	decaySlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, 25);
 	addAndMakeVisible(decaySlider);
-	decayAttachment.reset(new SliderAttachment(valueTreeState, "decay", decaySlider));
+	decayAttachment.reset(new SliderAttachment(valueTreeState, "decayTime", decaySlider));
 	
 	dampingSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
 	dampingSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, 25);

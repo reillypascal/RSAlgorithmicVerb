@@ -32,8 +32,8 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													0.0f,
 													1.0f,
 													0.5f),
-		std::make_unique<juce::AudioParameterFloat>("decay",
-													"Decay",
+		std::make_unique<juce::AudioParameterFloat>("decayTime",
+													"Decay Time",
 													0.0f,
 													0.99f,
 													0.35f),
@@ -56,13 +56,13 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													"Dry/Wet Mix",
 													0.0f,
 													1.0f,
-													0.1f)
+													0.35f)
 })
 {
 	reverbType = static_cast<juce::AudioParameterChoice*>(parameters.getParameter("reverbType"));
 	
 	roomSizeParameter = parameters.getRawParameterValue("roomSize");
-	decayParameter = parameters.getRawParameterValue("decay");
+	decayParameter = parameters.getRawParameterValue("decayTime");
 	dampingParameter = parameters.getRawParameterValue("damping");
 	preDelayParameter = parameters.getRawParameterValue("preDelay");
 	earlyLateMixParameter = parameters.getRawParameterValue("earlyLateMix");
@@ -199,7 +199,7 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	
 	// parameter values
 	float size = scale(static_cast<float>(*roomSizeParameter), 0.0f, 1.0f, 0.01f, 2.0f);
-	float decayValue = static_cast<float>(*decayParameter);
+	float decayTime = static_cast<float>(*decayParameter);
 	float damping = scale(static_cast<float>(*dampingParameter) * -1 + 1, 0.0f, 1.0f, 200.0f, 20000.0f);
 	float preDelay = scale(static_cast<float>(*preDelayParameter), 0.0f, 1.0f, 0.0f, 125.0f);
 	float earlyLateMix = static_cast<float>(*earlyLateMixParameter);
@@ -209,8 +209,9 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	
 	// set parameters
 	ProcessorBase* currentProcessorNode = static_cast<ProcessorBase*>(reverbNode->getProcessor());
+	
 	currentProcessorNode->setSize(size);
-	currentProcessorNode->setDecay(decayValue);
+	currentProcessorNode->setDecay(decayTime);
 	currentProcessorNode->setDampingCutoff(damping);
 	currentProcessorNode->setPreDelay(preDelay);
 	currentProcessorNode->setEarlyLateMix(earlyLateMix);
