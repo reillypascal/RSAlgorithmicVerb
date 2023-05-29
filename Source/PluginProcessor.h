@@ -87,7 +87,7 @@ private:
 	
 	juce::AudioParameterChoice* reverbType = nullptr;
 	std::atomic<float>* roomSizeParameter = nullptr;
-	std::atomic<float>* decayParameter = nullptr;
+	std::atomic<float>* feedbackParameter = nullptr;
 	std::atomic<float>* dampingParameter = nullptr;
 	std::atomic<float>* preDelayParameter = nullptr;
 	std::atomic<float>* earlyLateMixParameter = nullptr;

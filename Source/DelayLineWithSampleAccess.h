@@ -29,7 +29,6 @@ public:
 	
 	~DelayLineWithSampleAccess()
 	{
-		//delete mDelayBuffer;
 	}
 	
 	void pushSample(int channel, SampleType newValue)

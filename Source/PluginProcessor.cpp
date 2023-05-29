@@ -32,8 +32,8 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													0.0f,
 													1.0f,
 													0.5f),
-		std::make_unique<juce::AudioParameterFloat>("decayTime",
-													"Decay Time",
+		std::make_unique<juce::AudioParameterFloat>("feedback",
+													"Feedback",
 													0.0f,
 													0.99f,
 													0.35f),
@@ -46,7 +46,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													"Pre-Delay",
 													0.0f,
 													1.0f,
-													0.5f),
+													0.0f),
 		std::make_unique<juce::AudioParameterFloat>("earlyLateMix",
 													"Early/Late Mix",
 													0.0f,
@@ -62,11 +62,12 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 	reverbType = static_cast<juce::AudioParameterChoice*>(parameters.getParameter("reverbType"));
 	
 	roomSizeParameter = parameters.getRawParameterValue("roomSize");
-	decayParameter = parameters.getRawParameterValue("decayTime");
+	feedbackParameter = parameters.getRawParameterValue("feedback");
 	dampingParameter = parameters.getRawParameterValue("damping");
 	preDelayParameter = parameters.getRawParameterValue("preDelay");
 	earlyLateMixParameter = parameters.getRawParameterValue("earlyLateMix");
 	dryWetMixParameter = parameters.getRawParameterValue("dryWetMix");
+	
 }
 
 RSAlgorithmicVerbAudioProcessor::~RSAlgorithmicVerbAudioProcessor()
@@ -199,19 +200,19 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	
 	// parameter values
 	float size = scale(static_cast<float>(*roomSizeParameter), 0.0f, 1.0f, 0.01f, 2.0f);
-	float decayTime = static_cast<float>(*decayParameter);
+	float feedback = static_cast<float>(*feedbackParameter);
 	float damping = scale(static_cast<float>(*dampingParameter) * -1 + 1, 0.0f, 1.0f, 200.0f, 20000.0f);
-	float preDelay = scale(static_cast<float>(*preDelayParameter), 0.0f, 1.0f, 0.0f, 125.0f);
+	float preDelay = scale(static_cast<float>(*preDelayParameter), 0.0f, 1.0f, 0.0f, 250.0f);
 	float earlyLateMix = static_cast<float>(*earlyLateMixParameter);
 	float dryWetMix = static_cast<float>(*dryWetMixParameter);
-	
+		
 	updateGraph();
 	
 	// set parameters
 	ProcessorBase* currentProcessorNode = static_cast<ProcessorBase*>(reverbNode->getProcessor());
 	
 	currentProcessorNode->setSize(size);
-	currentProcessorNode->setDecay(decayTime);
+	currentProcessorNode->setDecay(feedback);
 	currentProcessorNode->setDampingCutoff(damping);
 	currentProcessorNode->setPreDelay(preDelay);
 	currentProcessorNode->setEarlyLateMix(earlyLateMix);

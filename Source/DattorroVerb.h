@@ -270,7 +270,7 @@ public:
 	
 	//==============================================================================
 	void setSize(float newSize) override { mSize = newSize; }
-	void setDecay(float newDecay) override { mDecay = newDecay; }
+	void setDecay(float newDecay) override { mDecay = pow(newDecay, 2); }
 	void setDampingCutoff(float newCutoff) override { mDampingCutoff = newCutoff; }
 	void setPreDelay(float newPreDelay) override { mPreDelayTime = newPreDelay; }
 	void setEarlyLateMix(float newMix) override { mEarlyLateMix = newMix; }

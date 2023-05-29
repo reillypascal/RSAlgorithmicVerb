@@ -74,7 +74,7 @@ private:
 	};
 	
 	juce::Slider roomSizeSlider;
-	juce::Slider decaySlider;
+	juce::Slider feedbackSlider;
 	juce::Slider dampingSlider;
 	juce::Slider preDelaySlider;
 	juce::Slider earlyLateMixSlider;
@@ -82,7 +82,7 @@ private:
 	
 	std::unique_ptr<ComboBoxAttachment> reverbMenuAttachment;
 	std::unique_ptr<SliderAttachment> roomSizeAttachment;
-	std::unique_ptr<SliderAttachment> decayAttachment;
+	std::unique_ptr<SliderAttachment> feedbackAttachment;
 	std::unique_ptr<SliderAttachment> dampingAttachment;
 	std::unique_ptr<SliderAttachment> preDelayAttachment;
 	std::unique_ptr<SliderAttachment> earlyLateMixAttachment;

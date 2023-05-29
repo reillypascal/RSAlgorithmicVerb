@@ -56,34 +56,34 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
 	
 	// sliders
 	roomSizeSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-	roomSizeSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, 25);
+	roomSizeSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, textBoxHeight);
 	addAndMakeVisible(roomSizeSlider);
 	roomSizeAttachment.reset(new SliderAttachment(valueTreeState, "roomSize", roomSizeSlider));
 	
-	decaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-	decaySlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, 25);
-	addAndMakeVisible(decaySlider);
-	decayAttachment.reset(new SliderAttachment(valueTreeState, "decayTime", decaySlider));
+	feedbackSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+	feedbackSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, textBoxHeight);
+	addAndMakeVisible(feedbackSlider);
+	feedbackAttachment.reset(new SliderAttachment(valueTreeState, "feedback", feedbackSlider));
 	
 	dampingSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-	dampingSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, 25);
+	dampingSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, textBoxHeight);
 	addAndMakeVisible(dampingSlider);
 	dampingAttachment.reset(new SliderAttachment(valueTreeState, "damping", dampingSlider));
 	
 	preDelaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-	preDelaySlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, 25);
+	preDelaySlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, textBoxHeight);
 	addAndMakeVisible(preDelaySlider);
 	preDelayAttachment.reset(new SliderAttachment(valueTreeState, "preDelay", preDelaySlider));
 	
 	earlyLateMixSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-	earlyLateMixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, 25);
+	earlyLateMixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, textBoxHeight);
 	addAndMakeVisible(earlyLateMixSlider);
 	earlyLateMixAttachment.reset(new SliderAttachment(valueTreeState, "earlyLateMix", earlyLateMixSlider));
 	
 	dryWetMixSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-	dryWetMixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, 25);
+	dryWetMixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, textBoxHeight);
 	addAndMakeVisible(dryWetMixSlider);
-	decayAttachment.reset(new SliderAttachment(valueTreeState, "dryWetMix", dryWetMixSlider));
+	dryWetMixAttachment.reset(new SliderAttachment(valueTreeState, "dryWetMix", dryWetMixSlider));
 
 	// interface style
 	getLookAndFeel().setDefaultLookAndFeel(&grayBlueLookAndFeel);
@@ -127,7 +127,7 @@ void RSAlgorithmicVerbAudioProcessorEditor::resized()
 	
 	// row 1 sliders
 	roomSizeSlider.setBounds(xBorder, yBorderTop, sliderWidth, sliderHeight);
-	decaySlider.setBounds(xBorder + sliderWidth, yBorderTop, sliderWidth, sliderHeight);
+	feedbackSlider.setBounds(xBorder + sliderWidth, yBorderTop, sliderWidth, sliderHeight);
 	dampingSlider.setBounds(xBorder + (2 * sliderWidth), yBorderTop, sliderWidth, sliderHeight);
 	
 	// row 1 labels
