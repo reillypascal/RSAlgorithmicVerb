@@ -6,15 +6,21 @@ Dependencies
 - Projucer (https://docs.juce.com/master/tutorial_new_projucer_project.html) (for creating Xcode/Visual Studio projects in order to build)
 
 <!--
+Windows:
+- Compiled Windows files are available under "Releases". Unzip the files and place them in C:\Program Files\Common Files\VST3
+
 macOS:
-- Compiled macOS files are available under "Releases"
-- Put these files in Library/Audio/Plug-Ins/Components/ (for AU) or Library/Audio/Plug-Ins/VST3/ (for VST)
+- Compiled macOS files are available under "Releases". Unzip the files and place them in /Library/Audio/Plug-Ins/Components/ (AU) or in /Library/Audio/Plug-Ins/VST3/ (VST).
 - You will likely need to disable Gatekeeper for the plugins. To do this for AU, type...
 ```sh
-	spctl --add "/Library/Audio/Plug-Ins/VST3/RSAlgorithmicVerb.component"
+	spctl --add "/Library/Audio/Plug-Ins/Components/RSAlgorithmicVerb.component"
 ```
 
-...or change the file extension to ".vst3" for VST.
+...or for VST...
+```sh
+	spctl --add "/Library/Audio/Plug-Ins/VST3/RSAlgorithmicVerb.vst3"
+```
+
 - You can also add the file path by typing...
 ```sh
 	spctl --add 
