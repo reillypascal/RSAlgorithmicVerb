@@ -1,8 +1,16 @@
 /*
   ==============================================================================
 
-    This file contains the basic framework code for a JUCE plugin processor.
-
+TODO:
+ - Gardner room algorithms
+ - Barr allpass ring
+ - early reflections
+ - early/late knob by pre-delay
+	- UI colored panels or borders
+	- UI category labels? or just use panel/border to group
+ - disable appropriate parameters when changing algorithms
+ - fix decay parameter name
+ 
   ==============================================================================
 */
 
@@ -45,7 +53,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 		std::make_unique<juce::AudioParameterFloat>("diffusion",
 													"Diffusion",
 													0.0f,
-													1.0f,
+													0.99f,
 													0.75f),
 		std::make_unique<juce::AudioParameterFloat>("preDelay",
 													"Pre-Delay",

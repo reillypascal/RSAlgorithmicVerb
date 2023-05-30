@@ -13,6 +13,7 @@
 #include <JuceHeader.h>
 
 #include "ProcessorBase.h"
+#include "EarlyReflections.h"
 
 class Freeverb : public ProcessorBase
 {
