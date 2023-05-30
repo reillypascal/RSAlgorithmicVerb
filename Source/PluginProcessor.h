@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "DattorroVerb.h"
 #include "Freeverb.h"
+#include "IOBlocks.h"
 
 //==============================================================================
 /**
@@ -82,14 +83,20 @@ private:
 	Node::Ptr midiOutputNode = nullptr;
 	
 	Node::Ptr reverbNode = nullptr;
+	Node::Ptr outputProcessorNode = nullptr;
 	
 	juce::AudioProcessorValueTreeState parameters;
 	
 	juce::AudioParameterChoice* reverbType = nullptr;
+	// row 1
 	std::atomic<float>* roomSizeParameter = nullptr;
 	std::atomic<float>* feedbackParameter = nullptr;
 	std::atomic<float>* dampingParameter = nullptr;
+	std::atomic<float>* diffusionParameter = nullptr;
+	// row 2
 	std::atomic<float>* preDelayParameter = nullptr;
+	std::atomic<float>* lowCutParameter = nullptr;
+	std::atomic<float>* highCutParameter = nullptr;
 	std::atomic<float>* earlyLateMixParameter = nullptr;
 	std::atomic<float>* dryWetMixParameter = nullptr;
 	

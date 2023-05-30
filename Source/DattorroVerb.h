@@ -67,7 +67,7 @@ public:
 		
 		// initialize input chain parameters
 		preDelay.setDelay(mPreDelayTime);
-		inputFilter.setCutoffFrequency(mDampingCutoff);
+		inputFilter.setCutoffFrequency(13500);
 		allpass1.setDelay(210 * mSize);
 		allpass2.setDelay(158 * mSize);
 		allpass3.setDelay(561 * mSize);
@@ -77,7 +77,7 @@ public:
 		
 		// break out parameters so mod can add/subtract 12 samples
 		modulatedAPF1.setDelay(1343 * mSize);
-		modulatedAPF2.setDelay(995* mSize);
+		modulatedAPF2.setDelay(995 * mSize);
 		
 		delay1.setDelay(6241 * mSize);
 		delay2.setDelay(6590 * mSize);
@@ -108,7 +108,10 @@ public:
 		// reverb sample loop params
 		int channel = 0;
 		// need separate ones for different delays
-		float allpassFeedbackCoefficient = 0.5;
+		float decayDiffusion1 = 0.93;
+		float decayDiffusion2 = 0.67;
+		float inputDiffusion1 = 1;
+		float inputDiffusion2 = 0.83;
 		auto* channelDataA = monoBufferA.getWritePointer (channel);
 		auto* channelDataB = monoBufferB.getWritePointer (channel);
 		for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
@@ -120,26 +123,26 @@ public:
 			
 			// apply allpasses
 			allpassOutput = allpass1.popSample(channel);
-			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelDataA[sample] - allpassOutput * allpassFeedbackCoefficient;
+			feedback = allpassOutput * inputDiffusion1 * mDiffusion;
+			feedforward = -channelDataA[sample] - allpassOutput * inputDiffusion1 * mDiffusion;
 			allpass1.pushSample(channel, channelDataA[sample] + feedback);
 			channelDataA[sample] = allpassOutput + feedforward;
 			
 			allpassOutput = allpass2.popSample(channel);
-			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelDataA[sample] - allpassOutput * allpassFeedbackCoefficient;
+			feedback = allpassOutput * inputDiffusion1 * mDiffusion;
+			feedforward = -channelDataA[sample] - allpassOutput * inputDiffusion1 * mDiffusion;
 			allpass2.pushSample(channel, channelDataA[sample] + feedback);
 			channelDataA[sample] = allpassOutput + feedforward;
 			
 			allpassOutput = allpass3.popSample(channel);
-			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelDataA[sample] - allpassOutput * allpassFeedbackCoefficient;
+			feedback = allpassOutput * inputDiffusion2 * mDiffusion;
+			feedforward = -channelDataA[sample] - allpassOutput * inputDiffusion2 * mDiffusion;
 			allpass3.pushSample(channel, channelDataA[sample] + feedback);
 			channelDataA[sample] = allpassOutput + feedforward;
 			
 			allpassOutput = allpass4.popSample(channel);
-			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelDataA[sample] - allpassOutput * allpassFeedbackCoefficient;
+			feedback = allpassOutput * inputDiffusion2 * mDiffusion;
+			feedforward = -channelDataA[sample] - allpassOutput * inputDiffusion2 * mDiffusion;
 			allpass4.pushSample(channel, channelDataA[sample] + feedback);
 			channelDataA[sample] = allpassOutput + feedforward;
 			
@@ -148,8 +151,8 @@ public:
 
 			// modulated APF1
 			allpassOutput = modulatedAPF1.popSample(channel);
-			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelDataA[sample] - allpassOutput * allpassFeedbackCoefficient;
+			feedback = allpassOutput * decayDiffusion1 * mDiffusion;
+			feedforward = -channelDataA[sample] - allpassOutput * decayDiffusion1 * mDiffusion;
 			modulatedAPF1.pushSample(channel, channelDataA[sample] + feedback);
 			channelDataA[sample] = allpassOutput + feedforward;
 			
@@ -166,8 +169,8 @@ public:
 			
 			// allpass 5
 			allpassOutput = allpass5.popSample(channel);
-			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelDataA[sample] - allpassOutput * allpassFeedbackCoefficient;
+			feedback = allpassOutput * decayDiffusion1 * mDiffusion;
+			feedforward = -channelDataA[sample] - allpassOutput * decayDiffusion1 * mDiffusion;
 			allpass5.pushSample(channel, channelDataA[sample] + feedback);
 			channelDataA[sample] = allpassOutput + feedforward;
 			
@@ -194,8 +197,8 @@ public:
 			
 			// modulated APF2
 			allpassOutput = modulatedAPF2.popSample(channel);
-			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelDataB[sample] - allpassOutput * allpassFeedbackCoefficient;
+			feedback = allpassOutput * decayDiffusion2 * mDiffusion;
+			feedforward = -channelDataB[sample] - allpassOutput * decayDiffusion2 * mDiffusion;
 			modulatedAPF2.pushSample(channel, channelDataB[sample] + feedback);
 			channelDataB[sample] = allpassOutput + feedforward;
 			
@@ -212,8 +215,8 @@ public:
 			
 			// allpass 6
 			allpassOutput = allpass6.popSample(channel);
-			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelDataB[sample] - allpassOutput * allpassFeedbackCoefficient;
+			feedback = allpassOutput * decayDiffusion2 * mDiffusion;
+			feedforward = -channelDataB[sample] - allpassOutput * decayDiffusion2 * mDiffusion;
 			allpass6.pushSample(channel, channelDataB[sample] + feedback);
 			channelDataB[sample] = allpassOutput + feedforward;
 			
@@ -284,6 +287,7 @@ public:
 	void setSize(float newSize) override { mSize = newSize; }
 	void setDecay(float newDecay) override { mDecay = pow(newDecay, 2); }
 	void setDampingCutoff(float newCutoff) override { mDampingCutoff = newCutoff; }
+	void setDiffusion(float newDiffusion) override { mDiffusion = newDiffusion; }
 	void setPreDelay(float newPreDelay) override { mPreDelayTime = newPreDelay; }
 	void setEarlyLateMix(float newMix) override { mEarlyLateMix = newMix; }
 	void setDryWetMix(float newMix) override { mDryWetMix = newMix; }
@@ -324,6 +328,7 @@ private:
 	float mSize = 1;
 	float mDecay = 0.25;
 	float mDampingCutoff = 6500;
+	float mDiffusion = 0.75;
 	float mEarlyLateMix = 1;
 	float mDryWetMix = 0.25;
 };

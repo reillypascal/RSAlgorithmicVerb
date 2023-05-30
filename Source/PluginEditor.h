@@ -59,10 +59,15 @@ private:
 	juce::AudioProcessorValueTreeState& valueTreeState;
 	
 	juce::Label reverbMenuLabel;
+	// row 1
 	juce::Label roomSizeLabel;
 	juce::Label decayLabel;
 	juce::Label dampingLabel;
+	juce::Label diffusionLabel;
+	// row 2
 	juce::Label preDelayLabel;
+	juce::Label lowCutLabel;
+	juce::Label highCutLabel;
 	juce::Label earlyLateMixLabel;
 	juce::Label dryWetMixLabel;
 	
@@ -72,19 +77,28 @@ private:
 		dattorro = 1,
 		freeverb,
 	};
-	
+	// row 1
 	juce::Slider roomSizeSlider;
 	juce::Slider feedbackSlider;
 	juce::Slider dampingSlider;
+	juce::Slider diffusionSlider;
+	// row 2
 	juce::Slider preDelaySlider;
+	juce::Slider lowCutSlider;
+	juce::Slider highCutSlider;
 	juce::Slider earlyLateMixSlider;
 	juce::Slider dryWetMixSlider;
 	
 	std::unique_ptr<ComboBoxAttachment> reverbMenuAttachment;
+	// row 1
 	std::unique_ptr<SliderAttachment> roomSizeAttachment;
 	std::unique_ptr<SliderAttachment> feedbackAttachment;
 	std::unique_ptr<SliderAttachment> dampingAttachment;
+	std::unique_ptr<SliderAttachment> diffusionAttachment;
+	// row 2
 	std::unique_ptr<SliderAttachment> preDelayAttachment;
+	std::unique_ptr<SliderAttachment> lowCutAttachment;
+	std::unique_ptr<SliderAttachment> highCutAttachment;
 	std::unique_ptr<SliderAttachment> earlyLateMixAttachment;
 	std::unique_ptr<SliderAttachment> dryWetMixAttachment;
 	

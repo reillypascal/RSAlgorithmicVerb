@@ -42,11 +42,26 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													0.0f,
 													1.0f,
 													0.75f),
+		std::make_unique<juce::AudioParameterFloat>("diffusion",
+													"Diffusion",
+													0.0f,
+													1.0f,
+													0.75f),
 		std::make_unique<juce::AudioParameterFloat>("preDelay",
 													"Pre-Delay",
 													0.0f,
 													1.0f,
 													0.0f),
+		std::make_unique<juce::AudioParameterFloat>("lowCut",
+													"Low Cut",
+													0.0f,
+													1000.0f,
+													0.0f),
+		std::make_unique<juce::AudioParameterFloat>("highCut",
+													"High Cut",
+													200.0f,
+													20000.0f,
+													20000.0f),
 		std::make_unique<juce::AudioParameterFloat>("earlyLateMix",
 													"Early/Late Mix",
 													0.0f,
@@ -60,11 +75,15 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 })
 {
 	reverbType = static_cast<juce::AudioParameterChoice*>(parameters.getParameter("reverbType"));
-	
+	// row 1
 	roomSizeParameter = parameters.getRawParameterValue("roomSize");
 	feedbackParameter = parameters.getRawParameterValue("feedback");
 	dampingParameter = parameters.getRawParameterValue("damping");
+	diffusionParameter = parameters.getRawParameterValue("diffusion");
+	// row 2
 	preDelayParameter = parameters.getRawParameterValue("preDelay");
+	lowCutParameter = parameters.getRawParameterValue("lowCut");
+	highCutParameter = parameters.getRawParameterValue("highCut");
 	earlyLateMixParameter = parameters.getRawParameterValue("earlyLateMix");
 	dryWetMixParameter = parameters.getRawParameterValue("dryWetMix");
 	
@@ -198,25 +217,35 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 	
-	// parameter values
+	// parameter values row 1
 	float size = scale(static_cast<float>(*roomSizeParameter), 0.0f, 1.0f, 0.01f, 2.0f);
 	float feedback = static_cast<float>(*feedbackParameter);
 	float damping = scale(static_cast<float>(*dampingParameter) * -1 + 1, 0.0f, 1.0f, 200.0f, 20000.0f);
+	float diffusion = static_cast<float>(*diffusionParameter);
+	// row 2
 	float preDelay = scale(static_cast<float>(*preDelayParameter), 0.0f, 1.0f, 0.0f, 250.0f);
+	float lowCut = static_cast<float>(*lowCutParameter);
+	float highCut = static_cast<float>(*highCutParameter);
 	float earlyLateMix = static_cast<float>(*earlyLateMixParameter);
 	float dryWetMix = static_cast<float>(*dryWetMixParameter);
 		
 	updateGraph();
 	
-	// set parameters
+	// get processors to set parameters
 	ProcessorBase* currentProcessorNode = static_cast<ProcessorBase*>(reverbNode->getProcessor());
+	OutputBlock* currentOutputNode = static_cast<OutputBlock*>(outputProcessorNode->getProcessor());
 	
+	// reverb node parameters
 	currentProcessorNode->setSize(size);
 	currentProcessorNode->setDecay(feedback);
 	currentProcessorNode->setDampingCutoff(damping);
+	currentProcessorNode->setDiffusion(diffusion);
 	currentProcessorNode->setPreDelay(preDelay);
 	currentProcessorNode->setEarlyLateMix(earlyLateMix);
 	currentProcessorNode->setDryWetMix(dryWetMix);
+	// output node parameters
+	currentOutputNode->setLowCut(lowCut);
+	currentOutputNode->setHighCut(highCut);
 	
 	// processing
 	mainProcessor->processBlock(buffer, midiMessages);
@@ -334,11 +363,15 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 		}
 		else
 		{
+			outputProcessorNode = mainProcessor->addNode(std::make_unique<OutputBlock>());
+			
 			for (int channel = 0; channel < getMainBusNumInputChannels(); ++channel)
 			{
 				mainProcessor->addConnection({ { audioInputNode->nodeID, channel },
 											   { reverbNode->nodeID, channel } });
 				mainProcessor->addConnection({ { reverbNode->nodeID, channel },
+											   { outputProcessorNode->nodeID, channel } });
+				mainProcessor->addConnection({ { outputProcessorNode->nodeID, channel },
 											   { audioOutputNode->nodeID, channel } });
 			}
 		}

@@ -5,7 +5,7 @@
               jucerFormatVersion="1" companyWebsite="reillyspitzfaden.netlify.app"
               companyEmail="reillypascal@gmail.com" pluginManufacturer="Reilly Spitzfaden"
               pluginManufacturerCode="Rspi" pluginCode="Rsav" aaxIdentifier="com.reillyspitzfaden.RSAlgorithmicVerb"
-              bundleIdentifier="com.reillyspitzfaden.RSAlgorithmicVerb" version="0.1.1"
+              bundleIdentifier="com.reillyspitzfaden.RSAlgorithmicVerb" version="0.2.0"
               pluginFormats="buildAU,buildVST3" pluginAUMainType="'aufx'" pluginVST3Category="Fx"
               pluginAAXCategory="8" pluginVSTCategory="kPlugCategEffect">
   <MAINGROUP id="h5VveC" name="RSAlgorithmicVerb">
@@ -21,6 +21,7 @@
       <FILE id="jwqlsc" name="EarlyReflections.h" compile="0" resource="0"
             file="Source/EarlyReflections.h"/>
       <FILE id="GtffiZ" name="Freeverb.h" compile="0" resource="0" file="Source/Freeverb.h"/>
+      <FILE id="E3u2WC" name="IOBlocks.h" compile="0" resource="0" file="Source/IOBlocks.h"/>
       <FILE id="mCFD5y" name="DelayLineWithSampleAccess.h" compile="0" resource="0"
             file="Source/DelayLineWithSampleAccess.h"/>
       <FILE id="mYaXC8" name="ProcessorBase.h" compile="0" resource="0" file="Source/ProcessorBase.h"/>
