@@ -90,66 +90,72 @@ public:
 		dryWetMixer.pushDrySamples(dryBlock);
 		
 		// mono reverb processing
-		juce::AudioBuffer<float> monoBuffer(1, buffer.getNumSamples());
-		monoBuffer.clear();
+		juce::AudioBuffer<float> monoBufferA(1, buffer.getNumSamples());
+		juce::AudioBuffer<float> monoBufferB(1, buffer.getNumSamples());
+		monoBufferA.clear();
+		monoBufferB.clear();
 		// sum stereo to mono for input chain
-		monoBuffer.copyFrom(0, 0, buffer, 0, 0, buffer.getNumSamples());
+		monoBufferA.copyFrom(0, 0, buffer, 0, 0, buffer.getNumSamples());
+		monoBufferB.copyFrom(0, 0, buffer, 0, 0, buffer.getNumSamples());
 		if (buffer.getNumChannels() > 1)
 		{
-			monoBuffer.addFrom(0, 0, buffer, 1, 0, buffer.getNumSamples());
-			monoBuffer.applyGain(0.707f);
+			monoBufferA.addFrom(0, 0, buffer, 1, 0, buffer.getNumSamples());
+			monoBufferB.addFrom(0, 0, buffer, 1, 0, buffer.getNumSamples());
+			monoBufferA.applyGain(0.5f);
+			monoBufferB.applyGain(0.5f);
 		}
 		
 		// reverb sample loop params
 		int channel = 0;
 		// need separate ones for different delays
 		float allpassFeedbackCoefficient = 0.5;
-		auto* channelData = monoBuffer.getWritePointer (channel);
-		for (int sample = 0; sample < monoBuffer.getNumSamples(); ++sample)
+		auto* channelDataA = monoBufferA.getWritePointer (channel);
+		auto* channelDataB = monoBufferB.getWritePointer (channel);
+		for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 		{
 			
 			// apply predelay, filter
-			preDelay.pushSample(channel, channelData[sample]);
-			channelData[sample] = inputFilter.processSample(channel, preDelay.popSample(channel));
+			preDelay.pushSample(channel, channelDataA[sample]);
+			channelDataA[sample] = inputFilter.processSample(channel, preDelay.popSample(channel));
 			
 			// apply allpasses
 			allpassOutput = allpass1.popSample(channel);
 			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelData[sample] - allpassOutput * allpassFeedbackCoefficient;
-			allpass1.pushSample(channel, channelData[sample] + feedback);
-			channelData[sample] = allpassOutput + feedforward;
+			feedforward = -channelDataA[sample] - allpassOutput * allpassFeedbackCoefficient;
+			allpass1.pushSample(channel, channelDataA[sample] + feedback);
+			channelDataA[sample] = allpassOutput + feedforward;
 			
 			allpassOutput = allpass2.popSample(channel);
 			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelData[sample] - allpassOutput * allpassFeedbackCoefficient;
-			allpass2.pushSample(channel, channelData[sample] + feedback);
-			channelData[sample] = allpassOutput + feedforward;
+			feedforward = -channelDataA[sample] - allpassOutput * allpassFeedbackCoefficient;
+			allpass2.pushSample(channel, channelDataA[sample] + feedback);
+			channelDataA[sample] = allpassOutput + feedforward;
 			
 			allpassOutput = allpass3.popSample(channel);
 			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelData[sample] - allpassOutput * allpassFeedbackCoefficient;
-			allpass3.pushSample(channel, channelData[sample] + feedback);
-			channelData[sample] = allpassOutput + feedforward;
+			feedforward = -channelDataA[sample] - allpassOutput * allpassFeedbackCoefficient;
+			allpass3.pushSample(channel, channelDataA[sample] + feedback);
+			channelDataA[sample] = allpassOutput + feedforward;
 			
 			allpassOutput = allpass4.popSample(channel);
 			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelData[sample] - allpassOutput * allpassFeedbackCoefficient;
-			allpass4.pushSample(channel, channelData[sample] + feedback);
-			channelData[sample] = allpassOutput + feedforward;
+			feedforward = -channelDataA[sample] - allpassOutput * allpassFeedbackCoefficient;
+			allpass4.pushSample(channel, channelDataA[sample] + feedback);
+			channelDataA[sample] = allpassOutput + feedforward;
 			
-			// figure-8 begins
-			channelData[sample] += summingOutput;
+			// first fig-8 half
+			channelDataA[sample] += summingB * mDecay;
 
 			// modulated APF1
 			allpassOutput = modulatedAPF1.popSample(channel);
 			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelData[sample] - allpassOutput * allpassFeedbackCoefficient;
-			modulatedAPF1.pushSample(channel, channelData[sample] + feedback);
-			channelData[sample] = allpassOutput + feedforward;
+			feedforward = -channelDataA[sample] - allpassOutput * allpassFeedbackCoefficient;
+			modulatedAPF1.pushSample(channel, channelDataA[sample] + feedback);
+			channelDataA[sample] = allpassOutput + feedforward;
 			
 			// delay 1
-			delay1.pushSample(channel, channelData[sample]);
-			channelData[sample] = dampingFilter1.processSample(channel, delay1.popSample(channel));
+			delay1.pushSample(channel, channelDataA[sample]);
+			channelDataA[sample] = (dampingFilter1.processSample(channel, delay1.popSample(channel))) * mDecay;
 			
 			// OUTPUT NODE A
 			// L
@@ -161,9 +167,9 @@ public:
 			// allpass 5
 			allpassOutput = allpass5.popSample(channel);
 			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelData[sample] - allpassOutput * allpassFeedbackCoefficient;
-			allpass5.pushSample(channel, channelData[sample] + feedback);
-			channelData[sample] = allpassOutput + feedforward;
+			feedforward = -channelDataA[sample] - allpassOutput * allpassFeedbackCoefficient;
+			allpass5.pushSample(channel, channelDataA[sample] + feedback);
+			channelDataA[sample] = allpassOutput + feedforward;
 			
 			// OUTPUT NODE B
 			// L
@@ -172,8 +178,8 @@ public:
 			channel1Output -= allpass5.getSampleAtDelay(channel, 496 * mSize) * 0.6;
 			
 			//delay 2
-			delay2.pushSample(channel, channelData[sample]);
-			channelData[sample] = delay2.popSample(channel) * mDecay;
+			delay2.pushSample(channel, channelDataA[sample]);
+			channelDataA[sample] = delay2.popSample(channel) * mDecay;
 			
 			// OUTPUT NODE C
 			// L
@@ -181,17 +187,21 @@ public:
 			// R
 			channel1Output -= delay2.getSampleAtDelay(channel, 179 * mSize) * 0.6;
 			
+			summingA = channelDataA[sample];
+			
 			// second fig-8 half
+			channelDataB[sample] += summingA * mDecay;
+			
 			// modulated APF2
 			allpassOutput = modulatedAPF2.popSample(channel);
 			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelData[sample] - allpassOutput * allpassFeedbackCoefficient;
-			modulatedAPF2.pushSample(channel, channelData[sample] + feedback);
-			channelData[sample] = allpassOutput + feedforward;
+			feedforward = -channelDataB[sample] - allpassOutput * allpassFeedbackCoefficient;
+			modulatedAPF2.pushSample(channel, channelDataB[sample] + feedback);
+			channelDataB[sample] = allpassOutput + feedforward;
 			
 			// delay 3
-			delay3.pushSample(channel, channelData[sample]);
-			channelData[sample] = dampingFilter2.processSample(channel, delay3.popSample(channel));
+			delay3.pushSample(channel, channelDataB[sample]);
+			channelDataB[sample] = (dampingFilter2.processSample(channel, delay3.popSample(channel))) * mDecay;
 			
 			// OUTPUT NODE D
 			// L
@@ -203,9 +213,9 @@ public:
 			// allpass 6
 			allpassOutput = allpass6.popSample(channel);
 			feedback = allpassOutput * allpassFeedbackCoefficient;
-			feedforward = -channelData[sample] - allpassOutput * allpassFeedbackCoefficient;
-			allpass6.pushSample(channel, channelData[sample] + feedback);
-			channelData[sample] = allpassOutput + feedforward;
+			feedforward = -channelDataB[sample] - allpassOutput * allpassFeedbackCoefficient;
+			allpass6.pushSample(channel, channelDataB[sample] + feedback);
+			channelDataB[sample] = allpassOutput + feedforward;
 			
 			// OUTPUT NODE E
 			// L
@@ -214,8 +224,10 @@ public:
 			channel1Output -= allpass6.getSampleAtDelay(channel, 1817 * mSize) * 0.6;
 			
 			// delay 4
-			delay4.pushSample(channel, channelData[sample]);
-			summingOutput = (delay4.popSample(channel) * mDecay);
+			delay4.pushSample(channel, channelDataB[sample]);
+			channelDataB[sample] = delay4.popSample(channel);
+			
+			summingB = channelDataB[sample];
 			
 			// OUTPUT NODE F
 			// L
@@ -303,7 +315,8 @@ private:
 	float allpassOutput = 0;
 	float feedback = 0;
 	float feedforward = 0;
-	float summingOutput = 0;
+	float summingA = 0;
+	float summingB = 0;
 	float channel0Output = 0;
 	float channel1Output = 0;
 	
