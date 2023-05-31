@@ -28,6 +28,8 @@ public:
 		spec.maximumBlockSize = samplesPerBlock;
 		spec.numChannels = getMainBusNumInputChannels();
 		
+		earlyReflections.prepareToPlay(sampleRate, samplesPerBlock);
+		
 		comb0.prepare(spec);
 		comb1.prepare(spec);
 		comb2.prepare(spec);
@@ -63,13 +65,29 @@ public:
 	}
 	
 	//==============================================================================
-	void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&) override
+	void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override
 	{
 		juce::ScopedNoDenormals noDenormals;
 		
 		juce::dsp::AudioBlock<float> block { buffer };
 		mixer.setWetMixProportion(mDryWetMix);
 		mixer.pushDrySamples(block);
+		
+		juce::AudioBuffer<float> earlyReflectionsBuffer(buffer.getNumChannels(), buffer.getNumSamples());
+		earlyReflectionsBuffer.clear();
+		earlyReflectionsBuffer.makeCopyOf(buffer, false);
+		
+		// mix between
+		float earlyGain = cos(mEarlyLateMix * M_PI * 0.5);
+		float lateGain = cos((mEarlyLateMix * M_PI * 0.5) + M_PI * 1.5);
+		earlyReflectionsBuffer.applyGain(earlyGain);
+		buffer.applyGain(lateGain);
+		
+		// get early reflection parameters
+		earlyReflections.setSize(mSize);
+		earlyReflections.setDecay(mDecay);
+		
+		earlyReflections.processBlock(earlyReflectionsBuffer, midiMessages);
 		
 		dampingFilter0.setCutoffFrequency(mDampingCutoff);
 		dampingFilter1.setCutoffFrequency(mDampingCutoff);
@@ -161,7 +179,11 @@ public:
 			}
 		}
 		
-		mixer.mixWetSamples(block);
+		// mix early/late reflection buffers; add wet samples
+		for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
+			buffer.addFrom(channel, 0, earlyReflectionsBuffer, channel, 0, buffer.getNumSamples());
+		juce::dsp::AudioBlock<float> wetBlock { buffer };
+		mixer.mixWetSamples(wetBlock);
 	}
 	
 	//==============================================================================
@@ -205,6 +227,8 @@ public:
 	void setDryWetMix(float newMix) override { mDryWetMix = newMix; }
 	
 private:
+	EarlyReflections earlyReflections;
+	
 	juce::dsp::DelayLine<float> comb0 {22050};
 	juce::dsp::DelayLine<float> comb1 {22050};
 	juce::dsp::DelayLine<float> comb2 {22050};

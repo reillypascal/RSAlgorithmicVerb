@@ -1,9 +1,9 @@
 /*
   ==============================================================================
-
-    EarlyReflections.h
-    Created: 27 May 2023 4:18:41pm
-    Author:  Reilly Spitzfaden
+ 
+ TODO:
+ - implement predelay
+ - diffusion?
 
   ==============================================================================
 */
@@ -53,7 +53,7 @@ public:
 		if(totalNumInputChannels > 1)
 		{
 			monoBuffer.addFrom(0, 0, buffer, 1, 0, buffer.getNumSamples());
-			monoBuffer.applyGain(0.707f);
+			monoBuffer.applyGain(0.5f);
 		}
 		
 		leftHRTFDelay.setDelay(35);
@@ -65,14 +65,14 @@ public:
 			earlyReflectionsDelayLine.pushSample(0, channelData[sample]);
 			
 			// sum left 3 taps
-			channel0Output = earlyReflectionsDelayLine.getSampleAtDelay(0, 441) * mInitialLevel;
-			channel0Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 2929) * mInitialLevel * mDecay;
-			channel0Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 6319) * mInitialLevel * pow(mDecay, 2);
+			channel0Output = earlyReflectionsDelayLine.getSampleAtDelay(0, 441 * mSize) * mInitialLevel;
+			channel0Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 2929 * mSize) * mInitialLevel * mDecay;
+			channel0Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 6319 * mSize) * mInitialLevel * pow(mDecay, 2);
 			
 			// sum right 3 taps (interleaved w/ left)
-			channel1Output = earlyReflectionsDelayLine.getSampleAtDelay(0, 1191) * mInitialLevel;
-			channel1Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 3948) * mInitialLevel * mDecay;
-			channel1Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 9462) * mInitialLevel * pow(mDecay, 2);
+			channel1Output = earlyReflectionsDelayLine.getSampleAtDelay(0, 1191 * mSize) * mInitialLevel;
+			channel1Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 3948 * mSize) * mInitialLevel * mDecay;
+			channel1Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 9462 * mSize) * mInitialLevel * pow(mDecay, 2);
 			
 			// right into left HRTF and vice versa
 			leftHRTFDelay.pushSample(0, channel1Output);

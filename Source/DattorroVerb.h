@@ -61,7 +61,7 @@ public:
 	}
 	
 	//==============================================================================
-	void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&) override
+	void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override
 	{
 		juce::ScopedNoDenormals noDenormals;
 		
