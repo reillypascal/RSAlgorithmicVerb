@@ -76,6 +76,8 @@ private:
 	{
 		dattorro = 1,
 		gardnerSmallRoom,
+		gardnerMediumRoom,
+		gardnerLargeRoom,
 		freeverb,
 	};
 	// row 1

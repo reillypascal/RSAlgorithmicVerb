@@ -183,10 +183,10 @@ private:
 };
 
 //==============================================================================
-class GardnerMediumPlate : public ProcessorBase
+class GardnerMediumRoom : public ProcessorBase
 {
 public:
-	GardnerMediumPlate() {}
+	GardnerMediumRoom() {}
 	
 	//==============================================================================
 	void prepareToPlay(double sampleRate, int samplesPerBlock) override
@@ -252,9 +252,84 @@ public:
 			auto* channelData = buffer.getWritePointer(channel);
 			auto* channelData2 = input2Buffer.getWritePointer(channel);
 			
-			for (int sample = 0; sample < buffer.getNumSamples(); ++channel)
+			for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 			{
+				channelData[sample] += dampingFilter.processSample(channel, channelFeedback.at(channel)) * mDecay;
 				
+				// outer 35ms allpass
+				feedforwardOuter = channelData[sample];
+				allpassOutputOuter = delay3.popSample(channel);
+				feedbackOuter = (allpassOutputOuter + (feedforwardOuter * -0.3)) * 0.3;
+				
+				// inner 8.3ms allpass
+				feedforwardInner = channelData[sample];
+				allpassOutputInner = delay1.popSample(channel);
+				feedbackInner = (allpassOutputInner + (feedforwardInner * -0.7)) * 0.7;
+				delay1.pushSample(channel, channelData[sample] + feedbackInner);
+				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.7);
+				
+				// inner 22ms allpass
+				feedforwardInner = channelData[sample];
+				allpassOutputInner = delay2.popSample(channel);
+				feedbackInner = (allpassOutputInner + (feedforwardInner * -0.5)) * 0.5;
+				delay2.pushSample(channel, channelData[sample] + feedbackInner);
+				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.5);
+				
+				// finish outer 35ms allpass
+				delay3.pushSample(channel, channelData[sample] + feedbackOuter);
+				channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.3);
+				
+				// output tap 1
+				channelOutput.at(channel) = channelData[sample] * 0.5;
+				
+				delay4.pushSample(channel, channelData[sample]);
+				channelData[sample] = delay4.popSample(channel);
+				
+				// single 30ms allpass
+				feedforwardInner = channelData[sample];
+				allpassOutputInner = delay5.popSample(channel);
+				feedbackInner = (allpassOutputInner + (feedforwardInner * -0.5)) * 0.5;
+				delay5.pushSample(channel, channelData[sample] + feedbackInner);
+				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.5);
+				
+				delay6.pushSample(channel, channelData[sample]);
+				channelData[sample] = delay6.popSample(channel);
+				
+				// output tap 2
+				channelOutput.at(channel) += channelData[sample] * 0.5;
+				
+				delay7.pushSample(channel, channelData[sample]);
+				channelData[sample] = delay7.popSample(channel);
+				channelData[sample] *= mDecay;
+				
+				// second input to loop
+				channelData[sample] += channelData2[sample];
+				
+				// outer 30ms allpass
+				feedforwardOuter = channelData[sample];
+				allpassOutputOuter = delay8.popSample(channel);
+				feedbackOuter = (allpassOutputOuter + (feedforwardOuter * -0.3)) * 0.3;
+				
+				// inner 9.8ms allpass
+				feedforwardInner = channelData[sample];
+				allpassOutputInner = delay9.popSample(channel);
+				feedbackInner = (allpassOutputInner + (feedforwardInner * -0.6)) * 0.6;
+				delay9.pushSample(channel, channelData[sample] + feedbackInner);
+				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.6);
+				
+				// finish outer 30ms allpass
+				delay8.pushSample(channel, channelData[sample] + feedbackOuter);
+				channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.3);
+				
+				// output tap 3
+				channelOutput.at(channel) += channelData[sample] * 0.5;
+				
+				delay10.pushSample(channel, channelData[sample]);
+				channelData[sample] = delay10.popSample(channel);
+				
+				channelFeedback.at(channel) = dampingFilter.processSample(channel, channelData[sample]);
+				
+				channelData[sample] = channelOutput.at(channel);
 			}
 		}
 		
@@ -327,10 +402,10 @@ private:
 };
 
 //==============================================================================
-class GardnerLargePlate : public ProcessorBase
+class GardnerLargeRoom : public ProcessorBase
 {
 public:
-	GardnerLargePlate() {}
+	GardnerLargeRoom() {}
 	
 	//==============================================================================
 	void prepareToPlay(double sampleRate, int samplesPerBlock) override
@@ -368,17 +443,16 @@ public:
 		dryWetMixer.setWetMixProportion(mDryWetMix);
 		dryWetMixer.pushDrySamples(dryBlock);
 		
-		float samplesPerMs = getSampleRate() / 1000;
-		
+		//float samplesPerMs = getSampleRate() / 1000;
 		
 		
 		dampingFilter.setCutoffFrequency(mDampingCutoff);
 		
 		for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
 		{
-			auto* channelData = buffer.getWritePointer(channel);
+			//auto* channelData = buffer.getWritePointer(channel);
 			
-			for (int sample = 0; sample < buffer.getNumSamples(); ++channel)
+			for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 			{
 				
 			}

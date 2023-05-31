@@ -48,6 +48,13 @@ public:
 	virtual void setEarlyLateMix(float newMix) { mEarlyLateMix = newMix; }
 	virtual void setDryWetMix(float newMix) { mDryWetMix = newMix; }
 	
+	float scale(float input, float inLow, float inHi, float outLow, float outHi)
+	{
+		float scaleFactor = (outHi - outLow)/(inHi - inLow);
+		float offset = outLow - inLow;
+		return (input * scaleFactor) + offset;
+	}
+	
 private:
 	float mSize = 1;
 	float mDecay = 0.25;

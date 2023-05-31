@@ -60,6 +60,8 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
 	reverbMenuBox.addSectionHeading("Allpass Rings");
 	reverbMenuBox.addItem("Dattorro Plate", dattorro);
 	reverbMenuBox.addItem("Gardner Small Room", gardnerSmallRoom);
+	reverbMenuBox.addItem("Gardner Medium Room", gardnerMediumRoom);
+	reverbMenuBox.addItem("Gardner Large Room", gardnerLargeRoom);
 	reverbMenuBox.addSeparator();
 	//reverbMenuBox.addSectionHeading("Feedback Delay Networks");
 	//reverbMenuBox.addSeparator();

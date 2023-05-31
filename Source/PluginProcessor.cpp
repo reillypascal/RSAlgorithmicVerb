@@ -37,7 +37,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 	parameters(*this, nullptr, juce::Identifier("RSRetroVerbTest1"), {
 		std::make_unique<juce::AudioParameterChoice>("reverbType",
 													 "Reverb Type",
-													 juce::StringArray { "Dattorro", "SmallRoom", "Freeverb" },
+													 juce::StringArray { "Dattorro", "SmallRoom", "MediumRoom", "LargeRoom", "Freeverb" },
 													 0),
 		std::make_unique<juce::AudioParameterFloat>("roomSize",
 													"Room Size",
@@ -351,6 +351,32 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 			break;
 			
 		case 2:
+			if (reverbNode != nullptr)
+			{
+				if (reverbNode->getProcessor()->getName() == "GardnerMediumRoom")
+					break;
+				
+				mainProcessor->removeNode(reverbNode.get());
+			}
+			
+			reverbNode = mainProcessor->addNode(std::make_unique<GardnerMediumRoom>());
+			hasChanged = true;
+			break;
+			
+		case 3:
+			if (reverbNode != nullptr)
+			{
+				if (reverbNode->getProcessor()->getName() == "GardnerLargeRoom")
+					break;
+				
+				mainProcessor->removeNode(reverbNode.get());
+			}
+			
+			reverbNode = mainProcessor->addNode(std::make_unique<GardnerLargeRoom>());
+			hasChanged = true;
+			break;
+			
+		case 4:
 			if (reverbNode != nullptr)
 			{
 				if (reverbNode->getProcessor()->getName() == "Freeverb")
