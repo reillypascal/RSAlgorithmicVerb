@@ -223,15 +223,34 @@ public:
 		dryWetMixer.setWetMixProportion(mDryWetMix);
 		dryWetMixer.pushDrySamples(dryBlock);
 		
+		juce::AudioBuffer<float> input2Buffer(buffer.getNumChannels(), buffer.getNumSamples());
+		input2Buffer.clear();
+		input2Buffer.makeCopyOf(buffer, false);
+		
 		float samplesPerMs = getSampleRate() / 1000;
 		
-		
+		// input 1
+		delay1.setDelay(8.3 * samplesPerMs * mSize);
+		delay2.setDelay(22 * samplesPerMs * mSize);
+		delay3.setDelay(4.7 * samplesPerMs * mSize);
+		// segment 2
+		delay4.setDelay(5 * samplesPerMs * mSize);
+		delay5.setDelay(30 * samplesPerMs * mSize);
+		delay6.setDelay(67 * samplesPerMs * mSize);
+		// segment 3
+		delay7.setDelay(15 * samplesPerMs * mSize);
+		// input 2
+		delay8.setDelay(9.8 * samplesPerMs * mSize);
+		delay9.setDelay(29.2 * samplesPerMs * mSize);
+		// segment 5
+		delay10.setDelay(108 * samplesPerMs * mSize);
 		
 		dampingFilter.setCutoffFrequency(mDampingCutoff);
 		
 		for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
 		{
 			auto* channelData = buffer.getWritePointer(channel);
+			auto* channelData2 = input2Buffer.getWritePointer(channel);
 			
 			for (int sample = 0; sample < buffer.getNumSamples(); ++channel)
 			{
