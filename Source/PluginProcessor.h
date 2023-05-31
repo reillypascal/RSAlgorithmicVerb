@@ -84,7 +84,6 @@ private:
 	Node::Ptr midiOutputNode = nullptr;
 	
 	Node::Ptr reverbNode = nullptr;
-	Node::Ptr outputProcessorNode = nullptr;
 	
 	juce::AudioProcessorValueTreeState parameters;
 	

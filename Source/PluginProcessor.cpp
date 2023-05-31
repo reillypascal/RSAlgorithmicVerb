@@ -3,11 +3,15 @@
 
 TODO:
  - Gardner room algorithms
+	- Small X
+		- Try new diffusion values
+	- Medium
+	- Large
+ - EQ to wet only!
  - Barr allpass ring
  - early reflections
- - early/late knob by pre-delay
-	- UI colored panels or borders
-	- UI category labels? or just use panel/border to group
+	- add parallel/series at 0.33/0.67 mark
+ - "Bloom" effect & more moderate version for room/chamber
  - disable appropriate parameters when changing algorithms
  - fix decay parameter name
  
@@ -33,7 +37,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 	parameters(*this, nullptr, juce::Identifier("RSRetroVerbTest1"), {
 		std::make_unique<juce::AudioParameterChoice>("reverbType",
 													 "Reverb Type",
-													 juce::StringArray { "Dattorro", "Small Room", "Freeverb" },
+													 juce::StringArray { "Dattorro", "SmallRoom", "Freeverb" },
 													 0),
 		std::make_unique<juce::AudioParameterFloat>("roomSize",
 													"Room Size",
@@ -234,8 +238,8 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	float diffusion = static_cast<float>(*diffusionParameter);
 	// row 2
 	float preDelay = scale(static_cast<float>(*preDelayParameter), 0.0f, 1.0f, 0.0f, 250.0f);
-	float lowCut = static_cast<float>(*lowCutParameter);
-	float highCut = static_cast<float>(*highCutParameter);
+	//float lowCut = static_cast<float>(*lowCutParameter);
+	//float highCut = static_cast<float>(*highCutParameter);
 	float earlyLateMix = static_cast<float>(*earlyLateMixParameter);
 	float dryWetMix = static_cast<float>(*dryWetMixParameter);
 		
@@ -243,7 +247,6 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	
 	// get processors to set parameters
 	ProcessorBase* currentProcessorNode = static_cast<ProcessorBase*>(reverbNode->getProcessor());
-	OutputBlock* currentOutputNode = static_cast<OutputBlock*>(outputProcessorNode->getProcessor());
 	
 	// reverb node parameters
 	currentProcessorNode->setSize(size);
@@ -253,9 +256,6 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	currentProcessorNode->setPreDelay(preDelay);
 	currentProcessorNode->setEarlyLateMix(earlyLateMix);
 	currentProcessorNode->setDryWetMix(dryWetMix);
-	// output node parameters
-	currentOutputNode->setLowCut(lowCut);
-	currentOutputNode->setHighCut(highCut);
 	
 	// processing
 	mainProcessor->processBlock(buffer, midiMessages);
@@ -335,7 +335,6 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 			
 			reverbNode = mainProcessor->addNode(std::make_unique<DattorroPlate>());
 			hasChanged = true;
-			
 			break;
 			
 		case 1:
@@ -349,7 +348,6 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 			
 			reverbNode = mainProcessor->addNode(std::make_unique<GardnerSmallRoom>());
 			hasChanged = true;
-			
 			break;
 			
 		case 2:
@@ -384,23 +382,29 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 		if (reverbNode == nullptr)
 		{
 			connectAudioNodes();
+			connectMidiNodes();
 		}
 		else
 		{
-			outputProcessorNode = mainProcessor->addNode(std::make_unique<OutputBlock>());
-			
 			for (int channel = 0; channel < getMainBusNumInputChannels(); ++channel)
 			{
 				mainProcessor->addConnection({ { audioInputNode->nodeID, channel },
 											   { reverbNode->nodeID, channel } });
 				mainProcessor->addConnection({ { reverbNode->nodeID, channel },
-											   { outputProcessorNode->nodeID, channel } });
-				mainProcessor->addConnection({ { outputProcessorNode->nodeID, channel },
 											   { audioOutputNode->nodeID, channel } });
 			}
 		}
 		
-		connectMidiNodes();
+		mainProcessor->addConnection ({ { midiInputNode->nodeID,
+										  juce::AudioProcessorGraph::midiChannelIndex },
+										{ reverbNode->nodeID,
+										  juce::AudioProcessorGraph::midiChannelIndex } });
+		mainProcessor->addConnection ({ { reverbNode->nodeID,
+										  juce::AudioProcessorGraph::midiChannelIndex },
+										{ midiOutputNode->nodeID,
+										  juce::AudioProcessorGraph::midiChannelIndex } });
+		
+		//connectMidiNodes();
 		for (auto node : mainProcessor->getNodes())
 			node->getProcessor()->enableAllBuses();
 	}

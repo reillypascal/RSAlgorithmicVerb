@@ -59,12 +59,14 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
 	addAndMakeVisible(reverbMenuBox);
 	reverbMenuBox.addSectionHeading("Allpass Rings");
 	reverbMenuBox.addItem("Dattorro Plate", dattorro);
+	reverbMenuBox.addItem("Gardner Small Room", gardnerSmallRoom);
 	reverbMenuBox.addSeparator();
 	//reverbMenuBox.addSectionHeading("Feedback Delay Networks");
 	//reverbMenuBox.addSeparator();
 	reverbMenuBox.addSectionHeading("Schroeder Reverbs");
 	reverbMenuBox.addItem("Freeverb", freeverb);
 	reverbMenuBox.setSelectedId(dattorro);
+	reverbMenuBox.setJustificationType(juce::Justification::centred);
 	reverbMenuAttachment.reset(new ComboBoxAttachment(valueTreeState, "reverbType", reverbMenuBox));
 	
 	// sliders row 1
@@ -142,7 +144,7 @@ void RSAlgorithmicVerbAudioProcessorEditor::resized()
 	const int yBorderBottom = 50;
 	const int rowSpacer = 45;
 	
-	const int menuWidth = 135;
+	const int menuWidth = 200;
 	const int menuHeight = 20;
 	const int sliderWidth1 = (getWidth() - (2 * xBorder)) / 4;
 	const int sliderWidth2 = (getWidth() - (2 * xBorder)) / 5;
