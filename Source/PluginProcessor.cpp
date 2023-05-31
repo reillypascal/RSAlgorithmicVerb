@@ -3,15 +3,16 @@
 
 TODO:
  - Gardner room algorithms
-	- Small X
-		- Try new diffusion values
-	- Medium
 	- Large
+	- Set diffusions?
  - EQ to wet only!
  - Barr allpass ring
  - early reflections
 	- add parallel/series at 0.33/0.67 mark
+	- note that series early -> late slows onset/suggests larger hall!
  - "Bloom" effect & more moderate version for room/chamber
+	- early -> late series
+	-
  - disable appropriate parameters when changing algorithms
  - fix decay parameter name
  
