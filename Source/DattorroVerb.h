@@ -1,9 +1,7 @@
 /*
   ==============================================================================
 
-    DattorroVerb.h
-    Created: 27 May 2023 4:18:01pm
-    Author:  Reilly Spitzfaden
+    Plate reverb "in the style of Griesinger" from Dattorro 1997
 
   ==============================================================================
 */

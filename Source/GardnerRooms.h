@@ -1,9 +1,7 @@
 /*
   ==============================================================================
 
-    GardnerRooms.h
-    Created: 31 May 2023 12:03:37am
-    Author:  Reilly Spitzfaden
+	Allpass loop rooms from Gardner 1992
 
   ==============================================================================
 */
@@ -53,18 +51,20 @@ public:
 		
 		float samplesPerMs = getSampleRate() / 1000;
 		
-		delay1.setDelay(24 * samplesPerMs * mSize);
-		delay2.setDelay(22 * samplesPerMs * mSize);
-		delay3.setDelay(8.3 * samplesPerMs * mSize);
-		delay4.setDelay(4.7 * samplesPerMs * mSize);
-		delay5.setDelay(30 * samplesPerMs * mSize);
-		delay6.setDelay(36 * samplesPerMs * mSize);
-		
 		dampingFilter.setCutoffFrequency(mDampingCutoff);
 		
 		for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
 		{
 			auto* channelData = buffer.getWritePointer(channel);
+			
+			// segment 1
+			delay1.setDelay(24 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay2.setDelay(22 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay3.setDelay(8.3 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay4.setDelay(4.7 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			// segment 2
+			delay5.setDelay(30 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay6.setDelay(36 * samplesPerMs * mSize + channelDelayOffset[channel]);
 			
 			for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 			{
@@ -173,6 +173,8 @@ private:
 	std::vector<float> channelFeedback {0, 0};
 	std::vector<float> channelOutput {0, 0};
 	
+	std::vector<float> channelDelayOffset {0, 7};
+	
 	float mPreDelayTime = 441;
 	float mSize = 1;
 	float mDecay = 0.25;
@@ -229,28 +231,28 @@ public:
 		
 		float samplesPerMs = getSampleRate() / 1000;
 		
-		// input 1
-		delay1.setDelay(8.3 * samplesPerMs * mSize);
-		delay2.setDelay(22 * samplesPerMs * mSize);
-		delay3.setDelay(4.7 * samplesPerMs * mSize);
-		// segment 2
-		delay4.setDelay(5 * samplesPerMs * mSize);
-		delay5.setDelay(30 * samplesPerMs * mSize);
-		delay6.setDelay(67 * samplesPerMs * mSize);
-		// segment 3
-		delay7.setDelay(15 * samplesPerMs * mSize);
-		// input 2
-		delay8.setDelay(9.8 * samplesPerMs * mSize);
-		delay9.setDelay(29.2 * samplesPerMs * mSize);
-		// segment 5
-		delay10.setDelay(108 * samplesPerMs * mSize);
-		
 		dampingFilter.setCutoffFrequency(mDampingCutoff);
 		
 		for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
 		{
 			auto* channelData = buffer.getWritePointer(channel);
 			auto* channelData2 = input2Buffer.getWritePointer(channel);
+			
+			// input 1
+			delay1.setDelay(8.3 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay2.setDelay(22 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay3.setDelay(4.7 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			// segment 2
+			delay4.setDelay(5 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay5.setDelay(30 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay6.setDelay(67 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			// segment 3
+			delay7.setDelay(15 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			// input 2
+			delay8.setDelay(9.8 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay9.setDelay(29.2 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			// segment 5
+			delay10.setDelay(108 * samplesPerMs * mSize + channelDelayOffset[channel]);
 			
 			for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 			{
@@ -392,6 +394,8 @@ private:
 	std::vector<float> channelFeedback {0, 0};
 	std::vector<float> channelOutput {0, 0};
 	
+	std::vector<float> channelDelayOffset {0, 15};
+	
 	float mPreDelayTime = 441;
 	float mSize = 1;
 	float mDecay = 0.25;
@@ -443,18 +447,114 @@ public:
 		dryWetMixer.setWetMixProportion(mDryWetMix);
 		dryWetMixer.pushDrySamples(dryBlock);
 		
-		//float samplesPerMs = getSampleRate() / 1000;
-		
+		float samplesPerMs = getSampleRate() / 1000;
 		
 		dampingFilter.setCutoffFrequency(mDampingCutoff);
 		
 		for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
 		{
-			//auto* channelData = buffer.getWritePointer(channel);
+			auto* channelData = buffer.getWritePointer(channel);
+			
+			// input 1
+			delay1.setDelay(8 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay2.setDelay(12 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay3.setDelay(4 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			// segment 2
+			delay4.setDelay(17 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay5.setDelay(62 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay6.setDelay(25 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay7.setDelay(31 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			// segment 3
+			delay8.setDelay(3 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay9.setDelay(76 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay10.setDelay(30 * samplesPerMs * mSize + channelDelayOffset[channel]);
+			delay11.setDelay(24 * samplesPerMs * mSize + channelDelayOffset[channel]);
 			
 			for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 			{
+				channelData[sample] += dampingFilter.processSample(channel, channelFeedback.at(channel)) * mDecay;
 				
+				// inner 8ms allpass
+				feedforwardInner = channelData[sample];
+				allpassOutputInner = delay1.popSample(channel);
+				feedbackInner = (allpassOutputInner + (feedforwardInner * -0.3)) * 0.3;
+				delay1.pushSample(channel, channelData[sample] + feedbackInner);
+				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.3);
+				
+				// inner 12ms allpass (0.3)
+				feedforwardInner = channelData[sample];
+				allpassOutputInner = delay2.popSample(channel);
+				feedbackInner = (allpassOutputInner + (feedforwardInner * -0.3)) * 0.3;
+				delay2.pushSample(channel, channelData[sample] + feedbackInner);
+				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.3);
+				
+				// 4ms delay
+				delay3.pushSample(channel, channelData[sample]);
+				channelData[sample] = delay3.popSample(channel);
+				
+				// output tap 1
+				channelOutput.at(channel) = channelData[sample] * 0.34;
+				
+				// 17ms delay
+				delay4.pushSample(channel, channelData[sample]);
+				channelData[sample] = delay4.popSample(channel);
+				
+				// outer 87ms allpass (0.5)
+				feedforwardOuter = channelData[sample];
+				allpassOutputOuter = delay6.popSample(channel);
+				feedbackOuter = (allpassOutputOuter + (feedforwardOuter * -0.5)) * 0.5;
+				
+				// inner 62ms allpass (0.25)
+				feedforwardInner = channelData[sample];
+				allpassOutputInner = delay5.popSample(channel);
+				feedbackInner = (allpassOutputInner + (feedforwardInner * -0.25)) * 0.25;
+				delay5.pushSample(channel, channelData[sample] + feedbackInner);
+				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.25);
+				
+				// finish outer 87ms allpass
+				delay6.pushSample(channel, channelData[sample] + feedbackOuter);
+				channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.5);
+				
+				// 31ms delay
+				delay7.pushSample(channel, channelData[sample]);
+				channelData[sample] = delay7.popSample(channel);
+				
+				// output tap 2
+				channelOutput.at(channel) += channelData[sample] * 0.14;
+				
+				// 3ms delay
+				delay8.pushSample(channel, channelData[sample]);
+				channelData[sample] = delay8.popSample(channel);
+				
+				// outer 120ms allpass (0.5)
+				feedforwardOuter = channelData[sample];
+				allpassOutputOuter = delay11.popSample(channel);
+				feedbackOuter = (allpassOutputOuter + (feedforwardOuter * -0.5)) * 0.5;
+				
+				// inner 76ms allpass (0.25)
+				feedforwardInner = channelData[sample];
+				allpassOutputInner = delay9.popSample(channel);
+				feedbackInner = (allpassOutputInner + (feedforwardInner * -0.25)) * 0.25;
+				delay9.pushSample(channel, channelData[sample] + feedbackInner);
+				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.25);
+				
+				// inner 30ms allpass (0.25)
+				feedforwardInner = channelData[sample];
+				allpassOutputInner = delay10.popSample(channel);
+				feedbackInner = (allpassOutputInner + (feedforwardInner * -0.25)) * 0.25;
+				delay10.pushSample(channel, channelData[sample] + feedbackInner);
+				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.25);
+				
+				// finish outer 120ms allpass
+				delay11.pushSample(channel, channelData[sample] + feedbackOuter);
+				channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.5);
+				
+				// output tap 3
+				channelOutput.at(channel) += channelData[sample] * 0.14;
+				
+				// feedback/output
+				channelFeedback.at(channel) = dampingFilter.processSample(channel, channelData[sample]);
+				channelData[sample] = channelOutput.at(channel);
 			}
 		}
 		
@@ -518,6 +618,8 @@ private:
 	float feedbackOuter = 0;
 	std::vector<float> channelFeedback {0, 0};
 	std::vector<float> channelOutput {0, 0};
+	
+	std::vector<float> channelDelayOffset {0, 23};
 	
 	float mPreDelayTime = 441;
 	float mSize = 1;

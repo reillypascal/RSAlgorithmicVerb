@@ -1,6 +1,8 @@
 /*
   ==============================================================================
  
+	FIR-based early reflections with 6 taps and HRTF for binaural stereo. Based on Dattorro
+ 
  TODO:
  - implement predelay
  - diffusion?

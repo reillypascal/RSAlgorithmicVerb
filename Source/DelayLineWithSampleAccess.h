@@ -1,9 +1,7 @@
 /*
   ==============================================================================
 
-    DelayLineWithSampleAccess.h
-    Created: 27 May 2023 4:21:34pm
-    Author:  Reilly Spitzfaden
+    Based on juce::dsp::DelayLine, but allows access to the underlying buffer at specified sample offsets for multiple-tap delays.
 
   ==============================================================================
 */

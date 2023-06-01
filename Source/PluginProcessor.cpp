@@ -5,6 +5,8 @@ TODO:
  - Gardner room algorithms
 	- Large
 	- Set diffusions?
+	- stereo differences
+ - modulation
  - EQ to wet only!
  - Barr allpass ring
  - early reflections
@@ -12,7 +14,6 @@ TODO:
 	- note that series early -> late slows onset/suggests larger hall!
  - "Bloom" effect & more moderate version for room/chamber
 	- early -> late series
-	-
  - disable appropriate parameters when changing algorithms
  - fix decay parameter name
  

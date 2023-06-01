@@ -1,9 +1,7 @@
 /*
   ==============================================================================
 
-    Freeverb.h
-    Created: 27 May 2023 4:18:27pm
-    Author:  Reilly Spitzfaden
+    "Freeverb"-style Schroeder reverb; 8 parallel combs -> 4 series allpasses, with added Dattorro FIR early reflections
 
   ==============================================================================
 */
