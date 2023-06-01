@@ -68,7 +68,7 @@ public:
 			
 			for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 			{
-				channelData[sample] += dampingFilter.processSample(channel, channelFeedback.at(channel)) * mDecay;
+				channelData[sample] += dampingFilter.processSample(channel, channelFeedback.at(channel) * mDecay);
 				
 				delay1.pushSample(channel, channelData[sample]);
 				channelData[sample] = delay1.popSample(channel);
@@ -97,7 +97,7 @@ public:
 				channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.3);
 				
 				// mix into output
-				channelOutput.at(channel) = channelData[sample] * 0.707;
+				channelOutput.at(channel) = channelData[sample] * 0.5;
 				
 				// outer 66ms allpass
 				feedforwardOuter = channelData[sample];
@@ -117,7 +117,7 @@ public:
 				
 				// make channel feedback; mix output
 				channelFeedback.at(channel) = channelData[sample];
-				channelOutput.at(channel) += channelData[sample] * 0.707;
+				channelOutput.at(channel) += channelData[sample] * 0.5;
 				channelData[sample] = channelOutput.at(channel);
 			}
 		}
@@ -145,7 +145,7 @@ public:
 	
 	//==============================================================================
 	void setSize(float newSize) override { mSize = newSize; }
-	void setDecay(float newDecay) override { mDecay = newDecay; }
+	void setDecay(float newDecay) override { mDecay = newDecay * 0.5; }
 	void setDampingCutoff(float newCutoff) override { mDampingCutoff = newCutoff; }
 	void setDiffusion(float newDiffusion) override { mDiffusion = newDiffusion; }
 	void setPreDelay(float newPreDelay) override { mPreDelayTime = newPreDelay; }
@@ -256,7 +256,7 @@ public:
 			
 			for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 			{
-				channelData[sample] += dampingFilter.processSample(channel, channelFeedback.at(channel)) * mDecay;
+				channelData[sample] += dampingFilter.processSample(channel, channelFeedback.at(channel) * mDecay);
 				
 				// outer 35ms allpass
 				feedforwardOuter = channelData[sample];
@@ -362,7 +362,7 @@ public:
 	
 	//==============================================================================
 	void setSize(float newSize) override { mSize = newSize; }
-	void setDecay(float newDecay) override { mDecay = newDecay; }
+	void setDecay(float newDecay) override { mDecay = newDecay * 0.5; }
 	void setDampingCutoff(float newCutoff) override { mDampingCutoff = newCutoff; }
 	void setDiffusion(float newDiffusion) override { mDiffusion = newDiffusion; }
 	void setPreDelay(float newPreDelay) override { mPreDelayTime = newPreDelay; }
@@ -472,7 +472,7 @@ public:
 			
 			for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 			{
-				channelData[sample] += dampingFilter.processSample(channel, channelFeedback.at(channel)) * mDecay;
+				channelData[sample] += dampingFilter.processSample(channel, channelFeedback.at(channel) * mDecay);
 				
 				// inner 8ms allpass
 				feedforwardInner = channelData[sample];
@@ -586,7 +586,7 @@ public:
 	
 	//==============================================================================
 	void setSize(float newSize) override { mSize = newSize; }
-	void setDecay(float newDecay) override { mDecay = newDecay; }
+	void setDecay(float newDecay) override { mDecay = newDecay * 0.5; }
 	void setDampingCutoff(float newCutoff) override { mDampingCutoff = newCutoff; }
 	void setDiffusion(float newDiffusion) override { mDiffusion = newDiffusion; }
 	void setPreDelay(float newPreDelay) override { mPreDelayTime = newPreDelay; }

@@ -3,9 +3,10 @@
 
 TODO:
  - Gardner room algorithms
-	- Large
 	- Set diffusions?
-	- stereo differences
+	- R channel ringing
+	- Early reflections are vital!
+	- Runaway feedback?
  - modulation
  - EQ to wet only!
  - Barr allpass ring
@@ -14,6 +15,7 @@ TODO:
 	- note that series early -> late slows onset/suggests larger hall!
  - "Bloom" effect & more moderate version for room/chamber
 	- early -> late series
+	- nested allpasses - echoes build up when recirculated
  - disable appropriate parameters when changing algorithms
  - fix decay parameter name
  
@@ -234,7 +236,7 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
         buffer.clear (i, 0, buffer.getNumSamples());
 	
 	// parameter values row 1
-	float size = scale(static_cast<float>(*roomSizeParameter), 0.0f, 1.0f, 0.01f, 2.0f);
+	float size = scale(static_cast<float>(*roomSizeParameter), 0.0f, 1.0f, 0.25f, 1.5f);
 	float feedback = static_cast<float>(*feedbackParameter);
 	float damping = scale(static_cast<float>(*dampingParameter) * -1 + 1, 0.0f, 1.0f, 200.0f, 20000.0f);
 	float diffusion = static_cast<float>(*diffusionParameter);
