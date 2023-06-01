@@ -5,7 +5,7 @@
               jucerFormatVersion="1" companyWebsite="reillyspitzfaden.netlify.app"
               companyEmail="reillypascal@gmail.com" pluginManufacturer="Reilly Spitzfaden"
               pluginManufacturerCode="Rspi" pluginCode="Rsav" aaxIdentifier="com.reillyspitzfaden.RSAlgorithmicVerb"
-              bundleIdentifier="com.reillyspitzfaden.RSAlgorithmicVerb" version="0.2.0"
+              bundleIdentifier="com.reillyspitzfaden.RSAlgorithmicVerb" version="0.3.0"
               pluginFormats="buildAU,buildVST3" pluginAUMainType="'aufx'" pluginVST3Category="Fx"
               pluginAAXCategory="8" pluginVSTCategory="kPlugCategEffect">
   <MAINGROUP id="h5VveC" name="RSAlgorithmicVerb">
