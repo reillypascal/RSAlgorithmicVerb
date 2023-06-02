@@ -68,7 +68,7 @@ public:
 			
 			for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 			{
-				channelData[sample] += dampingFilter.processSample(channel, channelFeedback.at(channel) * mDecay);
+				channelData[sample] += channelFeedback.at(channel);
 				
 				delay1.pushSample(channel, channelData[sample]);
 				channelData[sample] = delay1.popSample(channel);
@@ -116,7 +116,7 @@ public:
 				channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.1);
 				
 				// make channel feedback; mix output
-				channelFeedback.at(channel) = channelData[sample];
+				channelFeedback.at(channel) = dampingFilter.processSample(channel, channelData[sample] * mDecay);
 				channelOutput.at(channel) += channelData[sample] * 0.5;
 				channelData[sample] = channelOutput.at(channel);
 			}
@@ -256,7 +256,7 @@ public:
 			
 			for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 			{
-				channelData[sample] += dampingFilter.processSample(channel, channelFeedback.at(channel) * mDecay);
+				channelData[sample] += channelFeedback.at(channel);
 				
 				// outer 35ms allpass
 				feedforwardOuter = channelData[sample];
@@ -329,7 +329,7 @@ public:
 				delay10.pushSample(channel, channelData[sample]);
 				channelData[sample] = delay10.popSample(channel);
 				
-				channelFeedback.at(channel) = dampingFilter.processSample(channel, channelData[sample]);
+				channelFeedback.at(channel) = dampingFilter.processSample(channel, channelData[sample] * mDecay);
 				
 				channelData[sample] = channelOutput.at(channel);
 			}
@@ -472,7 +472,7 @@ public:
 			
 			for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 			{
-				channelData[sample] += dampingFilter.processSample(channel, channelFeedback.at(channel) * mDecay);
+				channelData[sample] += channelFeedback.at(channel);
 				
 				// inner 8ms allpass
 				feedforwardInner = channelData[sample];
@@ -553,7 +553,7 @@ public:
 				channelOutput.at(channel) += channelData[sample] * 0.14;
 				
 				// feedback/output
-				channelFeedback.at(channel) = dampingFilter.processSample(channel, channelData[sample]);
+				channelFeedback.at(channel) = dampingFilter.processSample(channel, channelData[sample] * mDecay);
 				channelData[sample] = channelOutput.at(channel);
 			}
 		}
