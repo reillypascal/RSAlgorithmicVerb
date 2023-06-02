@@ -237,16 +237,16 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
         buffer.clear (i, 0, buffer.getNumSamples());
 	
 	// parameter values row 1
-	float size = scale(static_cast<float>(*roomSizeParameter), 0.0f, 1.0f, 0.25f, 1.5f);
-	float feedback = static_cast<float>(*feedbackParameter);
-	float damping = scale(static_cast<float>(*dampingParameter) * -1 + 1, 0.0f, 1.0f, 200.0f, 20000.0f);
-	float diffusion = static_cast<float>(*diffusionParameter);
+	float size = scale(roomSizeParameter->load(), 0.0f, 1.0f, 0.25f, 1.5f);
+	float feedback = feedbackParameter->load();
+	float damping = scale(dampingParameter->load() * -1 + 1, 0.0f, 1.0f, 200.0f, 20000.0f);
+	float diffusion = diffusionParameter->load();
 	// row 2
-	float preDelay = scale(static_cast<float>(*preDelayParameter), 0.0f, 1.0f, 0.0f, 250.0f);
-	//float lowCut = static_cast<float>(*lowCutParameter);
-	//float highCut = static_cast<float>(*highCutParameter);
-	float earlyLateMix = static_cast<float>(*earlyLateMixParameter);
-	float dryWetMix = static_cast<float>(*dryWetMixParameter);
+	float preDelay = scale(preDelayParameter->load(), 0.0f, 1.0f, 0.0f, 250.0f);
+	//float lowCut = lowCutParameter->load();
+	//float highCut = highCutParameter->load();
+	float earlyLateMix = earlyLateMixParameter->load();
+	float dryWetMix = dryWetMixParameter->load();
 		
 	updateGraph();
 	
