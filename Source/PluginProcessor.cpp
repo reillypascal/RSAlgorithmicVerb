@@ -8,6 +8,7 @@ TODO:
 	- Early reflections are vital!
 	- Runaway feedback?
  - modulation
+ - split implementation from interface on reverbs
  - EQ to wet only!
  - Barr allpass ring
  - early reflections

@@ -17,11 +17,15 @@
       <FILE id="VVsiA3" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="gfVbjw" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="XAbMe6" name="DattorroVerb.cpp" compile="1" resource="0"
+            file="Source/DattorroVerb.cpp"/>
       <FILE id="l80Jn6" name="DattorroVerb.h" compile="0" resource="0" file="Source/DattorroVerb.h"/>
       <FILE id="jwqlsc" name="EarlyReflections.h" compile="0" resource="0"
             file="Source/EarlyReflections.h"/>
       <FILE id="GtffiZ" name="Freeverb.h" compile="0" resource="0" file="Source/Freeverb.h"/>
       <FILE id="cg07wd" name="GardnerRooms.h" compile="0" resource="0" file="Source/GardnerRooms.h"/>
+      <FILE id="GqamHE" name="LFO.cpp" compile="1" resource="0" file="Source/LFO.cpp"/>
+      <FILE id="aA7GG2" name="LFO.h" compile="0" resource="0" file="Source/LFO.h"/>
       <FILE id="E3u2WC" name="IOBlocks.h" compile="0" resource="0" file="Source/IOBlocks.h"/>
       <FILE id="mCFD5y" name="DelayLineWithSampleAccess.h" compile="0" resource="0"
             file="Source/DelayLineWithSampleAccess.h"/>
