@@ -64,6 +64,10 @@ private:
 	// mixers
 	juce::dsp::DryWetMixer<float> dryWetMixer;
 	
+	OscillatorParameters lfoParameters;
+	SignalGenData lfoOutput;
+	LFO lfo;
+	
 	float allpassOutput = 0;
 	float feedback = 0;
 	float feedforward = 0;

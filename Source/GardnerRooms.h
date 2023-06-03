@@ -77,6 +77,7 @@ public:
 				feedforwardOuter = channelData[sample];
 				allpassOutputOuter = delay4.popSample(channel);
 				feedbackOuter = (allpassOutputOuter + (feedforwardOuter * -0.3)) * 0.3;
+				channelData[sample] = feedbackOuter;
 				
 				// inner 22ms allpass
 				feedforwardInner = channelData[sample];
@@ -93,16 +94,17 @@ public:
 				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.6);
 				
 				// finish outer 35ms allpass
-				delay4.pushSample(channel, channelData[sample] + feedbackOuter);
+				delay4.pushSample(channel, channelData[sample]);
 				channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.3);
 				
 				// mix into output
-				channelOutput.at(channel) = channelData[sample] * 0.5;
+				channelOutput.at(channel) = channelData[sample] * 0.707;
 				
 				// outer 66ms allpass
 				feedforwardOuter = channelData[sample];
 				allpassOutputOuter = delay6.popSample(channel);
 				feedbackOuter = (allpassOutputOuter + (feedforwardOuter * -0.1)) * 0.1;
+				channelData[sample] = feedbackOuter;
 				
 				// inner 30ms allpass
 				feedforwardInner = channelData[sample];
@@ -112,12 +114,12 @@ public:
 				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.4);
 				
 				// finish outer 66ms allpass
-				delay6.pushSample(channel, channelData[sample] + feedbackOuter);
+				delay6.pushSample(channel, channelData[sample]);
 				channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.1);
 				
 				// make channel feedback; mix output
 				channelFeedback.at(channel) = dampingFilter.processSample(channel, channelData[sample] * mDecay);
-				channelOutput.at(channel) += channelData[sample] * 0.5;
+				channelOutput.at(channel) += channelData[sample] * 0.707;
 				channelData[sample] = channelOutput.at(channel);
 			}
 		}
@@ -262,6 +264,7 @@ public:
 				feedforwardOuter = channelData[sample];
 				allpassOutputOuter = delay3.popSample(channel);
 				feedbackOuter = (allpassOutputOuter + (feedforwardOuter * -0.3)) * 0.3;
+				channelData[sample] = feedbackOuter;
 				
 				// inner 8.3ms allpass
 				feedforwardInner = channelData[sample];
@@ -278,7 +281,7 @@ public:
 				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.5);
 				
 				// finish outer 35ms allpass
-				delay3.pushSample(channel, channelData[sample] + feedbackOuter);
+				delay3.pushSample(channel, channelData[sample]);
 				channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.3);
 				
 				// output tap 1
@@ -311,6 +314,7 @@ public:
 				feedforwardOuter = channelData[sample];
 				allpassOutputOuter = delay8.popSample(channel);
 				feedbackOuter = (allpassOutputOuter + (feedforwardOuter * -0.3)) * 0.3;
+				channelData[sample] = feedbackOuter;
 				
 				// inner 9.8ms allpass
 				feedforwardInner = channelData[sample];
@@ -320,7 +324,7 @@ public:
 				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.6);
 				
 				// finish outer 30ms allpass
-				delay8.pushSample(channel, channelData[sample] + feedbackOuter);
+				delay8.pushSample(channel, channelData[sample]);
 				channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.3);
 				
 				// output tap 3
@@ -362,7 +366,7 @@ public:
 	
 	//==============================================================================
 	void setSize(float newSize) override { mSize = newSize; }
-	void setDecay(float newDecay) override { mDecay = newDecay * 0.5; }
+	void setDecay(float newDecay) override { mDecay = newDecay; }
 	void setDampingCutoff(float newCutoff) override { mDampingCutoff = newCutoff; }
 	void setDiffusion(float newDiffusion) override { mDiffusion = newDiffusion; }
 	void setPreDelay(float newPreDelay) override { mPreDelayTime = newPreDelay; }
@@ -493,7 +497,7 @@ public:
 				channelData[sample] = delay3.popSample(channel);
 				
 				// output tap 1
-				channelOutput.at(channel) = channelData[sample] * 0.34;
+				channelOutput.at(channel) = channelData[sample] * 0.68;
 				
 				// 17ms delay
 				delay4.pushSample(channel, channelData[sample]);
@@ -503,6 +507,7 @@ public:
 				feedforwardOuter = channelData[sample];
 				allpassOutputOuter = delay6.popSample(channel);
 				feedbackOuter = (allpassOutputOuter + (feedforwardOuter * -0.5)) * 0.5;
+				channelData[sample] = feedbackOuter;
 				
 				// inner 62ms allpass (0.25)
 				feedforwardInner = channelData[sample];
@@ -512,7 +517,7 @@ public:
 				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.25);
 				
 				// finish outer 87ms allpass
-				delay6.pushSample(channel, channelData[sample] + feedbackOuter);
+				delay6.pushSample(channel, channelData[sample]);
 				channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.5);
 				
 				// 31ms delay
@@ -520,7 +525,7 @@ public:
 				channelData[sample] = delay7.popSample(channel);
 				
 				// output tap 2
-				channelOutput.at(channel) += channelData[sample] * 0.14;
+				channelOutput.at(channel) += channelData[sample] * 0.28;
 				
 				// 3ms delay
 				delay8.pushSample(channel, channelData[sample]);
@@ -530,6 +535,7 @@ public:
 				feedforwardOuter = channelData[sample];
 				allpassOutputOuter = delay11.popSample(channel);
 				feedbackOuter = (allpassOutputOuter + (feedforwardOuter * -0.5)) * 0.5;
+				channelData[sample] = feedbackOuter;
 				
 				// inner 76ms allpass (0.25)
 				feedforwardInner = channelData[sample];
@@ -546,11 +552,11 @@ public:
 				channelData[sample] = allpassOutputInner + (feedforwardInner * -0.25);
 				
 				// finish outer 120ms allpass
-				delay11.pushSample(channel, channelData[sample] + feedbackOuter);
+				delay11.pushSample(channel, channelData[sample]);
 				channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.5);
 				
 				// output tap 3
-				channelOutput.at(channel) += channelData[sample] * 0.14;
+				channelOutput.at(channel) += channelData[sample] * 0.28;
 				
 				// feedback/output
 				channelFeedback.at(channel) = dampingFilter.processSample(channel, channelData[sample] * mDecay);
@@ -586,7 +592,7 @@ public:
 	
 	//==============================================================================
 	void setSize(float newSize) override { mSize = newSize; }
-	void setDecay(float newDecay) override { mDecay = newDecay * 0.5; }
+	void setDecay(float newDecay) override { mDecay = newDecay; }
 	void setDampingCutoff(float newCutoff) override { mDampingCutoff = newCutoff; }
 	void setDiffusion(float newDiffusion) override { mDiffusion = newDiffusion; }
 	void setPreDelay(float newPreDelay) override { mPreDelayTime = newPreDelay; }

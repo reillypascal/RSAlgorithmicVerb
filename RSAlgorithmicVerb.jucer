@@ -22,7 +22,10 @@
       <FILE id="l80Jn6" name="DattorroVerb.h" compile="0" resource="0" file="Source/DattorroVerb.h"/>
       <FILE id="jwqlsc" name="EarlyReflections.h" compile="0" resource="0"
             file="Source/EarlyReflections.h"/>
+      <FILE id="Gi16iB" name="Freeverb.cpp" compile="1" resource="0" file="Source/Freeverb.cpp"/>
       <FILE id="GtffiZ" name="Freeverb.h" compile="0" resource="0" file="Source/Freeverb.h"/>
+      <FILE id="MEUfFR" name="GardnerRooms.cpp" compile="1" resource="0"
+            file="Source/GardnerRooms.cpp"/>
       <FILE id="cg07wd" name="GardnerRooms.h" compile="0" resource="0" file="Source/GardnerRooms.h"/>
       <FILE id="mCFD5y" name="DelayLineWithSampleAccess.h" compile="0" resource="0"
             file="Source/DelayLineWithSampleAccess.h"/>
