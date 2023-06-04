@@ -17,6 +17,9 @@
       <FILE id="VVsiA3" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="gfVbjw" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="e2dnwV" name="ConcertHallB.cpp" compile="1" resource="0"
+            file="Source/ConcertHallB.cpp"/>
+      <FILE id="OZQpab" name="ConcertHallB.h" compile="0" resource="0" file="Source/ConcertHallB.h"/>
       <FILE id="XAbMe6" name="DattorroVerb.cpp" compile="1" resource="0"
             file="Source/DattorroVerb.cpp"/>
       <FILE id="l80Jn6" name="DattorroVerb.h" compile="0" resource="0" file="Source/DattorroVerb.h"/>
@@ -32,7 +35,6 @@
       <FILE id="mYaXC8" name="ProcessorBase.h" compile="0" resource="0" file="Source/ProcessorBase.h"/>
       <FILE id="GqamHE" name="LFO.cpp" compile="1" resource="0" file="Source/LFO.cpp"/>
       <FILE id="aA7GG2" name="LFO.h" compile="0" resource="0" file="Source/LFO.h"/>
-      <FILE id="E3u2WC" name="IOBlocks.h" compile="0" resource="0" file="Source/IOBlocks.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>

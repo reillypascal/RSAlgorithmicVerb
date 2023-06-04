@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "ConcertHallB.h"
 #include "DattorroVerb.h"
 #include "Freeverb.h"
 #include "GardnerRooms.h"
