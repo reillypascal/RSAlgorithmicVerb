@@ -276,6 +276,8 @@ void DattorroPlate::reset()
 	inputFilter.reset();
 	dampingFilter1.reset();
 	dampingFilter2.reset();
+	
+	dryWetMixer.reset();
 }
 
 //==============================================================================

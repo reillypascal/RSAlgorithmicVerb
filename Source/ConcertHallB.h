@@ -44,12 +44,27 @@ public:
 	
 private:
 	// filters
-	
-	
+	// L
+	juce::dsp::DelayLine<float> inputDampingL { 4 };
+	juce::dsp::DelayLine<float> feedbackDampingL { 4 };
+	juce::dsp::DelayLine<float> loopDampingL { 4 };
+	juce::dsp::DelayLine<float> allpassChorusL { 1764 };
+	// R
+	juce::dsp::DelayLine<float> inputDampingR { 4 };
+	juce::dsp::DelayLine<float> feedbackDampingR { 4 };
+	juce::dsp::DelayLine<float> loopDampingR { 4 };
+	juce::dsp::DelayLine<float> allpassChorusR { 1764 };
+
 	// delays
-	
-	
+	// L
+	juce::dsp::DelayLine<float> inputZL { 4 };
+	// R
+	juce::dsp::DelayLine<float> inputZR { 4 };
+
 	// allpasses
+	// L
+	
+	// R
 	
 	
 	// mixers
@@ -71,6 +86,7 @@ private:
 	float feedbackInner = 0;
 	float feedbackOuter = 0;
 	
+	std::vector<float> channelInput {0, 0};
 	std::vector<float> channelFeedback {0, 0};
 	std::vector<float> channelOutput {0, 0};
 	
