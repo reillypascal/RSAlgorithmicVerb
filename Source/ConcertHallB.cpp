@@ -22,7 +22,14 @@ void LargeConcertHallB::prepareToPlay(double sampleRate, int samplesPerBlock)
 	spec.numChannels = getMainBusNumInputChannels();
 	
 	dryWetMixer.prepare(spec);
-	dryWetMixer.reset();
+	
+	// prepare filters
+	inputBandwidth.prepare(spec);
+	feedbackDamping.prepare(spec);
+	loopDamping.prepare(spec);
+	
+	// prepare delays
+	inputZ.prepare(spec);
 	
 	// prepare mono processors
 	juce::dsp::ProcessSpec monoSpec;
@@ -31,19 +38,8 @@ void LargeConcertHallB::prepareToPlay(double sampleRate, int samplesPerBlock)
 	monoSpec.numChannels = 1;
 	
 	// prepare filters
-	inputDampingL.prepare(monoSpec);
-	feedbackDampingL.prepare(monoSpec);
-	loopDampingL.prepare(monoSpec);
 	allpassChorusL.prepare(monoSpec);
-	
-	inputDampingR.prepare(monoSpec);
-	feedbackDampingR.prepare(monoSpec);
-	loopDampingR.prepare(monoSpec);
 	allpassChorusR.prepare(monoSpec);
-	
-	// prepare delays
-	inputZL.prepare(monoSpec);
-	inputZR.prepare(monoSpec);
 	
 	// prepare allpasses
 }
@@ -58,53 +54,48 @@ void LargeConcertHallB::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
 	juce::dsp::AudioBlock<float> dryBlock { buffer };
 	dryWetMixer.pushDrySamples(dryBlock);
 	
-	// reverb loop buffer
-	juce::AudioBuffer<float> monoBuffer(1, buffer.getNumSamples());
-	monoBuffer.clear();
-	
 	// set delays
 	// filters
-	inputDampingL.setDelay(1);
-	feedbackDampingL.setDelay(1);
-	loopDampingL.setDelay(1);
+	inputBandwidth.setDelay(1);
+	feedbackDamping.setDelay(1);
+	loopDamping.setCutoffFrequency(mDampingCutoff);
 	allpassChorusL.setDelay(1);
-	
-	inputDampingR.setDelay(1);
-	feedbackDampingR.setDelay(1);
-	loopDampingR.setDelay(1);
 	allpassChorusR.setDelay(1);
 	// delays
-	inputZL.setDelay(1);
-	inputZR.setDelay(1);
+	inputZ.setDelay(1);
 	// allpasses
 	
-	auto* channelDataL = buffer.getWritePointer(0);
-	auto* channelDataR = buffer.getWritePointer(1);
-	auto* reverbData = monoBuffer.getWritePointer(0);
+	juce::AudioBuffer<float> reverbBuffer(1, buffer.getNumSamples());
+	
+	auto* reverbData = reverbBuffer.getWritePointer(0);
 	
 	for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 	{
-		// L input
-		channelInput.at(0) = (channelDataL[sample] * 0.812) + (inputDampingL.popSample(0) * 0.188);
-		inputDampingL.pushSample(0, channelInput.at(0));
-		inputZL.pushSample(0, channelInput.at(0));
-		channelInput.at(0) = inputZL.popSample(0) * 0.5;
+		//======== take sample in from buffer; add to channel inputs ========
+		for (int channel = 0; channel < (buffer.getNumChannels() <= 2 ? buffer.getNumChannels() : 2); ++channel)
+		{
+			// make always 2 loops and clamp when appropriate
+			// i.e. duplicate mono input into 2 parts of reverb loop
+			// input
+			channelInput.at(channel) = inputBandwidth.popSample(channel);
+			// IN FROM BUFFER
+			inputBandwidth.pushSample(channel, (buffer.getSample(channel, sample) * 0.812) + (channelInput.at(channel) * 0.188));
+			inputZ.pushSample(channel, channelInput.at(channel));
+			channelInput.at(channel) = inputZ.popSample(channel) * 0.5;
+			
+			// feedback filtering, mix of feedback/input
+			channelInput.at(channel) += channelFeedback.at(channel) * (mDecay * 0.688);
+			channelFeedback.at(channel) *= 0.125;
+			channelFeedback.at(channel) += feedbackDamping.popSample(channel) * 0.875;
+			feedbackDamping.pushSample(0, channelFeedback.at(channel));
+			channelInput.at(channel) += channelFeedback.at(channel) * (mDecay * 0.312);
+			
+			// damping
+			channelInput.at(channel) = loopDamping.processSample(channel, channelInput.at(channel));
+		}
 		
-		// L feedback filtering
+		//======== reverb fig-8, forking in from channelInput ========
 		
-		// mix of feedback/L input
-		//reverbData[sample] = 
-		
-		// R input
-		channelInput.at(1) = (channelDataR[sample] * 0.812) + (inputDampingR.popSample(0) * 0.188);
-		inputDampingR.pushSample(0, channelInput.at(1));
-		inputZR.pushSample(0, channelInput.at(1));
-		channelInput.at(1) = inputZR.popSample(0) * 0.5;
-		
-		// R feedback filtering
-		
-		// mix of feedback/R input
-		//reverbData[sample] =
 		
 		for (int destChannel = 0; destChannel < buffer.getNumChannels(); ++destChannel)
 		{

@@ -44,28 +44,44 @@ public:
 	
 private:
 	// filters
+	juce::dsp::DelayLine<float> inputBandwidth { 4 };
+	juce::dsp::DelayLine<float> feedbackDamping { 4 };
+	juce::dsp::FirstOrderTPTFilter<float> loopDamping;
 	// L
-	juce::dsp::DelayLine<float> inputDampingL { 4 };
-	juce::dsp::DelayLine<float> feedbackDampingL { 4 };
-	juce::dsp::DelayLine<float> loopDampingL { 4 };
 	juce::dsp::DelayLine<float> allpassChorusL { 1764 };
 	// R
-	juce::dsp::DelayLine<float> inputDampingR { 4 };
-	juce::dsp::DelayLine<float> feedbackDampingR { 4 };
-	juce::dsp::DelayLine<float> loopDampingR { 4 };
 	juce::dsp::DelayLine<float> allpassChorusR { 1764 };
 
 	// delays
+	juce::dsp::DelayLine<float> inputZ { 4 };
 	// L
-	juce::dsp::DelayLine<float> inputZL { 4 };
+	juce::dsp::DelayLine<float> loopDelayL1 { 8 };
+	juce::dsp::DelayLine<float> loopDelayL2 { 4410 };
+	juce::dsp::DelayLine<float> loopDelayL3 { 4410 };
+	juce::dsp::DelayLine<float> loopDelayL4 { 4410 };
 	// R
-	juce::dsp::DelayLine<float> inputZR { 4 };
-
+	juce::dsp::DelayLine<float> loopDelayR1 { 8 };
+	juce::dsp::DelayLine<float> loopDelayR2 { 4410 };
+	juce::dsp::DelayLine<float> loopDelayR3 { 4410 };
+	juce::dsp::DelayLine<float> loopDelayR4 { 4410 };
+	
 	// allpasses
 	// L
-	
+	juce::dsp::DelayLine<float> allpassL1 { 4410 };
+	juce::dsp::DelayLine<float> allpassL2 { 4410 };
+	juce::dsp::DelayLine<float> allpassL3Inner { 4410 };
+	juce::dsp::DelayLine<float> allpassL3Outer { 4410 };
+	juce::dsp::DelayLine<float> allpassL4Innermost { 4410 };
+	juce::dsp::DelayLine<float> allpassL4Inner { 4410 };
+	juce::dsp::DelayLine<float> allpassL4Outer { 4410 };
 	// R
-	
+	juce::dsp::DelayLine<float> allpassR1 { 4410 };
+	juce::dsp::DelayLine<float> allpassR2 { 4410 };
+	juce::dsp::DelayLine<float> allpassR3Inner { 4410 };
+	juce::dsp::DelayLine<float> allpassR3Outer { 4410 };
+	juce::dsp::DelayLine<float> allpassR4Innermost { 4410 };
+	juce::dsp::DelayLine<float> allpassR4Inner { 4410 };
+	juce::dsp::DelayLine<float> allpassR4Outer { 4410 };
 	
 	// mixers
 	juce::dsp::DryWetMixer<float> dryWetMixer;
