@@ -237,7 +237,7 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
         buffer.clear (i, 0, buffer.getNumSamples());
 	
 	// parameter values row 1
-	float size = scale(roomSizeParameter->load(), 0.0f, 1.0f, 0.25f, 1.5f);
+	float size = scale(roomSizeParameter->load(), 0.0f, 1.0f, 0.25f, 1.75f);
 	float feedback = feedbackParameter->load();
 	float damping = scale(dampingParameter->load() * -1 + 1, 0.0f, 1.0f, 200.0f, 20000.0f);
 	float diffusion = diffusionParameter->load();
