@@ -5,11 +5,11 @@ Build Dependencies:
 - JUCE (https://juce.com/download/)
 - Projucer (https://docs.juce.com/master/tutorial_new_projucer_project.html) (for creating Xcode/Visual Studio projects in order to build)
 
-Windows:
+<!--Windows:
 - Compiled Windows files are available under "Releases". Unzip the files and place them in 
 	- C:\Program Files\Common Files\VST3 (VST3)
-<!--	- C:\Program Files\Common Files\Avid\Audio\Plug-Ins (AAX) -->
-
+	- C:\Program Files\Common Files\Avid\Audio\Plug-Ins (AAX) 
+-->
 macOS:
 - Compiled macOS files are available under "Releases". Unzip the files and place them in 
 	- Macintosh HD/Library/Audio/Plug-Ins/Components/ (AU)
