@@ -71,6 +71,9 @@ void LargeConcertHallB::prepareToPlay(double sampleRate, int samplesPerBlock)
 	allpassR4Inner.prepare(monoSpec);
 	allpassR4Outer.prepare(monoSpec);
 	
+	lfoParameters.frequency_Hz = 0.5;
+	lfoParameters.waveform = generatorWaveform::kSin;
+	lfo.setParameters(lfoParameters);
 }
 
 //==============================================================================
@@ -130,6 +133,9 @@ void LargeConcertHallB::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
 	
 	for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 	{
+		//================ render next LFO step ================
+		lfoOutput = lfo.renderAudioOutput();
+		
 		//======== take sample in from buffer; add to channel inputs ========
 		for (int channel = 0; channel < (buffer.getNumChannels() <= 2 ? buffer.getNumChannels() : 2); ++channel)
 		{
@@ -173,9 +179,11 @@ void LargeConcertHallB::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
 		feedforwardInner = reverbData[sample] * -0.312 * mDiffusion;
 		allpassL2.pushSample(0, reverbData[sample]);
 		reverbData[sample] = (allpassOutputInner * 0.906 * mDecay) + feedforwardInner;
-		
+		// node 23
 		loopDelayL2.pushSample(0, reverbData[sample]);
 		reverbData[sample] = loopDelayL2.popSample(0);
+		// start output R
+		channelOutput.at(1) = reverbData[sample] * 0.938;
 		
 		// nested allpass 3
 		// begin outer
@@ -194,8 +202,13 @@ void LargeConcertHallB::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
 		allpassL3Outer.pushSample(0, reverbData[sample]);
 		reverbData[sample] = (allpassOutputOuter * 0.844 * mDecay) + feedforwardOuter;
 		
+		// node 27_31
 		loopDelayL3.pushSample(0, reverbData[sample]);
 		reverbData[sample] = loopDelayL3.popSample(0);
+		// start output L
+		channelOutput.at(0) = (loopDelayL3.getSampleAtDelay(0, 276) * 0.938) - (loopDelayL3.getSampleAtDelay(0, 312) * 0.438);
+		// output R
+		channelOutput.at(1) += loopDelayL3.getSampleAtDelay(0, 40) * 0.438;
 		
 		// nested allpass 4
 		// begin outer
@@ -213,7 +226,7 @@ void LargeConcertHallB::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
 		// chorus
 		allpassChorusL.pushSample(0, allpassOutputInnermost);
 		allpassOutputInnermost *= 0.781;
-		allpassOutputInnermost += allpassChorusL.popSample(0) * 0.219; // modulate here
+		allpassOutputInnermost += allpassChorusL.popSample(0, scale(lfoOutput.normalOutput, -1, 1, 1, 12)) * 0.219; // modulate here
 		// finish innermost
 		feedbackInnermost = allpassOutputInnermost * 0.25 * mDiffusion;
 		reverbData[sample] += feedbackInnermost;
@@ -227,8 +240,11 @@ void LargeConcertHallB::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
 		allpassL4Outer.pushSample(0, reverbData[sample]);
 		reverbData[sample] = (allpassOutputOuter * 0.844 * mDecay) + feedforwardOuter;
 		
+		// node 37_39
 		loopDelayL4.pushSample(0, reverbData[sample]);
 		reverbData[sample] = loopDelayL4.popSample(0);
+		// output R
+		channelOutput.at(1) += (loopDelayL4.getSampleAtDelay(0, 36) * 0.469) + (loopDelayL4.getSampleAtDelay(0, 1572) * 0.125);
 		
 		// feedback *TO* R channel
 		channelFeedback.at(1) = reverbData[sample];
@@ -253,8 +269,11 @@ void LargeConcertHallB::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
 		allpassR2.pushSample(0, reverbData[sample]);
 		reverbData[sample] = (allpassOutputInner * 0.906 * mDecay) + feedforwardInner;
 		
+		// node 40_42
 		loopDelayR2.pushSample(0, reverbData[sample]);
 		reverbData[sample] = loopDelayR2.popSample(0);
+		// output L
+		channelOutput.at(0) += loopDelayR2.getSampleAtDelay(0, 625) * 0.938;
 		
 		// nested allpass 3
 		// begin outer
@@ -263,15 +282,58 @@ void LargeConcertHallB::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
 		reverbData[sample] += feedbackOuter;
 		feedforwardOuter = reverbData[sample] * -0.406 * mDiffusion;
 		// inner
+		allpassOutputInner = allpassR3Inner.popSample(0);
+		feedbackInner = allpassOutputInner * 0.25 * mDiffusion;
+		reverbData[sample] += feedbackInner;
+		feedforwardInner = reverbData[sample] * -0.25 * mDiffusion;
+		allpassR3Inner.pushSample(0, reverbData[sample]);
+		reverbData[sample] = (allpassOutputInner * 0.938 * mDecay) + feedforwardInner;
+		// finish outer
+		allpassR3Outer.pushSample(0, reverbData[sample]);
+		reverbData[sample] = (allpassOutputOuter * 0.844 * mDecay) + feedforwardOuter;
 		
+		// node 45_49
 		loopDelayR3.pushSample(0, reverbData[sample]);
 		reverbData[sample] = loopDelayR3.popSample(0);
+		// output L
+		channelOutput.at(0) += loopDelayR3.getSampleAtDelay(0, 468) * 0.438;
+		channelOutput.at(1) += (loopDelayR3.getSampleAtDelay(0, 24) * 0.938) - (loopDelayR3.getSampleAtDelay(0, 192) * 0.438);
 		
 		// allpass 4
+		// begin outer
+		allpassOutputOuter = allpassR4Outer.popSample(0);
+		feedbackOuter = allpassOutputInner * 0.406 * mDiffusion;
+		reverbData[sample] += feedbackOuter;
+		feedforwardOuter = reverbData[sample] * -0.406 * mDiffusion;
+		// begin inner
+		allpassOutputInner = allpassR4Inner.popSample(0);
+		feedbackInner = allpassOutputInner * 0.25 * mDiffusion;
+		reverbData[sample] += feedbackInner;
+		feedforwardInner = reverbData[sample] * -0.25 * mDiffusion;
+		// innermost
+		allpassOutputInnermost = allpassR4Innermost.popSample(0);
+		// chorus
+		allpassChorusR.pushSample(0, allpassOutputInnermost);
+		allpassOutputInnermost *= 0.781;
+		allpassOutputInnermost += allpassChorusL.popSample(0, scale(lfoOutput.quadPhaseOutput_pos, -1, 1, 1, 12)) * 0.219; // modulate here
+		// finish innermost
+		feedbackInnermost = allpassOutputInnermost * 0.25 * mDiffusion;
+		reverbData[sample] += feedbackInnermost;
+		feedforwardInnermost = reverbData[sample] * -0.25 * mDiffusion;
+		allpassR4Innermost.pushSample(0, reverbData[sample]);
+		reverbData[sample] = (allpassOutputInnermost * 0.938 * mDecay) + feedforwardInnermost;
+		// finish inner
+		allpassR4Inner.pushSample(0, reverbData[sample]);
+		reverbData[sample] = (allpassOutputInner * 0.938 * mDecay) + feedbackInner;
+		// finish outer
+		allpassR4Outer.pushSample(0, reverbData[sample]);
+		reverbData[sample] = (allpassOutputOuter * 0.844 * mDecay) + feedforwardOuter;
 		
-		
+		// node 55_58
 		loopDelayR4.pushSample(0, reverbData[sample]);
 		reverbData[sample] = loopDelayR4.popSample(0);
+		// output L
+		channelOutput.at(0) += loopDelayR4.getSampleAtDelay(0, 8) * 0.125;
 		
 		// feedback *TO* L channel
 		channelFeedback.at(0) = reverbData[sample];
@@ -341,10 +403,10 @@ void LargeConcertHallB::reset()
 const juce::String LargeConcertHallB::getName() const { return "LargeConcertHallB"; }
 
 //==============================================================================
-void LargeConcertHallB::setSize(float newSize) { mSize = newSize; }
-void LargeConcertHallB::setDecay(float newDecay) { mDecay = newDecay; }
+void LargeConcertHallB::setSize(float newSize) { mSize = newSize * 44.1 / 34.125; }
+void LargeConcertHallB::setDecay(float newDecay) { mDecay = pow(newDecay, 0.67) / 0.9; }
 void LargeConcertHallB::setDampingCutoff(float newCutoff) { mDampingCutoff = newCutoff; }
-void LargeConcertHallB::setDiffusion(float newDiffusion) { mDiffusion = newDiffusion / 0.406; }
+void LargeConcertHallB::setDiffusion(float newDiffusion) { mDiffusion = newDiffusion * 1.5; }
 void LargeConcertHallB::setPreDelay(float newPreDelay) { mPreDelayTime = newPreDelay; }
 void LargeConcertHallB::setEarlyLateMix(float newMix) { mEarlyLateMix = newMix; }
 void LargeConcertHallB::setDryWetMix(float newMix) { mDryWetMix = newMix; }

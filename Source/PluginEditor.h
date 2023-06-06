@@ -75,6 +75,7 @@ private:
 	enum reverbTypes
 	{
 		dattorro = 1,
+		largeConcertHallB,
 		gardnerSmallRoom,
 		gardnerMediumRoom,
 		gardnerLargeRoom,

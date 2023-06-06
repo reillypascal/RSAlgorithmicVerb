@@ -59,6 +59,7 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
 	addAndMakeVisible(reverbMenuBox);
 	reverbMenuBox.addSectionHeading("Allpass Rings");
 	reverbMenuBox.addItem("Dattorro Plate", dattorro);
+	reverbMenuBox.addItem("Large Concert Hall B", largeConcertHallB);
 	reverbMenuBox.addItem("Gardner Small Room", gardnerSmallRoom);
 	reverbMenuBox.addItem("Gardner Medium Room", gardnerMediumRoom);
 	reverbMenuBox.addItem("Gardner Large Room", gardnerLargeRoom);

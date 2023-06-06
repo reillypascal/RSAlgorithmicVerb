@@ -345,6 +345,19 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 		case 1:
 			if (reverbNode != nullptr)
 			{
+				if (reverbNode->getProcessor()->getName() == "LargeConcertHallB")
+					break;
+				
+				mainProcessor->removeNode(reverbNode.get());
+			}
+			
+			reverbNode = mainProcessor->addNode(std::make_unique<LargeConcertHallB>());
+			hasChanged = true;
+			break;
+			
+		case 2:
+			if (reverbNode != nullptr)
+			{
 				if (reverbNode->getProcessor()->getName() == "GardnerSmallRoom")
 					break;
 				
@@ -355,7 +368,7 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 			hasChanged = true;
 			break;
 			
-		case 2:
+		case 3:
 			if (reverbNode != nullptr)
 			{
 				if (reverbNode->getProcessor()->getName() == "GardnerMediumRoom")
@@ -368,7 +381,7 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 			hasChanged = true;
 			break;
 			
-		case 3:
+		case 4:
 			if (reverbNode != nullptr)
 			{
 				if (reverbNode->getProcessor()->getName() == "GardnerLargeRoom")
@@ -381,7 +394,7 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 			hasChanged = true;
 			break;
 			
-		case 4:
+		case 5:
 			if (reverbNode != nullptr)
 			{
 				if (reverbNode->getProcessor()->getName() == "Freeverb")

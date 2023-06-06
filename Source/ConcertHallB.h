@@ -55,15 +55,15 @@ private:
 	// delays
 	juce::dsp::DelayLine<float> inputZ { 4 };
 	// L
-	juce::dsp::DelayLine<float> loopDelayL1 { 8 };
-	juce::dsp::DelayLine<float> loopDelayL2 { 4410 };
-	juce::dsp::DelayLine<float> loopDelayL3 { 4410 };
-	juce::dsp::DelayLine<float> loopDelayL4 { 4410 };
+	DelayLineWithSampleAccess<float> loopDelayL1 { 8 };
+	DelayLineWithSampleAccess<float> loopDelayL2 { 4410 };
+	DelayLineWithSampleAccess<float> loopDelayL3 { 4410 };
+	DelayLineWithSampleAccess<float> loopDelayL4 { 4410 };
 	// R
-	juce::dsp::DelayLine<float> loopDelayR1 { 8 };
-	juce::dsp::DelayLine<float> loopDelayR2 { 4410 };
-	juce::dsp::DelayLine<float> loopDelayR3 { 4410 };
-	juce::dsp::DelayLine<float> loopDelayR4 { 4410 };
+	DelayLineWithSampleAccess<float> loopDelayR1 { 8 };
+	DelayLineWithSampleAccess<float> loopDelayR2 { 4410 };
+	DelayLineWithSampleAccess<float> loopDelayR3 { 4410 };
+	DelayLineWithSampleAccess<float> loopDelayR4 { 4410 };
 	
 	// allpasses
 	// L
