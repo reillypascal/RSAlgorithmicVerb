@@ -378,7 +378,7 @@ void LargeConcertHallB::reset()
 	loopDelayR3.reset();
 	loopDelayR4.reset();
 	
-	// prepare allpasses
+	// reset allpasses
 	// L
 	allpassL1.reset();
 	allpassL2.reset();
@@ -404,9 +404,9 @@ const juce::String LargeConcertHallB::getName() const { return "LargeConcertHall
 
 //==============================================================================
 void LargeConcertHallB::setSize(float newSize) { mSize = newSize * (44.1 / 34.125); }
-void LargeConcertHallB::setDecay(float newDecay) { mDecay = pow(newDecay, 0.75) * 1.2; }
+void LargeConcertHallB::setDecay(float newDecay) { mDecay = scale(newDecay, 0, 1, 0.25, 1); }
 void LargeConcertHallB::setDampingCutoff(float newCutoff) { mDampingCutoff = newCutoff; }
-void LargeConcertHallB::setDiffusion(float newDiffusion) { mDiffusion = newDiffusion * 2; }
+void LargeConcertHallB::setDiffusion(float newDiffusion) { mDiffusion = newDiffusion * 1.75; }
 void LargeConcertHallB::setPreDelay(float newPreDelay) { mPreDelayTime = newPreDelay; }
 void LargeConcertHallB::setEarlyLateMix(float newMix) { mEarlyLateMix = newMix; }
 void LargeConcertHallB::setDryWetMix(float newMix) { mDryWetMix = newMix; }

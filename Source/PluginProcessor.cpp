@@ -2,14 +2,8 @@
   ==============================================================================
 
 TODO:
- - Gardner room algorithms
-	- Set diffusions?
-	- R channel ringing
-	- Early reflections are vital!
-	- Runaway feedback?
- - modulation
- - split implementation from interface on reverbs
- - EQ to wet only!
+ - louder wet sound on rooms
+ - EQ to wet only
  - Barr allpass ring
  - early reflections
 	- add parallel/series at 0.33/0.67 mark
@@ -335,6 +329,7 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 				if (reverbNode->getProcessor()->getName() == "DattorroPlate")
 					break;
 				
+				reverbNode->getProcessor()->reset();
 				mainProcessor->removeNode(reverbNode.get());
 			}
 			
@@ -348,6 +343,7 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 				if (reverbNode->getProcessor()->getName() == "LargeConcertHallB")
 					break;
 				
+				reverbNode->getProcessor()->reset();
 				mainProcessor->removeNode(reverbNode.get());
 			}
 			
@@ -361,6 +357,7 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 				if (reverbNode->getProcessor()->getName() == "GardnerSmallRoom")
 					break;
 				
+				reverbNode->getProcessor()->reset();
 				mainProcessor->removeNode(reverbNode.get());
 			}
 			
@@ -374,6 +371,7 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 				if (reverbNode->getProcessor()->getName() == "GardnerMediumRoom")
 					break;
 				
+				reverbNode->getProcessor()->reset();
 				mainProcessor->removeNode(reverbNode.get());
 			}
 			
@@ -387,6 +385,7 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 				if (reverbNode->getProcessor()->getName() == "GardnerLargeRoom")
 					break;
 				
+				reverbNode->getProcessor()->reset();
 				mainProcessor->removeNode(reverbNode.get());
 			}
 			
@@ -400,6 +399,7 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 				if (reverbNode->getProcessor()->getName() == "Freeverb")
 					break;
 				
+				reverbNode->getProcessor()->reset();
 				mainProcessor->removeNode(reverbNode.get());
 			}
 			
@@ -410,6 +410,7 @@ void RSAlgorithmicVerbAudioProcessor::updateGraph()
 		default:
 			if (reverbNode != nullptr)
 			{
+				reverbNode->getProcessor()->reset();
 				mainProcessor->removeNode(reverbNode.get());
 				reverbNode = nullptr;
 				hasChanged = true;
