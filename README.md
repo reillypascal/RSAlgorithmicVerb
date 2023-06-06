@@ -1,5 +1,5 @@
 RS Algorithmic Verb
-- Implements a number of different reverb algorithms, including Dattorro's 1997 plate reverb "in the style of Griesinger," Gardner's 1992 room reverbs, and the popular "Freeverb" Schroeder reverb. FDN and other options to come.
+- Implements a number of different reverb algorithms, including Dattorro's 1997 plate reverb "in the style of Griesinger;" another large concert hall from Dattorro; Gardner's 1992 room reverbs; and the popular "Freeverb" Schroeder reverb. FDN and other options to come.
 
 Build Dependencies:
 - JUCE (https://juce.com/download/)
