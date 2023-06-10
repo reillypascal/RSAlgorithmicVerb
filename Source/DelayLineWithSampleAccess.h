@@ -41,16 +41,16 @@ public:
 		return mDelayBuffer.getSample(channel, mReadPosition[static_cast<size_t>(channel)]);
 	}
 	
-	SampleType getSampleAtDelay(int channel, int delay)
+	SampleType getSampleAtDelay(int channel, int delay) const
 	{
 		return mDelayBuffer.getSample(channel, wrapInt((mWritePosition[static_cast<size_t>(channel)] - delay), mNumSamples));
 	}
-	
+	/*
 	SampleType interpolateSample(int channel)
 	{
 		auto index1 = mReadPosition;
 	}
-	
+	*/
 	void setDelay(int newLength)
 	{
 		mDelayInSamples = newLength;
@@ -64,7 +64,7 @@ public:
 		reset();
 	}
 	
-	int getNumSamples()
+	int getNumSamples() const
 	{
 		return mDelayBuffer.getNumSamples();
 	}
@@ -94,7 +94,7 @@ public:
 		mDelayBuffer.clear();
 	}
 	
-	int wrapInt(int a, int b) {
+	int wrapInt(int a, int b) const {
 		int c = a % b;
 		return (c < 0) ? c + b : c;
 	}

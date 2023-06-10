@@ -104,6 +104,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 
 RSAlgorithmicVerbAudioProcessor::~RSAlgorithmicVerbAudioProcessor()
 {
+    //mainProcessor->clear();
 }
 
 //==============================================================================
