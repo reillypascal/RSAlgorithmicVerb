@@ -52,6 +52,7 @@ void DattorroPlate::prepareToPlay(double sampleRate, int samplesPerBlock)
 	lfoParameters.frequency_Hz = 0.25;
 	lfoParameters.waveform = generatorWaveform::kSin;
 	lfo.setParameters(lfoParameters);
+    lfo.reset(getSampleRate());
 }
 
 //==============================================================================
@@ -278,6 +279,8 @@ void DattorroPlate::reset()
 	dampingFilter2.reset();
 	
 	dryWetMixer.reset();
+    
+    lfo.reset(getSampleRate());
 }
 
 //==============================================================================

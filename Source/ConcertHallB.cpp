@@ -74,6 +74,7 @@ void LargeConcertHallB::prepareToPlay(double sampleRate, int samplesPerBlock)
 	lfoParameters.frequency_Hz = 0.5;
 	lfoParameters.waveform = generatorWaveform::kSin;
 	lfo.setParameters(lfoParameters);
+    lfo.reset(getSampleRate());
 }
 
 //==============================================================================
@@ -397,6 +398,8 @@ void LargeConcertHallB::reset()
 	allpassR4Outer.reset();
 	
 	dryWetMixer.reset();
+    
+    lfo.reset(getSampleRate());
 }
 
 //==============================================================================
