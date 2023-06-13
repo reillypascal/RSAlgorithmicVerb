@@ -1,7 +1,8 @@
-RS Algorithmic Verb
-- Implements a number of different reverb algorithms, including Dattorro's 1997 plate reverb "in the style of Griesinger;" another large concert hall from Dattorro; Gardner's 1992 room reverbs; and the popular "Freeverb" Schroeder reverb. FDN and other options to come.
+# RS Algorithmic Verb
 
-Build Dependencies:
+Implements a number of different reverb algorithms, including Dattorro's 1997 plate reverb "in the style of Griesinger;" another large concert hall from Dattorro; Gardner's 1992 room reverbs; and the popular "Freeverb" Schroeder reverb. FDN and other options to come.
+
+## Build Dependencies:
 - JUCE (https://juce.com/download/)
 - Projucer (https://docs.juce.com/master/tutorial_new_projucer_project.html) (for creating Xcode/Visual Studio projects in order to build)
 
@@ -10,7 +11,7 @@ Build Dependencies:
 	- C:\Program Files\Common Files\VST3 (VST3)
 	- C:\Program Files\Common Files\Avid\Audio\Plug-Ins (AAX) 
 -->
-macOS:
+## macOS:
 - Compiled macOS files are available under "Releases". Unzip the files and place them in 
 	- Macintosh HD/Library/Audio/Plug-Ins/Components/ (AU)
 	- Macintosh HD/Library/Audio/Plug-Ins/VST3/ (VST3)

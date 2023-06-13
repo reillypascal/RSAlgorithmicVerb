@@ -33,7 +33,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
                        ),
 #endif
 	mainProcessor(new juce::AudioProcessorGraph()),
-	parameters(*this, nullptr, juce::Identifier("RSRetroVerbTest1"), {
+	parameters(*this, nullptr, juce::Identifier("RSAlgorithmicVerb"), {
 		std::make_unique<juce::AudioParameterChoice>(juce::ParameterID { "reverbType", 1 },
 													 "Reverb Type",
 													 juce::StringArray { "Dattorro", "SmallRoom", "MediumRoom", "LargeRoom", "Freeverb" },
