@@ -7,7 +7,7 @@
               pluginManufacturerCode="Rspi" pluginCode="Rsav" aaxIdentifier="com.reillyspitzfaden.RSAlgorithmicVerb"
               bundleIdentifier="com.reillyspitzfaden.RSAlgorithmicVerb" version="0.4.1"
               pluginFormats="buildAU,buildVST3" pluginAUMainType="'aufx'" pluginVST3Category="Fx"
-              pluginAAXCategory="8" pluginVSTCategory="kPlugCategEffect">
+              pluginAAXCategory="8" pluginVSTCategory="kPlugCategEffect" cppLanguageStandard="20">
   <MAINGROUP id="h5VveC" name="RSAlgorithmicVerb">
     <GROUP id="{B58AE04A-B2A6-F5DD-B065-49609ED60D71}" name="Source">
       <FILE id="ra5vcP" name="PluginProcessor.cpp" compile="1" resource="0"
