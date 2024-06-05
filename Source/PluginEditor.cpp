@@ -14,7 +14,7 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
     : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts)
 {
 	// labels row 1
-	reverbMenuLabel.setText("Reverb Type", juce::dontSendNotification);
+	reverbMenuLabel.setText("Reverb Type:", juce::dontSendNotification);
 	reverbMenuLabel.setJustificationType(juce::Justification::centred);
 	addAndMakeVisible(reverbMenuLabel);
 	
@@ -123,7 +123,7 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
 	getLookAndFeel().setDefaultLookAndFeel(&grayBlueLookAndFeel);
 	
 	// panel size
-	setSize (800, 525);
+	setSize (900, 700);
 }
 
 RSAlgorithmicVerbAudioProcessorEditor::~RSAlgorithmicVerbAudioProcessorEditor()
@@ -133,58 +133,126 @@ RSAlgorithmicVerbAudioProcessorEditor::~RSAlgorithmicVerbAudioProcessorEditor()
 //==============================================================================
 void RSAlgorithmicVerbAudioProcessorEditor::paint (juce::Graphics& g)
 {
-	g.fillAll (juce::Colour(0x221144));
+    g.fillAll (juce::Colour::fromRGB(32, 32, 32));
 
+    // Title
 	g.setColour (juce::Colours::aliceblue);
 	g.setFont (32.0f);
-	g.drawFittedText ("RS Algorithmic Verb", 0, 10, getWidth(), 50, juce::Justification::centred, 1);
+	g.drawFittedText ("RS Algorithmic Verb", 25, 10, 350, 45, juce::Justification::left, 1);
+    // Info
+    g.setFont(16.0f);
+    g.drawFittedText("Version 0.5.0\n reillyspitzfaden.com", getWidth() - 375, 15, 350, 45, juce::Justification::right, 2);
+    
+    // panels
+//    g.setColour(juce::Colour::fromRGB(68, 81, 96));
 }
 
 void RSAlgorithmicVerbAudioProcessorEditor::resized()
 {
 	const int xBorder = 30;
-	const int yBorderTop = 135;
-	const int yBorderBottom = 50;
-	const int rowSpacer = 45;
+	const int yBorderTop = 115;
+	const int yBorderBottom = 65;
+	const int rowSpacer = 85;
+    const int bottomMenuSpacer = 5;
 	
 	const int menuWidth = 200;
 	const int menuHeight = 20;
 	const int sliderWidth1 = (getWidth() - (2 * xBorder)) / 4;
 	const int sliderWidth2 = (getWidth() - (2 * xBorder)) / 5;
-	const int sliderHeight1 = (getHeight() - (yBorderTop + yBorderBottom) - rowSpacer) / 2;
+	const int sliderHeight1 = (getHeight() - yBorderTop - yBorderBottom - rowSpacer - bottomMenuSpacer - menuHeight) / 2;
 	const int sliderHeight2 = sliderHeight1 * 0.8;
 	const int textLabelWidth = 150;
 	const int textLabelHeight = 20;
 	const int textLabelSpacer = 7;
 	
-	reverbMenuBox.setBounds((getWidth() / 2) - (menuWidth / 2), 65, menuWidth, menuHeight);
-	reverbMenuLabel.setBounds((getWidth() / 2) - (menuWidth / 2), 95, menuWidth, menuHeight);
-	reverbMenuLabel.setJustificationType(juce::Justification::centred);
-	
 	// row 1 sliders
-	roomSizeSlider.setBounds(xBorder, yBorderTop, sliderWidth1, sliderHeight1);
-	feedbackSlider.setBounds(xBorder + sliderWidth1, yBorderTop, sliderWidth1, sliderHeight1);
-	dampingSlider.setBounds(xBorder + (2 * sliderWidth1), yBorderTop, sliderWidth1, sliderHeight1);
-	diffusionSlider.setBounds(xBorder + (3 * sliderWidth1), yBorderTop, sliderWidth1, sliderHeight1);
+	roomSizeSlider.setBounds(xBorder, 
+                             yBorderTop,
+                             sliderWidth1,
+                             sliderHeight1);
+	feedbackSlider.setBounds(xBorder + sliderWidth1, 
+                             yBorderTop,
+                             sliderWidth1,
+                             sliderHeight1);
+	dampingSlider.setBounds(xBorder + (2 * sliderWidth1), 
+                            yBorderTop,
+                            sliderWidth1,
+                            sliderHeight1);
+	diffusionSlider.setBounds(xBorder + (3 * sliderWidth1), 
+                              yBorderTop,
+                              sliderWidth1,
+                              sliderHeight1);
 	
 	// row 1 labels
-	roomSizeLabel.setBounds(xBorder + ((sliderWidth1 / 2) - (textLabelWidth / 2)), yBorderTop + sliderHeight1 + textLabelSpacer, textLabelWidth, textLabelHeight);
-	decayLabel.setBounds(xBorder + sliderWidth1 + ((sliderWidth1 / 2) - (textLabelWidth / 2)), yBorderTop + sliderHeight1 + textLabelSpacer, textLabelWidth, textLabelHeight);
-	dampingLabel.setBounds(xBorder + (sliderWidth1 * 2) + ((sliderWidth1 / 2) - (textLabelWidth / 2)), yBorderTop + sliderHeight1 + textLabelSpacer, textLabelWidth, textLabelHeight);
-	diffusionLabel.setBounds(xBorder + (sliderWidth1 * 3) + ((sliderWidth1 / 2) - (textLabelWidth / 2)), yBorderTop + sliderHeight1 + textLabelSpacer, textLabelWidth, textLabelHeight);
+	roomSizeLabel.setBounds(xBorder + ((sliderWidth1 / 2) - (textLabelWidth / 2)), 
+                            yBorderTop + sliderHeight1 + textLabelSpacer,
+                            textLabelWidth,
+                            textLabelHeight);
+	decayLabel.setBounds(xBorder + sliderWidth1 + ((sliderWidth1 / 2) - (textLabelWidth / 2)), 
+                         yBorderTop + sliderHeight1 + textLabelSpacer,
+                         textLabelWidth,
+                         textLabelHeight);
+	dampingLabel.setBounds(xBorder + (sliderWidth1 * 2) + ((sliderWidth1 / 2) - (textLabelWidth / 2)), 
+                           yBorderTop + sliderHeight1 + textLabelSpacer,
+                           textLabelWidth,
+                           textLabelHeight);
+	diffusionLabel.setBounds(xBorder + (sliderWidth1 * 3) + ((sliderWidth1 / 2) - (textLabelWidth / 2)), 
+                             yBorderTop + sliderHeight1 + textLabelSpacer,
+                             textLabelWidth,
+                             textLabelHeight);
 	
 	
 	// row 2 sliders
-	preDelaySlider.setBounds(xBorder, yBorderTop + sliderHeight1 + rowSpacer, sliderWidth2, sliderHeight2);
-	lowCutSlider.setBounds(xBorder + (sliderWidth2 * 1), yBorderTop + sliderHeight1 + rowSpacer, sliderWidth2, sliderHeight2);
-	highCutSlider.setBounds(xBorder + (sliderWidth2 * 2), yBorderTop + sliderHeight1 + rowSpacer, sliderWidth2, sliderHeight2);
-	earlyLateMixSlider.setBounds(xBorder + (sliderWidth2 * 3), yBorderTop + sliderHeight1 + rowSpacer, sliderWidth2, sliderHeight2);
-	dryWetMixSlider.setBounds(xBorder + (sliderWidth2 * 4), yBorderTop + sliderHeight1 + rowSpacer, sliderWidth2, sliderHeight2);
+	preDelaySlider.setBounds(xBorder, 
+                             yBorderTop + sliderHeight1 + rowSpacer,
+                             sliderWidth2,
+                             sliderHeight2);
+	lowCutSlider.setBounds(xBorder + (sliderWidth2 * 1), 
+                           yBorderTop + sliderHeight1 + rowSpacer,
+                           sliderWidth2,
+                           sliderHeight2);
+	highCutSlider.setBounds(xBorder + (sliderWidth2 * 2), 
+                            yBorderTop + sliderHeight1 + rowSpacer,
+                            sliderWidth2,
+                            sliderHeight2);
+	earlyLateMixSlider.setBounds(xBorder + (sliderWidth2 * 3), 
+                                 yBorderTop + sliderHeight1 + rowSpacer,
+                                 sliderWidth2,
+                                 sliderHeight2);
+	dryWetMixSlider.setBounds(xBorder + (sliderWidth2 * 4), 
+                              yBorderTop + sliderHeight1 + rowSpacer,
+                              sliderWidth2,
+                              sliderHeight2);
 	
 	// row 2 labels
-	preDelayLabel.setBounds(xBorder + (sliderWidth2 / 2) - (textLabelWidth / 2), yBorderTop + sliderHeight1 + sliderHeight2 + rowSpacer + textLabelSpacer, textLabelWidth, textLabelHeight);
-	lowCutLabel.setBounds(xBorder + (sliderWidth2 * 1) + (sliderWidth2 / 2) - (textLabelWidth / 2), yBorderTop + sliderHeight1 + sliderHeight2 + rowSpacer + textLabelSpacer, textLabelWidth, textLabelHeight);
-	highCutLabel.setBounds(xBorder + (sliderWidth2 * 2) + (sliderWidth2 / 2) - (textLabelWidth / 2), yBorderTop + sliderHeight1 + sliderHeight2 + rowSpacer + textLabelSpacer, textLabelWidth, textLabelHeight);
-	earlyLateMixLabel.setBounds(xBorder + (sliderWidth2 * 3) + (sliderWidth2 / 2) - (textLabelWidth / 2), yBorderTop + sliderHeight1 + sliderHeight2 + rowSpacer + textLabelSpacer, textLabelWidth, textLabelHeight);
-	dryWetMixLabel.setBounds(xBorder + (sliderWidth2 * 4) + (sliderWidth2 / 2) - (textLabelWidth / 2), yBorderTop + sliderHeight1 + sliderHeight2 + rowSpacer + textLabelSpacer, textLabelWidth, textLabelHeight);
+	preDelayLabel.setBounds(xBorder + (sliderWidth2 / 2) - (textLabelWidth / 2), 
+                            yBorderTop + sliderHeight1 + sliderHeight2 + rowSpacer + textLabelSpacer,
+                            textLabelWidth,
+                            textLabelHeight);
+	lowCutLabel.setBounds(xBorder + (sliderWidth2 * 1) + (sliderWidth2 / 2) - (textLabelWidth / 2), 
+                          yBorderTop + sliderHeight1 + sliderHeight2 + rowSpacer + textLabelSpacer,
+                          textLabelWidth,
+                          textLabelHeight);
+	highCutLabel.setBounds(xBorder + (sliderWidth2 * 2) + (sliderWidth2 / 2) - (textLabelWidth / 2), yBorderTop + sliderHeight1 + sliderHeight2 + rowSpacer + textLabelSpacer, 
+                           textLabelWidth,
+                           textLabelHeight);
+	earlyLateMixLabel.setBounds(xBorder + (sliderWidth2 * 3) + (sliderWidth2 / 2) - (textLabelWidth / 2), 
+                                yBorderTop + sliderHeight1 + sliderHeight2 + rowSpacer + textLabelSpacer,
+                                textLabelWidth,
+                                textLabelHeight);
+	dryWetMixLabel.setBounds(xBorder + (sliderWidth2 * 4) + (sliderWidth2 / 2) - (textLabelWidth / 2), 
+                             yBorderTop + sliderHeight1 + sliderHeight2 + rowSpacer + textLabelSpacer,
+                             textLabelWidth,
+                             textLabelHeight);
+    
+    // menu
+    reverbMenuBox.setBounds(getWidth() - menuWidth - 45,
+                            getHeight() - menuHeight - 45,
+                            menuWidth,
+                            menuHeight);
+    reverbMenuLabel.setBounds(getWidth() - menuWidth - textLabelWidth - 45,
+                              getHeight() - menuHeight - 45,
+                              menuWidth,
+                              menuHeight);
+    reverbMenuLabel.setJustificationType(juce::Justification::centred);
 }
