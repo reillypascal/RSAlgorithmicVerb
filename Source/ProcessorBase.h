@@ -9,6 +9,25 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Utilities.h"
+
+class ReverbProcessorBase
+{
+public:
+    ReverbProcessorBase() {}
+    
+    virtual ~ReverbProcessorBase() {}
+    
+    virtual void prepare(const juce::dsp::ProcessSpec& spec) = 0;
+    
+    virtual void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) = 0;
+    
+    virtual void reset() = 0;
+    
+    virtual ReverbProcessorParameters& getParameters() = 0;
+    
+    virtual void setParameters(const ReverbProcessorParameters& params) = 0;
+};
 
 class ProcessorBase : public juce::AudioProcessor
 {

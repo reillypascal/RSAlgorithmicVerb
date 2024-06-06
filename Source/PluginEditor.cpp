@@ -150,7 +150,7 @@ void RSAlgorithmicVerbAudioProcessorEditor::paint (juce::Graphics& g)
 void RSAlgorithmicVerbAudioProcessorEditor::resized()
 {
 	const int xBorder = 30;
-	const int yBorderTop = 115;
+	const int yBorderTop = 100;
 	const int yBorderBottom = 65;
 	const int rowSpacer = 85;
     const int bottomMenuSpacer = 5;
