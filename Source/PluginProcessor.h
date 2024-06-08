@@ -18,7 +18,20 @@
 
 struct ProcessorFactory
 {
+    std::unique_ptr<ReverbProcessorBase> create(int type)
+    {
+        auto iter = processorMapping.find(type);
+        if (iter != processorMapping.end())
+            return iter->second();
+        
+        return nullptr;
+    }
     
+    std::map<int,
+             std::function<std::unique_ptr<ReverbProcessorBase>()>> processorMapping
+    {
+        { 1, []() { return std::make_unique<DattorroPlate>(); } }
+    };
 };
 
 //==============================================================================
@@ -94,6 +107,7 @@ private:
 	
 	juce::AudioProcessorValueTreeState parameters;
     
+    ProcessorFactory processorFactory {};
     std::unique_ptr<ReverbProcessorBase> reverbProcessor = std::unique_ptr<ReverbProcessorBase> {};
     ReverbProcessorParameters reverbParameters;
 	
