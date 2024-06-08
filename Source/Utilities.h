@@ -10,6 +10,13 @@
 
 #include <JuceHeader.h>
 
+inline float scale(float input, float inLow, float inHi, float outLow, float outHi)
+{
+    float scaleFactor = (outHi - outLow)/(inHi - inLow);
+    float offset = outLow - inLow;
+    return (input * scaleFactor) + offset;
+}
+
 struct ReverbProcessorParameters
 {
     ReverbProcessorParameters() {}
