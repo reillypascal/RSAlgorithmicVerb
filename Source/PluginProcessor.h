@@ -13,6 +13,13 @@
 #include "DattorroVerb.h"
 #include "Freeverb.h"
 #include "GardnerRooms.h"
+#include "ProcessorBase.h"
+#include "Utilities.h"
+
+struct ProcessorFactory
+{
+    
+};
 
 //==============================================================================
 /**
@@ -66,26 +73,29 @@ public:
 
 private:
     //==============================================================================
-	void initialiseGraph();
+//	void initialiseGraph();
+//	
+//	void updateGraph();
+//	
+//	void connectAudioNodes();
+//	
+//	void connectMidiNodes();
 	
-	void updateGraph();
-	
-	void connectAudioNodes();
-	
-	void connectMidiNodes();
-	
-	float scale(float input, float inLow, float inHi, float outLow, float outHi);
+//	float scale(float input, float inLow, float inHi, float outLow, float outHi);
 			
-	std::unique_ptr<juce::AudioProcessorGraph> mainProcessor = nullptr;
+//	std::unique_ptr<juce::AudioProcessorGraph> mainProcessor = nullptr;
 	
-	Node::Ptr audioInputNode = nullptr;
-	Node::Ptr audioOutputNode = nullptr;
-	Node::Ptr midiInputNode = nullptr;
-	Node::Ptr midiOutputNode = nullptr;
-	
-	Node::Ptr reverbNode = nullptr;
+//	Node::Ptr audioInputNode = nullptr;
+//	Node::Ptr audioOutputNode = nullptr;
+//	Node::Ptr midiInputNode = nullptr;
+//	Node::Ptr midiOutputNode = nullptr;
+//	
+//	Node::Ptr reverbNode = nullptr;
 	
 	juce::AudioProcessorValueTreeState parameters;
+    
+    std::unique_ptr<ReverbProcessorBase> reverbProcessor = std::unique_ptr<ReverbProcessorBase> {};
+    ReverbProcessorParameters reverbParameters;
 	
 	juce::AudioParameterChoice* reverbType = nullptr;
 	// row 1

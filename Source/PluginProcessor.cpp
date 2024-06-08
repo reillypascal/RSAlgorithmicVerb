@@ -32,7 +32,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
                      #endif
                        ),
 #endif
-	mainProcessor(new juce::AudioProcessorGraph()),
+//	mainProcessor(new juce::AudioProcessorGraph()),
 	parameters(*this, nullptr, juce::Identifier("RSAlgorithmicVerb"), {
 		std::make_unique<juce::AudioParameterChoice>(juce::ParameterID { "reverbType", 1 },
 													 "Reverb Type",
@@ -172,13 +172,13 @@ void RSAlgorithmicVerbAudioProcessor::changeProgramName (int index, const juce::
 //==============================================================================
 void RSAlgorithmicVerbAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-	mainProcessor->setPlayConfigDetails(getMainBusNumInputChannels(),
-										getMainBusNumOutputChannels(),
-										sampleRate, samplesPerBlock);
+//	mainProcessor->setPlayConfigDetails(getMainBusNumInputChannels(),
+//										getMainBusNumOutputChannels(),
+//										sampleRate, samplesPerBlock);
 	
-	mainProcessor->prepareToPlay(sampleRate, samplesPerBlock);
+//	mainProcessor->prepareToPlay(sampleRate, samplesPerBlock);
 	
-	initialiseGraph();
+//	initialiseGraph();
 	
 	juce::dsp::ProcessSpec spec;
 	spec.sampleRate = sampleRate;
@@ -193,7 +193,7 @@ void RSAlgorithmicVerbAudioProcessor::prepareToPlay (double sampleRate, int samp
 
 void RSAlgorithmicVerbAudioProcessor::releaseResources()
 {
-	mainProcessor->releaseResources();
+//	mainProcessor->releaseResources();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -243,22 +243,22 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	float earlyLateMix = earlyLateMixParameter->load();
 	float dryWetMix = dryWetMixParameter->load();
 		
-	updateGraph();
+//	updateGraph();
 	
 	// get processors to set parameters
-	ProcessorBase* currentProcessorNode = static_cast<ProcessorBase*>(reverbNode->getProcessor());
+//	ProcessorBase* currentProcessorNode = static_cast<ProcessorBase*>(reverbNode->getProcessor());
 	
 	// reverb node parameters
-	currentProcessorNode->setSize(size);
-	currentProcessorNode->setDecay(feedback);
-	currentProcessorNode->setDampingCutoff(damping);
-	currentProcessorNode->setDiffusion(diffusion);
-	currentProcessorNode->setPreDelay(preDelay);
-	currentProcessorNode->setEarlyLateMix(earlyLateMix);
-	currentProcessorNode->setDryWetMix(dryWetMix);
+//	currentProcessorNode->setSize(size);
+//	currentProcessorNode->setDecay(feedback);
+//	currentProcessorNode->setDampingCutoff(damping);
+//	currentProcessorNode->setDiffusion(diffusion);
+//	currentProcessorNode->setPreDelay(preDelay);
+//	currentProcessorNode->setEarlyLateMix(earlyLateMix);
+//	currentProcessorNode->setDryWetMix(dryWetMix);
 	
 	// processing
-	mainProcessor->processBlock(buffer, midiMessages);
+//	mainProcessor->processBlock(buffer, midiMessages);
 }
 
 //==============================================================================
@@ -296,185 +296,185 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new RSAlgorithmicVerbAudioProcessor();
 }
 
-void RSAlgorithmicVerbAudioProcessor::initialiseGraph()
-{
-	mainProcessor->clear();
-	
-	audioInputNode  = mainProcessor->addNode
-		(std::make_unique<AudioGraphIOProcessor>
-		(AudioGraphIOProcessor::audioInputNode));
-	audioOutputNode = mainProcessor->addNode
-		(std::make_unique<AudioGraphIOProcessor>
-		(AudioGraphIOProcessor::audioOutputNode));
-	midiInputNode   = mainProcessor->addNode
-		(std::make_unique<AudioGraphIOProcessor>
-		(AudioGraphIOProcessor::midiInputNode));
-	midiOutputNode  = mainProcessor->addNode
-		(std::make_unique<AudioGraphIOProcessor>
-		(AudioGraphIOProcessor::midiOutputNode));
-	
-	connectAudioNodes();
-	connectMidiNodes();
-}
+//void RSAlgorithmicVerbAudioProcessor::initialiseGraph()
+//{
+//	mainProcessor->clear();
+//	
+//	audioInputNode  = mainProcessor->addNode
+//		(std::make_unique<AudioGraphIOProcessor>
+//		(AudioGraphIOProcessor::audioInputNode));
+//	audioOutputNode = mainProcessor->addNode
+//		(std::make_unique<AudioGraphIOProcessor>
+//		(AudioGraphIOProcessor::audioOutputNode));
+//	midiInputNode   = mainProcessor->addNode
+//		(std::make_unique<AudioGraphIOProcessor>
+//		(AudioGraphIOProcessor::midiInputNode));
+//	midiOutputNode  = mainProcessor->addNode
+//		(std::make_unique<AudioGraphIOProcessor>
+//		(AudioGraphIOProcessor::midiOutputNode));
+//	
+//	connectAudioNodes();
+//	connectMidiNodes();
+//}
 
-void RSAlgorithmicVerbAudioProcessor::updateGraph()
-{
-	bool hasChanged = false;
-	
-	// responds to dropdown
-	switch(reverbType->getIndex())
-	{
-		case 0:
-			if (reverbNode != nullptr)
-			{
-				if (reverbNode->getProcessor()->getName() == "DattorroPlate")
-					break;
-				
-				reverbNode->getProcessor()->reset();
-				mainProcessor->removeNode(reverbNode.get());
-			}
-			
-			reverbNode = mainProcessor->addNode(std::make_unique<DattorroPlate>());
-			hasChanged = true;
-			break;
-			
-		case 1:
-			if (reverbNode != nullptr)
-			{
-				if (reverbNode->getProcessor()->getName() == "LargeConcertHallB")
-					break;
-				
-				reverbNode->getProcessor()->reset();
-				mainProcessor->removeNode(reverbNode.get());
-			}
-			
-			reverbNode = mainProcessor->addNode(std::make_unique<LargeConcertHallB>());
-			hasChanged = true;
-			break;
-			
-		case 2:
-			if (reverbNode != nullptr)
-			{
-				if (reverbNode->getProcessor()->getName() == "GardnerSmallRoom")
-					break;
-				
-				reverbNode->getProcessor()->reset();
-				mainProcessor->removeNode(reverbNode.get());
-			}
-			
-			reverbNode = mainProcessor->addNode(std::make_unique<GardnerSmallRoom>());
-			hasChanged = true;
-			break;
-			
-		case 3:
-			if (reverbNode != nullptr)
-			{
-				if (reverbNode->getProcessor()->getName() == "GardnerMediumRoom")
-					break;
-				
-				reverbNode->getProcessor()->reset();
-				mainProcessor->removeNode(reverbNode.get());
-			}
-			
-			reverbNode = mainProcessor->addNode(std::make_unique<GardnerMediumRoom>());
-			hasChanged = true;
-			break;
-			
-		case 4:
-			if (reverbNode != nullptr)
-			{
-				if (reverbNode->getProcessor()->getName() == "GardnerLargeRoom")
-					break;
-				
-				reverbNode->getProcessor()->reset();
-				mainProcessor->removeNode(reverbNode.get());
-			}
-			
-			reverbNode = mainProcessor->addNode(std::make_unique<GardnerLargeRoom>());
-			hasChanged = true;
-			break;
-			
-		case 5:
-			if (reverbNode != nullptr)
-			{
-				if (reverbNode->getProcessor()->getName() == "Freeverb")
-					break;
-				
-				reverbNode->getProcessor()->reset();
-				mainProcessor->removeNode(reverbNode.get());
-			}
-			
-			reverbNode = mainProcessor->addNode(std::make_unique<Freeverb>());
-			hasChanged = true;
-			break;
-			
-		default:
-			if (reverbNode != nullptr)
-			{
-				reverbNode->getProcessor()->reset();
-				mainProcessor->removeNode(reverbNode.get());
-				reverbNode = nullptr;
-				hasChanged = true;
-			}
-			
-			break;
-	}
-	
-	if (hasChanged)
-	{
-		for (auto connection : mainProcessor->getConnections())
-			mainProcessor->removeConnection(connection);
-				
-		if (reverbNode == nullptr)
-		{
-			connectAudioNodes();
-			connectMidiNodes();
-		}
-		else
-		{
-			for (int channel = 0; channel < getMainBusNumInputChannels(); ++channel)
-			{
-				mainProcessor->addConnection({ { audioInputNode->nodeID, channel },
-											   { reverbNode->nodeID, channel } });
-				mainProcessor->addConnection({ { reverbNode->nodeID, channel },
-											   { audioOutputNode->nodeID, channel } });
-			}
-		}
-		
-		mainProcessor->addConnection ({ { midiInputNode->nodeID,
-										  juce::AudioProcessorGraph::midiChannelIndex },
-										{ reverbNode->nodeID,
-										  juce::AudioProcessorGraph::midiChannelIndex } });
-		mainProcessor->addConnection ({ { reverbNode->nodeID,
-										  juce::AudioProcessorGraph::midiChannelIndex },
-										{ midiOutputNode->nodeID,
-										  juce::AudioProcessorGraph::midiChannelIndex } });
-		
-		//connectMidiNodes();
-		for (auto node : mainProcessor->getNodes())
-			node->getProcessor()->enableAllBuses();
-	}
-}
+//void RSAlgorithmicVerbAudioProcessor::updateGraph()
+//{
+//	bool hasChanged = false;
+//	
+//	// responds to dropdown
+//	switch(reverbType->getIndex())
+//	{
+//		case 0:
+//			if (reverbNode != nullptr)
+//			{
+//				if (reverbNode->getProcessor()->getName() == "DattorroPlate")
+//					break;
+//				
+//				reverbNode->getProcessor()->reset();
+//				mainProcessor->removeNode(reverbNode.get());
+//			}
+//			
+//			reverbNode = mainProcessor->addNode(std::make_unique<DattorroPlate>());
+//			hasChanged = true;
+//			break;
+//			
+//		case 1:
+//			if (reverbNode != nullptr)
+//			{
+//				if (reverbNode->getProcessor()->getName() == "LargeConcertHallB")
+//					break;
+//				
+//				reverbNode->getProcessor()->reset();
+//				mainProcessor->removeNode(reverbNode.get());
+//			}
+//			
+//			reverbNode = mainProcessor->addNode(std::make_unique<LargeConcertHallB>());
+//			hasChanged = true;
+//			break;
+//			
+//		case 2:
+//			if (reverbNode != nullptr)
+//			{
+//				if (reverbNode->getProcessor()->getName() == "GardnerSmallRoom")
+//					break;
+//				
+//				reverbNode->getProcessor()->reset();
+//				mainProcessor->removeNode(reverbNode.get());
+//			}
+//			
+//			reverbNode = mainProcessor->addNode(std::make_unique<GardnerSmallRoom>());
+//			hasChanged = true;
+//			break;
+//			
+//		case 3:
+//			if (reverbNode != nullptr)
+//			{
+//				if (reverbNode->getProcessor()->getName() == "GardnerMediumRoom")
+//					break;
+//				
+//				reverbNode->getProcessor()->reset();
+//				mainProcessor->removeNode(reverbNode.get());
+//			}
+//			
+//			reverbNode = mainProcessor->addNode(std::make_unique<GardnerMediumRoom>());
+//			hasChanged = true;
+//			break;
+//			
+//		case 4:
+//			if (reverbNode != nullptr)
+//			{
+//				if (reverbNode->getProcessor()->getName() == "GardnerLargeRoom")
+//					break;
+//				
+//				reverbNode->getProcessor()->reset();
+//				mainProcessor->removeNode(reverbNode.get());
+//			}
+//			
+//			reverbNode = mainProcessor->addNode(std::make_unique<GardnerLargeRoom>());
+//			hasChanged = true;
+//			break;
+//			
+//		case 5:
+//			if (reverbNode != nullptr)
+//			{
+//				if (reverbNode->getProcessor()->getName() == "Freeverb")
+//					break;
+//				
+//				reverbNode->getProcessor()->reset();
+//				mainProcessor->removeNode(reverbNode.get());
+//			}
+//			
+//			reverbNode = mainProcessor->addNode(std::make_unique<Freeverb>());
+//			hasChanged = true;
+//			break;
+//			
+//		default:
+//			if (reverbNode != nullptr)
+//			{
+//				reverbNode->getProcessor()->reset();
+//				mainProcessor->removeNode(reverbNode.get());
+//				reverbNode = nullptr;
+//				hasChanged = true;
+//			}
+//			
+//			break;
+//	}
+//	
+//	if (hasChanged)
+//	{
+//		for (auto connection : mainProcessor->getConnections())
+//			mainProcessor->removeConnection(connection);
+//				
+//		if (reverbNode == nullptr)
+//		{
+//			connectAudioNodes();
+//			connectMidiNodes();
+//		}
+//		else
+//		{
+//			for (int channel = 0; channel < getMainBusNumInputChannels(); ++channel)
+//			{
+//				mainProcessor->addConnection({ { audioInputNode->nodeID, channel },
+//											   { reverbNode->nodeID, channel } });
+//				mainProcessor->addConnection({ { reverbNode->nodeID, channel },
+//											   { audioOutputNode->nodeID, channel } });
+//			}
+//		}
+//		
+//		mainProcessor->addConnection ({ { midiInputNode->nodeID,
+//										  juce::AudioProcessorGraph::midiChannelIndex },
+//										{ reverbNode->nodeID,
+//										  juce::AudioProcessorGraph::midiChannelIndex } });
+//		mainProcessor->addConnection ({ { reverbNode->nodeID,
+//										  juce::AudioProcessorGraph::midiChannelIndex },
+//										{ midiOutputNode->nodeID,
+//										  juce::AudioProcessorGraph::midiChannelIndex } });
+//		
+//		//connectMidiNodes();
+//		for (auto node : mainProcessor->getNodes())
+//			node->getProcessor()->enableAllBuses();
+//	}
+//}
 
-void RSAlgorithmicVerbAudioProcessor::connectAudioNodes()
-{
-   for (int channel = 0; channel < getTotalNumInputChannels(); ++channel)
-	   mainProcessor->addConnection ({ { audioInputNode->nodeID, channel },
-									   { audioOutputNode->nodeID, channel } });
-}
+//void RSAlgorithmicVerbAudioProcessor::connectAudioNodes()
+//{
+//   for (int channel = 0; channel < getTotalNumInputChannels(); ++channel)
+//	   mainProcessor->addConnection ({ { audioInputNode->nodeID, channel },
+//									   { audioOutputNode->nodeID, channel } });
+//}
 
-void RSAlgorithmicVerbAudioProcessor::connectMidiNodes()
-{
-   mainProcessor->addConnection ({ { midiInputNode->nodeID,
-	   juce::AudioProcessorGraph::midiChannelIndex },
-	   { midiOutputNode->nodeID,
-		   juce::AudioProcessorGraph::midiChannelIndex
-	   } });
-}
+//void RSAlgorithmicVerbAudioProcessor::connectMidiNodes()
+//{
+//   mainProcessor->addConnection ({ { midiInputNode->nodeID,
+//	   juce::AudioProcessorGraph::midiChannelIndex },
+//	   { midiOutputNode->nodeID,
+//		   juce::AudioProcessorGraph::midiChannelIndex
+//	   } });
+//}
 
-float RSAlgorithmicVerbAudioProcessor::scale(float input, float inLow, float inHi, float outLow, float outHi)
-{
-	float scaleFactor = (outHi - outLow)/(inHi - inLow);
-	float offset = outLow - inLow;
-	return (input * scaleFactor) + offset;
-}
+//float RSAlgorithmicVerbAudioProcessor::scale(float input, float inLow, float inHi, float outLow, float outHi)
+//{
+//	float scaleFactor = (outHi - outLow)/(inHi - inLow);
+//	float offset = outLow - inLow;
+//	return (input * scaleFactor) + offset;
+//}
