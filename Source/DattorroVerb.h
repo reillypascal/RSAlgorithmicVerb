@@ -70,13 +70,13 @@ private:
     float channel0Output = 0;
     float channel1Output = 0;
     
-    float mPreDelayTime = 441;
-    float mSize = 1;
-    float mDecay = 0.25;
-    float mDampingCutoff = 6500;
-    float mDiffusion = 0.75;
-    float mEarlyLateMix = 1;
-    float mDryWetMix = 0.25;
+//    float mPreDelayTime = 441;
+//    float mSize = 1;
+//    float mDecay = 0.25;
+//    float mDampingCutoff = 6500;
+//    float mDiffusion = 0.75;
+//    float mEarlyLateMix = 1;
+//    float mDryWetMix = 0.25;
 };
 
 //class DattorroPlate : public ProcessorBase

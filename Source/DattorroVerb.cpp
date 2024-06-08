@@ -57,18 +57,203 @@ void DattorroPlate::prepare(const juce::dsp::ProcessSpec& spec)
 
 void DattorroPlate::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    juce::ScopedNoDenormals noDenormals;
+    
     int numSamples = buffer.getNumSamples();
     int numChannels = buffer.getNumChannels();
+
+    // initialize input chain parameters
+    preDelay.setDelay(mParameters.preDelay);
+    inputFilter.setCutoffFrequency(13500);
+    allpass1.setDelay(210 * mParameters.roomSize);
+    allpass2.setDelay(158 * mParameters.roomSize);
+    allpass3.setDelay(561 * mParameters.roomSize);
+    allpass4.setDelay(410 * mParameters.roomSize);
+    allpass5.setDelay(3931 * mParameters.roomSize);
+    allpass6.setDelay(2664 * mParameters.roomSize);
+
+    // break out parameters so mod can add/subtract 12 samples
+    float modAPF1Delay = 1343 * mParameters.roomSize;
+    float modAPF2Delay = 995 * mParameters.roomSize;
+    modulatedAPF1.setDelay(modAPF1Delay);
+    modulatedAPF2.setDelay(modAPF2Delay);
+
+    delay1.setDelay(6241 * mParameters.roomSize);
+    delay2.setDelay(6590 * mParameters.roomSize);
+    delay3.setDelay(4641 * mParameters.roomSize);
+    delay4.setDelay(5505 * mParameters.roomSize);
+
+    // dry/wet mixer — dry samples
+    dryWetMixer.setWetMixProportion(mParameters.dryWetMix);
+    juce::dsp::AudioBlock<float> dryBlock { buffer };
+    dryWetMixer.pushDrySamples(dryBlock);
     
-    for (int channel = 0; channel < numChannels; ++channel)
+    // mono reverb processing
+    juce::AudioBuffer<float> monoBufferA(1, buffer.getNumSamples());
+    juce::AudioBuffer<float> monoBufferB(1, buffer.getNumSamples());
+    monoBufferA.clear();
+    monoBufferB.clear();
+    // sum stereo to mono for input chain
+    monoBufferA.copyFrom(0, 0, buffer, 0, 0, buffer.getNumSamples());
+    monoBufferB.copyFrom(0, 0, buffer, 0, 0, buffer.getNumSamples());
+    if (buffer.getNumChannels() > 1)
     {
-        auto* channelData = buffer.getWritePointer(channel);
-        
-        for (int sample = 0; sample < numSamples; ++sample)
+        monoBufferA.addFrom(0, 0, buffer, 1, 0, buffer.getNumSamples());
+        monoBufferB.addFrom(0, 0, buffer, 1, 0, buffer.getNumSamples());
+        monoBufferA.applyGain(0.5f);
+        monoBufferB.applyGain(0.5f);
+    }
+    
+    int channel = 0;
+    // need separate ones for different delays
+    float decayDiffusion1 = 0.93;
+    float decayDiffusion2 = 0.67;
+    float inputDiffusion1 = 1;
+    float inputDiffusion2 = 0.83;
+    auto* channelDataA = monoBufferA.getWritePointer (channel);
+    auto* channelDataB = monoBufferB.getWritePointer (channel);
+
+    for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+    {
+        // LFO
+        lfoOutput = lfo.renderAudioOutput();
+
+        // apply predelay, filter
+        preDelay.pushSample(channel, channelDataA[sample]);
+        channelDataA[sample] = inputFilter.processSample(channel, preDelay.popSample(channel));
+
+        // apply allpasses
+        allpassOutput = allpass1.popSample(channel);
+        feedback = allpassOutput * inputDiffusion1 * mParameters.diffusion;
+        feedforward = -channelDataA[sample] - allpassOutput * inputDiffusion1 * mParameters.diffusion;
+        allpass1.pushSample(channel, channelDataA[sample] + feedback);
+        channelDataA[sample] = allpassOutput + feedforward;
+
+        allpassOutput = allpass2.popSample(channel);
+        feedback = allpassOutput * inputDiffusion1 * mParameters.diffusion;
+        feedforward = -channelDataA[sample] - allpassOutput * inputDiffusion1 * mParameters.diffusion;
+        allpass2.pushSample(channel, channelDataA[sample] + feedback);
+        channelDataA[sample] = allpassOutput + feedforward;
+
+        allpassOutput = allpass3.popSample(channel);
+        feedback = allpassOutput * inputDiffusion2 * mParameters.diffusion;
+        feedforward = -channelDataA[sample] - allpassOutput * inputDiffusion2 * mParameters.diffusion;
+        allpass3.pushSample(channel, channelDataA[sample] + feedback);
+        channelDataA[sample] = allpassOutput + feedforward;
+
+        allpassOutput = allpass4.popSample(channel);
+        feedback = allpassOutput * inputDiffusion2 * mParameters.diffusion;
+        feedforward = -channelDataA[sample] - allpassOutput * inputDiffusion2 * mParameters.diffusion;
+        allpass4.pushSample(channel, channelDataA[sample] + feedback);
+        channelDataA[sample] = allpassOutput + feedforward;
+
+        // first fig-8 half
+        channelDataA[sample] += summingB * mParameters.decayTime;
+
+        // modulated APF1
+        allpassOutput = modulatedAPF1.popSample(channel, modAPF1Delay + (lfoOutput.normalOutput * 12));
+        feedback = allpassOutput * decayDiffusion1 * mParameters.diffusion;
+        feedforward = -channelDataA[sample] - allpassOutput * decayDiffusion1 * mParameters.diffusion;
+        modulatedAPF1.pushSample(channel, channelDataA[sample] + feedback);
+        channelDataA[sample] = allpassOutput + feedforward;
+
+        // delay 1
+        delay1.pushSample(channel, channelDataA[sample]);
+        channelDataA[sample] = (dampingFilter1.processSample(channel, delay1.popSample(channel))) * mParameters.decayTime;
+
+        // OUTPUT NODE A
+        // L
+        channel0Output = delay1.getSampleAtDelay(channel, 394 * mParameters.roomSize) * 0.6;
+        channel0Output += delay1.getSampleAtDelay(channel, 4401 * mParameters.roomSize) * 0.6;
+        // R
+        channel1Output = -delay1.getSampleAtDelay(channel, 3124 * mParameters.roomSize) * 0.6;
+
+        // allpass 5
+        allpassOutput = allpass5.popSample(channel);
+        feedback = allpassOutput * decayDiffusion1 * mParameters.diffusion;
+        feedforward = -channelDataA[sample] - allpassOutput * decayDiffusion1 * mParameters.diffusion;
+        allpass5.pushSample(channel, channelDataA[sample] + feedback);
+        channelDataA[sample] = allpassOutput + feedforward;
+
+        // OUTPUT NODE B
+        // L
+        channel0Output -= allpass5.getSampleAtDelay(channel, 2831 * mParameters.roomSize) * 0.6;
+        // R
+        channel1Output -= allpass5.getSampleAtDelay(channel, 496 * mParameters.roomSize) * 0.6;
+
+        //delay 2
+        delay2.pushSample(channel, channelDataA[sample]);
+        channelDataA[sample] = delay2.popSample(channel) * mParameters.decayTime;
+
+        // OUTPUT NODE C
+        // L
+        channel0Output += delay2.getSampleAtDelay(channel, 2954 * mParameters.roomSize) * 0.6;
+        // R
+        channel1Output -= delay2.getSampleAtDelay(channel, 179 * mParameters.roomSize) * 0.6;
+
+        summingA = channelDataA[sample];
+
+        // second fig-8 half
+        channelDataB[sample] += summingA * mParameters.decayTime;
+
+        // modulated APF2
+        allpassOutput = modulatedAPF2.popSample(channel, modAPF2Delay + (lfoOutput.quadPhaseOutput_pos * 12));
+        feedback = allpassOutput * decayDiffusion2 * mParameters.diffusion;
+        feedforward = -channelDataB[sample] - allpassOutput * decayDiffusion2 * mParameters.diffusion;
+        modulatedAPF2.pushSample(channel, channelDataB[sample] + feedback);
+        channelDataB[sample] = allpassOutput + feedforward;
+
+        // delay 3
+        delay3.pushSample(channel, channelDataB[sample]);
+        channelDataB[sample] = (dampingFilter2.processSample(channel, delay3.popSample(channel))) * mParameters.decayTime;
+
+        // OUTPUT NODE D
+        // L
+        channel0Output -= delay3.getSampleAtDelay(channel, 2945 * mParameters.roomSize) * 0.6;
+        // R
+        channel1Output += delay3.getSampleAtDelay(channel, 522 * mParameters.roomSize) * 0.6;
+        channel1Output += delay3.getSampleAtDelay(channel, 5368 * mParameters.roomSize) * 0.6;
+
+        // allpass 6
+        allpassOutput = allpass6.popSample(channel);
+        feedback = allpassOutput * decayDiffusion2 * mParameters.diffusion;
+        feedforward = -channelDataB[sample] - allpassOutput * decayDiffusion2 * mParameters.diffusion;
+        allpass6.pushSample(channel, channelDataB[sample] + feedback);
+        channelDataB[sample] = allpassOutput + feedforward;
+
+        // OUTPUT NODE E
+        // L
+        channel0Output -= allpass6.getSampleAtDelay(channel, 277 * mParameters.roomSize) * 0.6;
+        // R
+        channel1Output -= allpass6.getSampleAtDelay(channel, 1817 * mParameters.roomSize) * 0.6;
+
+        // delay 4
+        delay4.pushSample(channel, channelDataB[sample]);
+        channelDataB[sample] = delay4.popSample(channel);
+
+        summingB = channelDataB[sample];
+
+        // OUTPUT NODE F
+        // L
+        channel0Output -= delay4.getSampleAtDelay(channel, 1578 * mParameters.roomSize) * 0.6;
+        // R
+        channel1Output += delay4.getSampleAtDelay(channel, 3956 * mParameters.roomSize) * 0.6;
+
+        for (int destChannel = 0; destChannel < buffer.getNumChannels(); ++destChannel)
         {
-            
+            if (destChannel == 0)
+            {
+                buffer.setSample(0, sample, channel0Output);
+            }
+            else if (destChannel == 1 && buffer.getNumChannels() > 1)
+            {
+                buffer.setSample(1, sample, channel1Output);
+            }
         }
     }
+
+    juce::dsp::AudioBlock<float> wetBlock { buffer };
+    dryWetMixer.mixWetSamples(wetBlock);
 }
 
 void DattorroPlate::reset() {}
