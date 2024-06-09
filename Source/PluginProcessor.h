@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+
 #include "ConcertHallB.h"
 #include "DattorroVerb.h"
 #include "EarlyReflections.h"
@@ -132,7 +133,8 @@ private:
 	std::atomic<float>* earlyLateMixParameter = nullptr;
 	std::atomic<float>* dryWetMixParameter = nullptr;
 	
-	juce::dsp::DryWetMixer<float> earlyLateMixer;
+    juce::dsp::DryWetMixer<float> dryEarlyMixer;
+    juce::dsp::DryWetMixer<float> earlyLateMixer;
 	juce::dsp::DryWetMixer<float> dryWetMixer;
     
     int slotProcessor { -1 };

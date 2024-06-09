@@ -86,25 +86,13 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													1.0f,
 													0.35f)
 })
-{
-//	reverbType = static_cast<juce::AudioParameterChoice*>(parameters.getParameter("reverbType"));
-	// row 1
-//	roomSizeParameter = parameters.getRawParameterValue("roomSize");
-//	feedbackParameter = parameters.getRawParameterValue("feedback");
-//	dampingParameter = parameters.getRawParameterValue("damping");
-//	diffusionParameter = parameters.getRawParameterValue("diffusion");
-//	// row 2
-//	preDelayParameter = parameters.getRawParameterValue("preDelay");
-//	lowCutParameter = parameters.getRawParameterValue("lowCut");
-//	highCutParameter = parameters.getRawParameterValue("highCut");
-//	earlyLateMixParameter = parameters.getRawParameterValue("earlyLateMix");
-//	dryWetMixParameter = parameters.getRawParameterValue("dryWetMix");
-	
+{ 
+    
 }
 
 RSAlgorithmicVerbAudioProcessor::~RSAlgorithmicVerbAudioProcessor()
-{
-    //mainProcessor->clear();
+{ 
+    
 }
 
 //==============================================================================
@@ -172,19 +160,15 @@ void RSAlgorithmicVerbAudioProcessor::changeProgramName (int index, const juce::
 //==============================================================================
 void RSAlgorithmicVerbAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-//	mainProcessor->setPlayConfigDetails(getMainBusNumInputChannels(),
-//										getMainBusNumOutputChannels(),
-//										sampleRate, samplesPerBlock);
-	
-//	mainProcessor->prepareToPlay(sampleRate, samplesPerBlock);
-	
-//	initialiseGraph();
-	
 	juce::dsp::ProcessSpec spec;
 	spec.sampleRate = sampleRate;
 	spec.maximumBlockSize = samplesPerBlock;
 	spec.numChannels = getMainBusNumInputChannels();
+    
+    earlyReflections.prepare(spec);
 	
+    dryEarlyMixer.prepare(spec);
+    dryEarlyMixer.reset();
 	earlyLateMixer.prepare(spec);
 	earlyLateMixer.reset();
 	dryWetMixer.prepare(spec);
@@ -193,7 +177,7 @@ void RSAlgorithmicVerbAudioProcessor::prepareToPlay (double sampleRate, int samp
 
 void RSAlgorithmicVerbAudioProcessor::releaseResources()
 {
-//	mainProcessor->releaseResources();
+    
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -231,18 +215,36 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
+    
+    auto numChannels = buffer.getNumChannels();
+    auto numSamples = buffer.getNumSamples();
 	
-	// parameter values row 1
-//	float size = scale(roomSizeParameter->load(), 0.0f, 1.0f, 0.25f, 1.75f);
-//	float feedback = feedbackParameter->load();
-//	float damping = scale(dampingParameter->load() * -1 + 1, 0.0f, 1.0f, 200.0f, 20000.0f);
-//	float diffusion = diffusionParameter->load();
-	// row 2
-//	float preDelay = scale(preDelayParameter->load(), 0.0f, 1.0f, 0.0f, 250.0f);
-//	//float lowCut = lowCutParameter->load();
-//	//float highCut = highCutParameter->load();
-//	float earlyLateMix = earlyLateMixParameter->load();
-//	float dryWetMix = dryWetMixParameter->load();
+    // use first half of early/late knob to mix between dry input to reverb & early reflections input
+//    dryEarlyMixer.setWetMixProportion(scale(std::clamp(parameters.getRawParameterValue("dryWetMix")->load(), 0.0f, 0.5f),
+//                                            0.0f,
+//                                            0.5f,
+//                                            0.0f,
+//                                            1.0f));
+    // use second half of early/late knob to mix between early -> late reflections and early/late in parallel
+//    earlyLateMixer.setWetMixProportion(scale(std::clamp(parameters.getRawParameterValue("dryWetMix")->load(), 0.5f, 1.0f),
+//                                            0.5f,
+//                                            1.0f,
+//                                            0.0f,
+//                                            1.0f));
+    dryWetMixer.setWetMixProportion(parameters.getRawParameterValue("dryWetMix")->load());
+    
+    juce::dsp::AudioBlock<float> dryBlock { buffer };
+    dryWetMixer.pushDrySamples(dryBlock);
+    
+    // duplicate buffer into early buffer/late input buffer
+    juce::AudioBuffer<float> earlyBuffer(numChannels, numSamples);
+    juce::AudioBuffer<float> lateInBuffer(numChannels, numSamples);
+    for (auto channel = 0; channel < numChannels; ++channel)
+    {
+        earlyBuffer.copyFrom(channel, 0, buffer, channel, 0, numSamples);
+        lateInBuffer.copyFrom(channel, 0, buffer, channel, 0, numSamples);
+    }
+    
     
     //=============== reverb processor ================
     slotProcessor = static_cast<juce::AudioParameterChoice*>(parameters.getParameter("reverbType"))->getIndex();
@@ -281,7 +283,8 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
         reverbParameters.lowCut = parameters.getRawParameterValue("lowCut")->load();
         reverbParameters.highCut = parameters.getRawParameterValue("highCut")->load();
         reverbParameters.earlyLateReflections = parameters.getRawParameterValue("earlyLateMix")->load();
-        reverbParameters.dryWetMix = parameters.getRawParameterValue("dryWetMix")->load();
+//        reverbParameters.dryWetMix = parameters.getRawParameterValue("dryWetMix")->load();
+        reverbParameters.dryWetMix = 1.0f;
         
         //============ set parameters ============
         reverbProcessor->setParameters(reverbParameters);
@@ -290,6 +293,9 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
         reverbProcessor->processBlock(buffer, midiMessages);
     }
 		
+    juce::dsp::AudioBlock<float> wetBlock { buffer };
+    dryWetMixer.mixWetSamples(wetBlock);
+    
 //	updateGraph();
 	
 	// get processors to set parameters
