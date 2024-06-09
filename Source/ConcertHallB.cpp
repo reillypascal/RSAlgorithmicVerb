@@ -401,18 +401,6 @@ ReverbProcessorParameters& LargeConcertHallB::getParameters() { return mParamete
 
 void LargeConcertHallB::setParameters(const ReverbProcessorParameters& params)
 {
-//    if (params.damping != mParameters.damping ||
-//        params.decayTime != mParameters.decayTime ||
-//        params.diffusion != mParameters.diffusion ||
-//        params.dryWetMix != mParameters.dryWetMix ||
-//        params.earlyLateReflections != mParameters.earlyLateReflections ||
-//        params.highCut != mParameters.highCut ||
-//        params.lowCut != mParameters.lowCut ||
-//        params.preDelay != mParameters.preDelay ||
-//        params.roomSize != mParameters.roomSize)
-//    {
-//        mParameters = params;
-//    }
     if (!(params == mParameters))
         mParameters = params;
 }
