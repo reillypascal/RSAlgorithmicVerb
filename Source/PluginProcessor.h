@@ -30,7 +30,8 @@ struct ProcessorFactory
     std::map<int,
              std::function<std::unique_ptr<ReverbProcessorBase>()>> processorMapping
     {
-        { 0, []() { return std::make_unique<DattorroPlate>(); } }
+        { 0, []() { return std::make_unique<DattorroPlate>(); } },
+        { 1, []() { return std::make_unique<LargeConcertHallB>(); } }
     };
 };
 
@@ -127,8 +128,8 @@ private:
 	juce::dsp::DryWetMixer<float> earlyLateMixer;
 	juce::dsp::DryWetMixer<float> dryWetMixer;
     
-    int slotProcessor { 0 };
-    int prevSlotProcessor { 0 };
+    int slotProcessor { -1 };
+    int prevSlotProcessor { -1 };
 	
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RSAlgorithmicVerbAudioProcessor)

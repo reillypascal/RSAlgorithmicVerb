@@ -32,7 +32,7 @@ public:
     
     void setParameters(const ReverbProcessorParameters& params) override;
 private:
-    // parameter struct
+    // parameter class
     ReverbProcessorParameters mParameters;
     
     // allpasses
