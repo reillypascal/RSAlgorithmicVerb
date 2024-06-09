@@ -31,7 +31,11 @@ struct ProcessorFactory
              std::function<std::unique_ptr<ReverbProcessorBase>()>> processorMapping
     {
         { 0, []() { return std::make_unique<DattorroPlate>(); } },
-        { 1, []() { return std::make_unique<LargeConcertHallB>(); } }
+        { 1, []() { return std::make_unique<LargeConcertHallB>(); } },
+        { 2, []() { return std::make_unique<GardnerSmallRoom>(); } },
+        { 3, []() { return std::make_unique<GardnerMediumRoom>(); } },
+        { 4, []() { return std::make_unique<GardnerLargeRoom>(); } },
+        { 5, []() { return std::make_unique<Freeverb>(); } }
     };
 };
 

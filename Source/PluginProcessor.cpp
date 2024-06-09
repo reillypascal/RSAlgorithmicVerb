@@ -36,7 +36,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 	parameters(*this, nullptr, juce::Identifier("RSAlgorithmicVerb"), {
 		std::make_unique<juce::AudioParameterChoice>(juce::ParameterID { "reverbType", 1 },
 													 "Reverb Type",
-													 juce::StringArray { "Dattorro", "SmallRoom", "MediumRoom", "LargeRoom", "Freeverb" },
+													 juce::StringArray { "Dattorro", "ConcertHallB", "SmallRoom", "MediumRoom", "LargeRoom", "Freeverb" },
 													 0),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "roomSize", 1 },
 													"Room Size",
@@ -52,7 +52,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													"Damping",
 													0.0f,
 													1.0f,
-													0.75f),
+													0.5f),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "diffusion", 1 },
 													"Diffusion",
 													0.0f,
