@@ -36,7 +36,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 	parameters(*this, nullptr, juce::Identifier("RSAlgorithmicVerb"), {
 		std::make_unique<juce::AudioParameterChoice>(juce::ParameterID { "reverbType", 1 },
 													 "Reverb Type",
-													 juce::StringArray { "Dattorro", "SmallRoom", "MediumRoom", "LargeRoom", "Freeverb" },
+													 juce::StringArray { "Dattorro", "ConcertHallB", "SmallRoom", "MediumRoom", "LargeRoom", "Freeverb" },
 													 0),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "roomSize", 1 },
 													"Room Size",
@@ -52,7 +52,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													"Damping",
 													0.0f,
 													1.0f,
-													0.75f),
+													0.5f),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "diffusion", 1 },
 													"Diffusion",
 													0.0f,
@@ -87,18 +87,18 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													0.35f)
 })
 {
-	reverbType = static_cast<juce::AudioParameterChoice*>(parameters.getParameter("reverbType"));
+//	reverbType = static_cast<juce::AudioParameterChoice*>(parameters.getParameter("reverbType"));
 	// row 1
-	roomSizeParameter = parameters.getRawParameterValue("roomSize");
-	feedbackParameter = parameters.getRawParameterValue("feedback");
-	dampingParameter = parameters.getRawParameterValue("damping");
-	diffusionParameter = parameters.getRawParameterValue("diffusion");
-	// row 2
-	preDelayParameter = parameters.getRawParameterValue("preDelay");
-	lowCutParameter = parameters.getRawParameterValue("lowCut");
-	highCutParameter = parameters.getRawParameterValue("highCut");
-	earlyLateMixParameter = parameters.getRawParameterValue("earlyLateMix");
-	dryWetMixParameter = parameters.getRawParameterValue("dryWetMix");
+//	roomSizeParameter = parameters.getRawParameterValue("roomSize");
+//	feedbackParameter = parameters.getRawParameterValue("feedback");
+//	dampingParameter = parameters.getRawParameterValue("damping");
+//	diffusionParameter = parameters.getRawParameterValue("diffusion");
+//	// row 2
+//	preDelayParameter = parameters.getRawParameterValue("preDelay");
+//	lowCutParameter = parameters.getRawParameterValue("lowCut");
+//	highCutParameter = parameters.getRawParameterValue("highCut");
+//	earlyLateMixParameter = parameters.getRawParameterValue("earlyLateMix");
+//	dryWetMixParameter = parameters.getRawParameterValue("dryWetMix");
 	
 }
 
@@ -224,6 +224,7 @@ bool RSAlgorithmicVerbAudioProcessor::isBusesLayoutSupported (const BusesLayout&
 
 void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    //============ boilerplate ============
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
@@ -232,16 +233,62 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
         buffer.clear (i, 0, buffer.getNumSamples());
 	
 	// parameter values row 1
-	float size = scale(roomSizeParameter->load(), 0.0f, 1.0f, 0.25f, 1.75f);
-	float feedback = feedbackParameter->load();
-	float damping = scale(dampingParameter->load() * -1 + 1, 0.0f, 1.0f, 200.0f, 20000.0f);
-	float diffusion = diffusionParameter->load();
+//	float size = scale(roomSizeParameter->load(), 0.0f, 1.0f, 0.25f, 1.75f);
+//	float feedback = feedbackParameter->load();
+//	float damping = scale(dampingParameter->load() * -1 + 1, 0.0f, 1.0f, 200.0f, 20000.0f);
+//	float diffusion = diffusionParameter->load();
 	// row 2
-	float preDelay = scale(preDelayParameter->load(), 0.0f, 1.0f, 0.0f, 250.0f);
-	//float lowCut = lowCutParameter->load();
-	//float highCut = highCutParameter->load();
-	float earlyLateMix = earlyLateMixParameter->load();
-	float dryWetMix = dryWetMixParameter->load();
+//	float preDelay = scale(preDelayParameter->load(), 0.0f, 1.0f, 0.0f, 250.0f);
+//	//float lowCut = lowCutParameter->load();
+//	//float highCut = highCutParameter->load();
+//	float earlyLateMix = earlyLateMixParameter->load();
+//	float dryWetMix = dryWetMixParameter->load();
+    
+    //=============== reverb processor ================
+    slotProcessor = static_cast<juce::AudioParameterChoice*>(parameters.getParameter("reverbType"))->getIndex();
+    
+    //============ update processor ============
+    if (slotProcessor != prevSlotProcessor)
+    {
+        reverbProcessor = processorFactory.create(slotProcessor);
+        
+        if (reverbProcessor != nullptr)
+        {
+            juce::dsp::ProcessSpec spec;
+            spec.sampleRate = getSampleRate();
+            spec.maximumBlockSize = buffer.getNumSamples();
+            spec.numChannels = buffer.getNumChannels();
+            
+            reverbProcessor->prepare(spec);
+        }
+        
+        prevSlotProcessor = slotProcessor;
+    }
+    
+    //============ run processor ============
+    if (reverbProcessor != nullptr)
+    {
+        //============ get parameters ============
+        reverbParameters = reverbProcessor->getParameters();
+        
+        //============ new parameters in class ============
+        reverbParameters.roomSize = scale(parameters.getRawParameterValue("roomSize")->load(), 0.0f, 1.0f, 0.25f, 1.75f);
+        reverbParameters.decayTime = parameters.getRawParameterValue("feedback")->load();
+        reverbParameters.damping = scale(parameters.getRawParameterValue("damping")->load() * -1.0f + 1.0f, 0.0f, 1.0f, 200.0f, 20000.0f);
+        reverbParameters.diffusion = parameters.getRawParameterValue("diffusion")->load();
+        // row 2
+        reverbParameters.preDelay = scale(parameters.getRawParameterValue("preDelay")->load(), 0.0f, 1.0f, 0.0f, 250.0f);
+        reverbParameters.lowCut = parameters.getRawParameterValue("lowCut")->load();
+        reverbParameters.highCut = parameters.getRawParameterValue("highCut")->load();
+        reverbParameters.earlyLateReflections = parameters.getRawParameterValue("earlyLateMix")->load();
+        reverbParameters.dryWetMix = parameters.getRawParameterValue("dryWetMix")->load();
+        
+        //============ set parameters ============
+        reverbProcessor->setParameters(reverbParameters);
+        
+        //============ process reverb ============
+        reverbProcessor->processBlock(buffer, midiMessages);
+    }
 		
 //	updateGraph();
 	

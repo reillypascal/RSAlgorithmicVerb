@@ -18,7 +18,25 @@
 
 struct ProcessorFactory
 {
+    std::unique_ptr<ReverbProcessorBase> create(int type)
+    {
+        auto iter = processorMapping.find(type);
+        if (iter != processorMapping.end())
+            return iter->second();
+        
+        return nullptr;
+    }
     
+    std::map<int,
+             std::function<std::unique_ptr<ReverbProcessorBase>()>> processorMapping
+    {
+        { 0, []() { return std::make_unique<DattorroPlate>(); } },
+        { 1, []() { return std::make_unique<LargeConcertHallB>(); } },
+        { 2, []() { return std::make_unique<GardnerSmallRoom>(); } },
+        { 3, []() { return std::make_unique<GardnerMediumRoom>(); } },
+        { 4, []() { return std::make_unique<GardnerLargeRoom>(); } },
+        { 5, []() { return std::make_unique<Freeverb>(); } }
+    };
 };
 
 //==============================================================================
@@ -94,6 +112,7 @@ private:
 	
 	juce::AudioProcessorValueTreeState parameters;
     
+    ProcessorFactory processorFactory {};
     std::unique_ptr<ReverbProcessorBase> reverbProcessor = std::unique_ptr<ReverbProcessorBase> {};
     ReverbProcessorParameters reverbParameters;
 	
@@ -112,6 +131,9 @@ private:
 	
 	juce::dsp::DryWetMixer<float> earlyLateMixer;
 	juce::dsp::DryWetMixer<float> dryWetMixer;
+    
+    int slotProcessor { -1 };
+    int prevSlotProcessor { -1 };
 	
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RSAlgorithmicVerbAudioProcessor)

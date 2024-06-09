@@ -14,8 +14,8 @@
 
 #include <JuceHeader.h>
 
-#include "ProcessorBase.h"
 #include "DelayLineWithSampleAccess.h"
+#include "ProcessorBase.h"
 
 //==============================================================================
 class EarlyReflections : public ProcessorBase
