@@ -25,6 +25,8 @@
       <FILE id="l80Jn6" name="DattorroVerb.h" compile="0" resource="0" file="Source/DattorroVerb.h"/>
       <FILE id="mCFD5y" name="DelayLineWithSampleAccess.h" compile="0" resource="0"
             file="Source/DelayLineWithSampleAccess.h"/>
+      <FILE id="tXGyRQ" name="EarlyReflections.cpp" compile="1" resource="0"
+            file="Source/EarlyReflections.cpp"/>
       <FILE id="jwqlsc" name="EarlyReflections.h" compile="0" resource="0"
             file="Source/EarlyReflections.h"/>
       <FILE id="Gi16iB" name="Freeverb.cpp" compile="1" resource="0" file="Source/Freeverb.cpp"/>

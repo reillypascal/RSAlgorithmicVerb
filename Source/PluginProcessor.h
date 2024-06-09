@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "ConcertHallB.h"
 #include "DattorroVerb.h"
+#include "EarlyReflections.h"
 #include "Freeverb.h"
 #include "GardnerRooms.h"
 #include "ProcessorBase.h"
@@ -115,6 +116,8 @@ private:
     ProcessorFactory processorFactory {};
     std::unique_ptr<ReverbProcessorBase> reverbProcessor = std::unique_ptr<ReverbProcessorBase> {};
     ReverbProcessorParameters reverbParameters;
+    
+    EarlyReflections earlyReflections;
 	
 	juce::AudioParameterChoice* reverbType = nullptr;
 	// row 1
