@@ -55,8 +55,6 @@ private:
     juce::dsp::FirstOrderTPTFilter<float> inputFilter;
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter1;
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter2;
-    // mixers
-    juce::dsp::DryWetMixer<float> dryWetMixer;
     
     OscillatorParameters lfoParameters;
     SignalGenData lfoOutput;

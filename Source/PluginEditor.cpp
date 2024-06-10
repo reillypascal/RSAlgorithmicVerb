@@ -47,7 +47,7 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
 	preDelayLabel.setJustificationType(juce::Justification::centred);
 	addAndMakeVisible(preDelayLabel);
 	
-	earlyLateMixLabel.setText("Early/Late Reflections", juce::dontSendNotification);
+	earlyLateMixLabel.setText("Early Reflections Mix", juce::dontSendNotification);
 	earlyLateMixLabel.setJustificationType(juce::Justification::centred);
 	addAndMakeVisible(earlyLateMixLabel);
 	

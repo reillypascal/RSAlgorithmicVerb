@@ -47,8 +47,6 @@ private:
     float channel1Output = 0;
     
     float mPreDelayTime = 441;
-    float mSize = 1;
-    float mDecay = 0.3;
     float mInitialLevel = 0.5;
 };
 

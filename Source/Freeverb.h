@@ -71,9 +71,7 @@ private:
     
     float feedback;
     float feedforward;
-    
-    juce::dsp::DryWetMixer<float> mixer;
-    
+        
     float mWidth = 23;
 };
 

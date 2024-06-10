@@ -57,7 +57,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													"Diffusion",
 													0.0f,
 													0.99f,
-													0.75f),
+													0.67f),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "preDelay", 1 },
 													"Pre-Delay",
 													0.0f,
@@ -76,10 +76,10 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 																				 5),
 													20000),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "earlyLateMix", 1 },
-													"Early/Late Mix",
+													"Early Reflections Mix",
 													0.0f,
 													1.0f,
-													1.0f),
+													0.0f),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "dryWetMix", 1 },
 													"Dry/Wet Mix",
 													0.0f,
@@ -167,10 +167,8 @@ void RSAlgorithmicVerbAudioProcessor::prepareToPlay (double sampleRate, int samp
     
     earlyReflections.prepare(spec);
 	
-    dryEarlyMixer.prepare(spec);
-    dryEarlyMixer.reset();
-	earlyLateMixer.prepare(spec);
-	earlyLateMixer.reset();
+    earlyLevelMixer.prepare(spec);
+    earlyLevelMixer.reset();
 	dryWetMixer.prepare(spec);
 	dryWetMixer.reset();
 }
@@ -208,7 +206,7 @@ bool RSAlgorithmicVerbAudioProcessor::isBusesLayoutSupported (const BusesLayout&
 
 void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    //============ boilerplate ============
+    //============ housekeeping ============
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
@@ -216,35 +214,30 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
-    auto numChannels = buffer.getNumChannels();
-    auto numSamples = buffer.getNumSamples();
+//    auto numChannels = buffer.getNumChannels();
+//    auto numSamples = buffer.getNumSamples();
 	
-    // use first half of early/late knob to mix between dry input to reverb & early reflections input
-//    dryEarlyMixer.setWetMixProportion(scale(std::clamp(parameters.getRawParameterValue("dryWetMix")->load(), 0.0f, 0.5f),
-//                                            0.0f,
-//                                            0.5f,
-//                                            0.0f,
-//                                            1.0f));
-    // use second half of early/late knob to mix between early -> late reflections and early/late in parallel
-//    earlyLateMixer.setWetMixProportion(scale(std::clamp(parameters.getRawParameterValue("dryWetMix")->load(), 0.5f, 1.0f),
-//                                            0.5f,
-//                                            1.0f,
-//                                            0.0f,
-//                                            1.0f));
+    //================ mixer settings + dry ================
+    // settings to mix btwn early/dry into reverb processor
+    earlyLevelMixer.setWetMixProportion(parameters.getRawParameterValue("earlyLateMix")->load());
+    // dry/wet mixer settings
     dryWetMixer.setWetMixProportion(parameters.getRawParameterValue("dryWetMix")->load());
     
     juce::dsp::AudioBlock<float> dryBlock { buffer };
+    earlyLevelMixer.pushDrySamples(dryBlock);
     dryWetMixer.pushDrySamples(dryBlock);
     
-    // duplicate buffer into early buffer/late input buffer
-    juce::AudioBuffer<float> earlyBuffer(numChannels, numSamples);
-    juce::AudioBuffer<float> lateInBuffer(numChannels, numSamples);
-    for (auto channel = 0; channel < numChannels; ++channel)
-    {
-        earlyBuffer.copyFrom(channel, 0, buffer, channel, 0, numSamples);
-        lateInBuffer.copyFrom(channel, 0, buffer, channel, 0, numSamples);
-    }
+    //================ early reflections processor ================
+    // early reflections parameters
+    earlyParameters = earlyReflections.getParameters();
+    earlyParameters.decayTime = parameters.getRawParameterValue("feedback")->load();
+    earlyParameters.roomSize = parameters.getRawParameterValue("roomSize")->load();
+    earlyReflections.setParameters(earlyParameters);
     
+    //================ process early reflections ================
+    earlyReflections.processBlock(buffer, midiMessages);
+    juce::dsp::AudioBlock<float> earlyBlock { buffer };
+    earlyLevelMixer.mixWetSamples(earlyBlock);
     
     //=============== reverb processor ================
     slotProcessor = static_cast<juce::AudioParameterChoice*>(parameters.getParameter("reverbType"))->getIndex();
@@ -292,7 +285,8 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
         //============ process reverb ============
         reverbProcessor->processBlock(buffer, midiMessages);
     }
-		
+    
+    //============ mix in reverb wet ============
     juce::dsp::AudioBlock<float> wetBlock { buffer };
     dryWetMixer.mixWetSamples(wetBlock);
     

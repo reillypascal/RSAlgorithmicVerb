@@ -119,6 +119,7 @@ private:
     ReverbProcessorParameters reverbParameters;
     
     EarlyReflections earlyReflections;
+    ReverbProcessorParameters earlyParameters;
 	
 	juce::AudioParameterChoice* reverbType = nullptr;
 	// row 1
@@ -133,8 +134,7 @@ private:
 	std::atomic<float>* earlyLateMixParameter = nullptr;
 	std::atomic<float>* dryWetMixParameter = nullptr;
 	
-    juce::dsp::DryWetMixer<float> dryEarlyMixer;
-    juce::dsp::DryWetMixer<float> earlyLateMixer;
+    juce::dsp::DryWetMixer<float> earlyLevelMixer;
 	juce::dsp::DryWetMixer<float> dryWetMixer;
     
     int slotProcessor { -1 };

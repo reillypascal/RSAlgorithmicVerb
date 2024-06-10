@@ -14,11 +14,9 @@ LargeConcertHallB::LargeConcertHallB() = default;
 
 LargeConcertHallB::~LargeConcertHallB() = default;
 
-
 void LargeConcertHallB::prepare(const juce::dsp::ProcessSpec& spec)
 {
     mSampleRate = spec.sampleRate;
-    dryWetMixer.prepare(spec);
     
     // prepare filters
     inputBandwidth.prepare(spec);
@@ -77,11 +75,6 @@ void LargeConcertHallB::prepare(const juce::dsp::ProcessSpec& spec)
 void LargeConcertHallB::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
-    
-    // dry/wet mixer — dry samples
-    dryWetMixer.setWetMixProportion(mParameters.dryWetMix);
-    juce::dsp::AudioBlock<float> dryBlock { buffer };
-    dryWetMixer.pushDrySamples(dryBlock);
     
     // set delays
     // filters
@@ -344,11 +337,6 @@ void LargeConcertHallB::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
             }
         }
     }
-    
-    juce::dsp::AudioBlock<float> wetBlock { buffer };
-    // output filtering
-    
-    dryWetMixer.mixWetSamples(wetBlock);
 }
 
 void LargeConcertHallB::reset()
@@ -391,9 +379,7 @@ void LargeConcertHallB::reset()
     allpassR4Innermost.reset();
     allpassR4Inner.reset();
     allpassR4Outer.reset();
-    
-    dryWetMixer.reset();
-    
+        
     lfo.reset(mSampleRate);
 }
 

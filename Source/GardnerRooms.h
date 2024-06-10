@@ -43,9 +43,7 @@ private:
     juce::dsp::DelayLine<float> delay6 { 22050 };
     
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
-    
-    juce::dsp::DryWetMixer<float> dryWetMixer;
-    
+        
     float allpassOutputInner = 0;
     float allpassOutputOuter = 0;
     float feedforwardInner = 0;
@@ -94,9 +92,7 @@ private:
     juce::dsp::DelayLine<float> delay10 { 22050 };
     
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
-    
-    juce::dsp::DryWetMixer<float> dryWetMixer;
-    
+        
     float allpassOutputInner = 0;
     float allpassOutputOuter = 0;
     float feedforwardInner = 0;
@@ -146,9 +142,7 @@ private:
     juce::dsp::DelayLine<float> delay11 { 22050 };
     
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
-    
-    juce::dsp::DryWetMixer<float> dryWetMixer;
-    
+        
     float allpassOutputInner = 0;
     float allpassOutputOuter = 0;
     float feedforwardInner = 0;

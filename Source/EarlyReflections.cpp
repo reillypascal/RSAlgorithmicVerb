@@ -55,14 +55,14 @@ void EarlyReflections::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
         earlyReflectionsDelayLine.pushSample(0, channelData[sample]);
         
         // sum left 3 taps
-        channel0Output = earlyReflectionsDelayLine.getSampleAtDelay(0, 441 * mSize) * mInitialLevel;
-        channel0Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 2929 * mSize) * mInitialLevel * mDecay;
-        channel0Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 6319 * mSize) * mInitialLevel * pow(mDecay, 2);
+        channel0Output = earlyReflectionsDelayLine.getSampleAtDelay(0, 441 * mParameters.roomSize) * mInitialLevel;
+        channel0Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 2929 * mParameters.roomSize) * mInitialLevel * mParameters.decayTime;
+        channel0Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 6319 * mParameters.roomSize) * mInitialLevel * pow(mParameters.decayTime, 2);
         
         // sum right 3 taps (interleaved w/ left)
-        channel1Output = earlyReflectionsDelayLine.getSampleAtDelay(0, 1191 * mSize) * mInitialLevel;
-        channel1Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 3948 * mSize) * mInitialLevel * mDecay;
-        channel1Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 9462 * mSize) * mInitialLevel * pow(mDecay, 2);
+        channel1Output = earlyReflectionsDelayLine.getSampleAtDelay(0, 1191 * mParameters.roomSize) * mInitialLevel;
+        channel1Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 3948 * mParameters.roomSize) * mInitialLevel * mParameters.decayTime;
+        channel1Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 9462 * mParameters.roomSize) * mInitialLevel * pow(mParameters.decayTime, 2);
         
         // right into left HRTF and vice versa
         leftHRTFDelay.pushSample(0, channel1Output);

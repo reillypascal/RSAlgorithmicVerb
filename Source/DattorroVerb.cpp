@@ -14,9 +14,6 @@ DattorroPlate::~DattorroPlate() = default;
 
 void DattorroPlate::prepare(const juce::dsp::ProcessSpec& spec)
 {
-    dryWetMixer.prepare(spec);
-    dryWetMixer.reset();
-    
     // prepare mono processors
     juce::dsp::ProcessSpec monoSpec;
     monoSpec.sampleRate = spec.sampleRate;
@@ -82,11 +79,6 @@ void DattorroPlate::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
     delay2.setDelay(6590 * mParameters.roomSize);
     delay3.setDelay(4641 * mParameters.roomSize);
     delay4.setDelay(5505 * mParameters.roomSize);
-
-    // dry/wet mixer — dry samples
-    dryWetMixer.setWetMixProportion(mParameters.dryWetMix);
-    juce::dsp::AudioBlock<float> dryBlock { buffer };
-    dryWetMixer.pushDrySamples(dryBlock);
     
     // mono reverb processing
     juce::AudioBuffer<float> monoBufferA(1, buffer.getNumSamples());
@@ -251,9 +243,6 @@ void DattorroPlate::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
             }
         }
     }
-
-    juce::dsp::AudioBlock<float> wetBlock { buffer };
-    dryWetMixer.mixWetSamples(wetBlock);
 }
 
 void DattorroPlate::reset() {}

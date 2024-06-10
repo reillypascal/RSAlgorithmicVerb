@@ -29,26 +29,16 @@ struct ReverbProcessorParameters
             decayTime = params.decayTime;
             damping = params.damping;
             diffusion = params.diffusion;
-            preDelay = params.preDelay;
-            lowCut = params.lowCut;
-            highCut = params.highCut;
-            earlyLateReflections = params.earlyLateReflections;
-            dryWetMix = params.dryWetMix;
         }
         return *this;
     }
     
     bool operator==(const ReverbProcessorParameters& params)
     {
-        if (params.damping == damping &&
+        if (params.roomSize == roomSize &&
             params.decayTime == decayTime &&
-            params.diffusion == diffusion &&
-            params.dryWetMix == dryWetMix &&
-            params.earlyLateReflections == earlyLateReflections &&
-            params.highCut == highCut &&
-            params.lowCut == lowCut &&
-            params.preDelay == preDelay &&
-            params.roomSize == roomSize)
+            params.damping == damping &&
+            params.diffusion == diffusion)
             return true;
         
         return false;

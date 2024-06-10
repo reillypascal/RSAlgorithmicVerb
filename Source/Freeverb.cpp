@@ -46,17 +46,11 @@ void Freeverb::prepare(const juce::dsp::ProcessSpec& spec)
     allpass1.prepare(spec);
     allpass2.prepare(spec);
     allpass3.prepare(spec);
-    
-    mixer.prepare(spec);
 }
 
 void Freeverb::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
-    
-    juce::dsp::AudioBlock<float> block { buffer };
-    mixer.setWetMixProportion(mParameters.dryWetMix);
-    mixer.pushDrySamples(block);
     
     dampingFilter0.setCutoffFrequency(mParameters.damping);
     dampingFilter1.setCutoffFrequency(mParameters.damping);
@@ -147,10 +141,6 @@ void Freeverb::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& 
             channelData[sample] = allpass3Output + feedforward;
         }
     }
-    
-    // add wet samples
-    juce::dsp::AudioBlock<float> wetBlock { buffer };
-    mixer.mixWetSamples(wetBlock);
 }
 
 void Freeverb::reset()
@@ -177,8 +167,6 @@ void Freeverb::reset()
     allpass1.reset();
     allpass2.reset();
     allpass3.reset();
-    
-    mixer.reset();
 }
 
 ReverbProcessorParameters& Freeverb::getParameters() { return mParameters; }

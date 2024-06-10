@@ -77,9 +77,6 @@ private:
     juce::dsp::DelayLine<float> allpassR4Inner { 4410 };
     juce::dsp::DelayLine<float> allpassR4Outer { 4410 };
 
-    // mixers
-    juce::dsp::DryWetMixer<float> dryWetMixer;
-
     OscillatorParameters lfoParameters;
     SignalGenData lfoOutput;
     LFO lfo;
@@ -101,14 +98,6 @@ private:
     std::vector<float> channelOutput {0, 0};
     
     int mSampleRate = 44100;
-
-//    float mPreDelayTime = 441;
-//    float mSize = 1;
-//    float mDecay = 0.25;
-//    float mDampingCutoff = 6500;
-//    float mDiffusion = 0.75;
-//    float mEarlyLateMix = 1;
-//    float mDryWetMix = 0.25;
 };
 
 //class LargeConcertHallB : public ProcessorBase

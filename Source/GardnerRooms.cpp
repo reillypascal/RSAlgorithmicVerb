@@ -1,9 +1,7 @@
 /*
   ==============================================================================
-
-    GardnerRooms.cpp
-    Created: 3 Jun 2023 4:33:58pm
-    Author:  Reilly Spitzfaden
+    
+    
 
   ==============================================================================
 */
@@ -18,9 +16,7 @@ GardnerSmallRoom::~GardnerSmallRoom() = default;
 void GardnerSmallRoom::prepare(const juce::dsp::ProcessSpec &spec)
 {
     mSampleRate = spec.sampleRate;
-    
-    dryWetMixer.prepare(spec);
-    
+        
     delay1.prepare(spec);
     delay2.prepare(spec);
     delay3.prepare(spec);
@@ -35,10 +31,6 @@ void GardnerSmallRoom::prepare(const juce::dsp::ProcessSpec &spec)
 void GardnerSmallRoom::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
-    
-    juce::dsp::AudioBlock<float> dryBlock { buffer };
-    dryWetMixer.setWetMixProportion(mParameters.dryWetMix);
-    dryWetMixer.pushDrySamples(dryBlock);
     
     float samplesPerMs = mSampleRate / 1000;
     
@@ -114,15 +106,10 @@ void GardnerSmallRoom::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
             channelData[sample] = channelOutput.at(channel);
         }
     }
-    
-    juce::dsp::AudioBlock<float> wetBlock { buffer };
-    dryWetMixer.mixWetSamples(wetBlock);
 }
 
 void GardnerSmallRoom::reset()
 {
-    dryWetMixer.reset();
-    
     delay1.reset();
     delay2.reset();
     delay3.reset();
@@ -150,9 +137,7 @@ GardnerMediumRoom::~GardnerMediumRoom() = default;
 void GardnerMediumRoom::prepare(const juce::dsp::ProcessSpec& spec)
 {
     mSampleRate = spec.sampleRate;
-    
-    dryWetMixer.prepare(spec);
-    
+        
     delay1.prepare(spec);
     delay2.prepare(spec);
     delay3.prepare(spec);
@@ -171,10 +156,6 @@ void GardnerMediumRoom::prepare(const juce::dsp::ProcessSpec& spec)
 void GardnerMediumRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
-    
-    juce::dsp::AudioBlock<float> dryBlock { buffer };
-    dryWetMixer.setWetMixProportion(mParameters.dryWetMix);
-    dryWetMixer.pushDrySamples(dryBlock);
     
     juce::AudioBuffer<float> input2Buffer(buffer.getNumChannels(), buffer.getNumSamples());
     input2Buffer.clear();
@@ -287,15 +268,10 @@ void GardnerMediumRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
             channelData[sample] = channelOutput.at(channel);
         }
     }
-    
-    juce::dsp::AudioBlock<float> wetBlock { buffer };
-    dryWetMixer.mixWetSamples(wetBlock);
 }
 
 void GardnerMediumRoom::reset() 
 {
-    dryWetMixer.reset();
-    
     delay1.reset();
     delay2.reset();
     delay3.reset();
@@ -326,9 +302,7 @@ GardnerLargeRoom::~GardnerLargeRoom() = default;
 void GardnerLargeRoom::prepare(const juce::dsp::ProcessSpec& spec)
 {
     mSampleRate = spec.sampleRate;
-    
-    dryWetMixer.prepare(spec);
-    
+        
     delay1.prepare(spec);
     delay2.prepare(spec);
     delay3.prepare(spec);
@@ -348,10 +322,6 @@ void GardnerLargeRoom::prepare(const juce::dsp::ProcessSpec& spec)
 void GardnerLargeRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
-    
-    juce::dsp::AudioBlock<float> dryBlock { buffer };
-    dryWetMixer.setWetMixProportion(mParameters.dryWetMix);
-    dryWetMixer.pushDrySamples(dryBlock);
     
     float samplesPerMs = mSampleRate / 1000;
     
@@ -465,15 +435,10 @@ void GardnerLargeRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
             channelData[sample] = channelOutput.at(channel);
         }
     }
-    
-    juce::dsp::AudioBlock<float> wetBlock { buffer };
-    dryWetMixer.mixWetSamples(wetBlock);
 }
 
 void GardnerLargeRoom::reset()
 {
-    dryWetMixer.reset();
-    
     delay1.reset();
     delay2.reset();
     delay3.reset();
