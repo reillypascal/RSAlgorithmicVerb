@@ -114,12 +114,17 @@ private:
 	
 	juce::AudioProcessorValueTreeState parameters;
     
+    juce::dsp::DelayLine<float> preDelay { 22050 };
+    
+    EarlyReflections earlyReflections;
+    ReverbProcessorParameters earlyParameters;
+    
     ProcessorFactory processorFactory {};
     std::unique_ptr<ReverbProcessorBase> reverbProcessor = std::unique_ptr<ReverbProcessorBase> {};
     ReverbProcessorParameters reverbParameters;
     
-    EarlyReflections earlyReflections;
-    ReverbProcessorParameters earlyParameters;
+    juce::dsp::DryWetMixer<float> earlyLevelMixer;
+    juce::dsp::DryWetMixer<float> dryWetMixer;
 	
 	juce::AudioParameterChoice* reverbType = nullptr;
 	// row 1
@@ -133,9 +138,6 @@ private:
 	std::atomic<float>* highCutParameter = nullptr;
 	std::atomic<float>* earlyLateMixParameter = nullptr;
 	std::atomic<float>* dryWetMixParameter = nullptr;
-	
-    juce::dsp::DryWetMixer<float> earlyLevelMixer;
-	juce::dsp::DryWetMixer<float> dryWetMixer;
     
     int slotProcessor { -1 };
     int prevSlotProcessor { -1 };

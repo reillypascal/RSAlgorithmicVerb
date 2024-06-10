@@ -61,7 +61,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "preDelay", 1 },
 													"Pre-Delay",
 													0.0f,
-													1.0f,
+													150.0f,
 													0.0f),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "lowCut", 1 },
 													"Low Cut",
@@ -165,6 +165,8 @@ void RSAlgorithmicVerbAudioProcessor::prepareToPlay (double sampleRate, int samp
 	spec.maximumBlockSize = samplesPerBlock;
 	spec.numChannels = getMainBusNumInputChannels();
     
+    preDelay.prepare(spec);
+    preDelay.setMaximumDelayInSamples((sampleRate / 4) + samplesPerBlock);
     earlyReflections.prepare(spec);
 	
     earlyLevelMixer.prepare(spec);
@@ -216,7 +218,7 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
     
 //    auto numChannels = buffer.getNumChannels();
 //    auto numSamples = buffer.getNumSamples();
-	
+    
     //================ mixer settings + dry ================
     // settings to mix btwn early/dry into reverb processor
     earlyLevelMixer.setWetMixProportion(parameters.getRawParameterValue("earlyLateMix")->load());
@@ -226,6 +228,12 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
     juce::dsp::AudioBlock<float> dryBlock { buffer };
     earlyLevelMixer.pushDrySamples(dryBlock);
     dryWetMixer.pushDrySamples(dryBlock);
+    
+    //================ pre-delay ================
+    preDelay.setDelay(parameters.getRawParameterValue("preDelay")->load() * (getSampleRate() / 1000));
+    juce::dsp::AudioBlock<float> preDelayBlock { buffer };
+    juce::dsp::ProcessContextReplacing<float> preDelayContext { preDelayBlock };
+    preDelay.process(preDelayContext);
     
     //================ early reflections processor ================
     // early reflections parameters
