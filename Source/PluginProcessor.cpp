@@ -172,13 +172,11 @@ void RSAlgorithmicVerbAudioProcessor::prepareToPlay (double sampleRate, int samp
     // low-cut
     lowCutFilter.prepare(spec);
     lowCutFilter.reset();
-    lowCutCoeff.makeHighPass(sampleRate, 20);
-    lowCutFilter.coefficients = lowCutCoeff;
+    *lowCutFilter.state = *juce::dsp::IIR::Coefficients<float>::makeHighPass(sampleRate, 20.0f);
     //high-cut
     highCutFilter.prepare(spec);
     highCutFilter.reset();
-    highCutCoeff.makeLowPass(sampleRate, 20000);
-    highCutFilter.coefficients = highCutCoeff;
+    *highCutFilter.state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(sampleRate, 20000.0f);
     // early reflections
     earlyReflections.prepare(spec);
 	// mixers
@@ -245,19 +243,16 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
     //================ filters, pre-delay ================
     // context
     juce::dsp::AudioBlock<float> preBlock { buffer };
-    juce::dsp::ProcessContextReplacing<float> preContext { preBlock };
     
     // filters
-    lowCutCoeff.makeHighPass(getSampleRate(), parameters.getRawParameterValue("lowCut")->load());
-    highCutCoeff.makeLowPass(getSampleRate(), parameters.getRawParameterValue("highCut")->load());
-//    lowCutFilter.coefficients = lowCutCoeff;
-//    highCutFilter.coefficients = highCutCoeff;
-    lowCutFilter.process(preContext);
-    highCutFilter.process(preContext);
+    *lowCutFilter.state = *juce::dsp::IIR::Coefficients<float>::makeHighPass(getSampleRate(), parameters.getRawParameterValue("lowCut")->load());
+    *highCutFilter.state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(getSampleRate(), parameters.getRawParameterValue("highCut")->load());
+    lowCutFilter.process(juce::dsp::ProcessContextReplacing<float>(preBlock));
+    highCutFilter.process(juce::dsp::ProcessContextReplacing<float>(preBlock));
     
     // pre-delay
     preDelay.setDelay(parameters.getRawParameterValue("preDelay")->load() * (getSampleRate() / 1000));
-    preDelay.process(preContext);
+    preDelay.process(juce::dsp::ProcessContextReplacing<float>(preBlock));
     
     //================ early reflections processor ================
     // early reflections parameters

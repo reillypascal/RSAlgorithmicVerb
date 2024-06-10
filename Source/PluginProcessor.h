@@ -115,10 +115,8 @@ private:
 	juce::AudioProcessorValueTreeState parameters;
     
     juce::dsp::DelayLine<float> preDelay { 22050 };
-    juce::dsp::IIR::Filter<float> lowCutFilter;
-    juce::dsp::IIR::Filter<float> highCutFilter;
-    juce::dsp::IIR::Coefficients<float> lowCutCoeff;
-    juce::dsp::IIR::Coefficients<float> highCutCoeff;
+    juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>> lowCutFilter;
+    juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>> highCutFilter;
     
     EarlyReflections earlyReflections;
     ReverbProcessorParameters earlyParameters;
