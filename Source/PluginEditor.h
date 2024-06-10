@@ -35,53 +35,83 @@ private:
 	
 	juce::AudioProcessorValueTreeState& valueTreeState;
 	
-	juce::Label reverbMenuLabel;
-	// row 1
+	// Labels
 	juce::Label roomSizeLabel;
+    juce::Label preDelayLabel;
+    
 	juce::Label decayLabel;
+    
 	juce::Label dampingLabel;
 	juce::Label diffusionLabel;
-	// row 2
-	juce::Label preDelayLabel;
-	juce::Label lowCutLabel;
-	juce::Label highCutLabel;
+    
+    juce::Label earlySizeLabel;
+    juce::Label earlyDecayLabel;
+    
+    juce::Label modRateLabel;
+    juce::Label modDepthLabel;
+    
+    juce::Label highCutLabel;
+    juce::Label lowCutLabel;
+    
 	juce::Label earlyLateMixLabel;
 	juce::Label dryWetMixLabel;
 	
-	juce::ComboBox reverbMenuBox;
-	enum reverbTypes
-	{
-		dattorro = 1,
-		largeConcertHallB,
-		gardnerSmallRoom,
-		gardnerMediumRoom,
-		gardnerLargeRoom,
-		freeverb,
-	};
-	// row 1
+    juce::Label reverbMenuLabel;
+    
+	// Sliders
 	juce::Slider roomSizeSlider;
+    juce::Slider preDelaySlider;
+    
 	juce::Slider feedbackSlider;
+    
 	juce::Slider dampingSlider;
 	juce::Slider diffusionSlider;
-	// row 2
-	juce::Slider preDelaySlider;
+    
+    juce::Slider earlySizeSlider;
+    juce::Slider earlyDepthSlider;
+    
+    juce::Slider modRateSlider;
+    juce::Slider modDepthSlider;
+	
+    juce::Slider highCutSlider;
 	juce::Slider lowCutSlider;
-	juce::Slider highCutSlider;
+    
 	juce::Slider earlyLateMixSlider;
 	juce::Slider dryWetMixSlider;
-	
-	std::unique_ptr<ComboBoxAttachment> reverbMenuAttachment;
-	// row 1
+    
+    juce::ComboBox reverbMenuBox;
+    enum reverbTypes
+    {
+        dattorro = 1,
+        largeConcertHallB,
+        gardnerSmallRoom,
+        gardnerMediumRoom,
+        gardnerLargeRoom,
+        freeverb,
+    };
+    
+	// attachments
 	std::unique_ptr<SliderAttachment> roomSizeAttachment;
+    std::unique_ptr<SliderAttachment> preDelayAttachment;
+    
 	std::unique_ptr<SliderAttachment> feedbackAttachment;
+    
 	std::unique_ptr<SliderAttachment> dampingAttachment;
 	std::unique_ptr<SliderAttachment> diffusionAttachment;
-	// row 2
-	std::unique_ptr<SliderAttachment> preDelayAttachment;
+    
+    std::unique_ptr<SliderAttachment> earlySizeAttachment;
+    std::unique_ptr<SliderAttachment> earlyDecayAttachment;
+    
+    std::unique_ptr<SliderAttachment> modRateAttachment;
+    std::unique_ptr<SliderAttachment> modDepthAttachment;
+    
+    std::unique_ptr<SliderAttachment> highCutAttachment;
 	std::unique_ptr<SliderAttachment> lowCutAttachment;
-	std::unique_ptr<SliderAttachment> highCutAttachment;
+    
 	std::unique_ptr<SliderAttachment> earlyLateMixAttachment;
 	std::unique_ptr<SliderAttachment> dryWetMixAttachment;
+    
+    std::unique_ptr<ComboBoxAttachment> reverbMenuAttachment;
 	
 	const int textBoxWidth = 70;
 	const int textBoxHeight = 25;

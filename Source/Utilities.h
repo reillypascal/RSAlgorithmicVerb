@@ -48,7 +48,6 @@ struct ReverbProcessorParameters
         return false;
     }
     
-    // top row
     float damping { 20000.0f };
     float decayTime { 0.35f };
     float diffusion { 0.75f };

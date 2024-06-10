@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <JuceHeader.h>
+#include <JuceHeader.h>\
 
 #include "ConcertHallB.h"
 #include "DattorroVerb.h"
@@ -127,19 +127,6 @@ private:
     
     juce::dsp::DryWetMixer<float> earlyLevelMixer;
     juce::dsp::DryWetMixer<float> dryWetMixer;
-	
-	juce::AudioParameterChoice* reverbType = nullptr;
-	// row 1
-	std::atomic<float>* roomSizeParameter = nullptr;
-	std::atomic<float>* feedbackParameter = nullptr;
-	std::atomic<float>* dampingParameter = nullptr;
-	std::atomic<float>* diffusionParameter = nullptr;
-	// row 2
-	std::atomic<float>* preDelayParameter = nullptr;
-	std::atomic<float>* lowCutParameter = nullptr;
-	std::atomic<float>* highCutParameter = nullptr;
-	std::atomic<float>* earlyLateMixParameter = nullptr;
-	std::atomic<float>* dryWetMixParameter = nullptr;
     
     int slotProcessor { -1 };
     int prevSlotProcessor { -1 };

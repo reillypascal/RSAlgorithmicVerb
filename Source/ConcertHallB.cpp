@@ -76,6 +76,11 @@ void LargeConcertHallB::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
 {
     juce::ScopedNoDenormals noDenormals;
     
+    // set LFO rate
+    lfoParameters = lfo.getParameters();
+    lfoParameters.frequency_Hz = mParameters.modRate;
+    lfo.setParameters(lfoParameters);
+    
     // set delays
     // filters
     inputBandwidth.setDelay(1);
@@ -216,7 +221,7 @@ void LargeConcertHallB::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
         // chorus
         allpassChorusL.pushSample(0, allpassOutputInnermost);
         allpassOutputInnermost *= 0.781;
-        allpassOutputInnermost += allpassChorusL.popSample(0, scale(lfoOutput.normalOutput, -1.0f, 1.0f, 1.0f, 12.0f)) * 0.219; // modulate here
+        allpassOutputInnermost += allpassChorusL.popSample(0, scale(lfoOutput.normalOutput, -1.0f, 1.0f, 1.0f, 12.0f * mParameters.modDepth)) * 0.219; // modulate here
         // finish innermost
         feedbackInnermost = allpassOutputInnermost * 0.25 * mParameters.diffusion;
         reverbData[sample] += feedbackInnermost;
@@ -305,7 +310,7 @@ void LargeConcertHallB::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
         // chorus
         allpassChorusR.pushSample(0, allpassOutputInnermost);
         allpassOutputInnermost *= 0.781;
-        allpassOutputInnermost += allpassChorusL.popSample(0, scale(lfoOutput.quadPhaseOutput_pos, -1.0f, 1.0f, 1.0f, 12.0f)) * 0.219; // modulate here
+        allpassOutputInnermost += allpassChorusL.popSample(0, scale(lfoOutput.quadPhaseOutput_pos, -1.0f, 1.0f, 1.0f, 12.0f * mParameters.modDepth)) * 0.219; // modulate here
         // finish innermost
         feedbackInnermost = allpassOutputInnermost * 0.25 * mParameters.diffusion;
         reverbData[sample] += feedbackInnermost;

@@ -34,15 +34,17 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 #endif
 //	mainProcessor(new juce::AudioProcessorGraph()),
 	parameters(*this, nullptr, juce::Identifier("RSAlgorithmicVerb"), {
-		std::make_unique<juce::AudioParameterChoice>(juce::ParameterID { "reverbType", 1 },
-													 "Reverb Type",
-													 juce::StringArray { "Dattorro", "ConcertHallB", "SmallRoom", "MediumRoom", "LargeRoom", "Freeverb" },
-													 0),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "roomSize", 1 },
 													"Room Size",
 													0.0f,
 													1.0f,
 													0.5f),
+        std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "preDelay", 1 },
+                                                    "Pre-Delay",
+                                                    juce::NormalisableRange<float>(0.0f,
+                                                                                   150.0f,
+                                                                                   1.0f),
+                                                    0.0f),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "feedback", 1 },
 													"Feedback",
 													0.0f,
@@ -58,24 +60,38 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													0.0f,
 													0.99f,
 													0.67f),
-		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "preDelay", 1 },
-													"Pre-Delay",
-                                                    juce::NormalisableRange<float>(0.0f,
-                                                                                   150.0f,
-                                                                                   1.0f),
-													0.0f),
+        std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "earlySize", 1 },
+                                                    "Early Size",
+                                                    0.0f,
+                                                    1.0f,
+                                                    0.5f),
+        std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "earlyDecay", 1 },
+                                                    "Early Decay",
+                                                    0.0f,
+                                                    0.99f,
+                                                    0.35f),
+        std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "modRate", 1 },
+                                                    "Mod Rate",
+                                                    0.0f,
+                                                    8.0f,
+                                                    2.5f),
+        std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "modDepth", 1 },
+                                                    "Mod Depth",
+                                                    0.0f,
+                                                    1.0f,
+                                                    0.0f),
+        std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "highCut", 1 },
+                                                    "High Cut",
+                                                    juce::NormalisableRange<float>(200,
+                                                                                 20000,
+                                                                                 5),
+                                                    20000),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "lowCut", 1 },
 													"Low Cut",
 													juce::NormalisableRange<float>(20,
 																				 1000,
 																				 5),
 													20),
-		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "highCut", 1 },
-													"High Cut",
-													juce::NormalisableRange<float>(200,
-																				 20000,
-																				 5),
-													20000),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "earlyLateMix", 1 },
 													"Early Reflections Mix",
 													0.0f,
@@ -85,7 +101,11 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													"Dry/Wet Mix",
 													0.0f,
 													1.0f,
-													0.35f)
+													0.35f),
+        std::make_unique<juce::AudioParameterChoice>(juce::ParameterID { "reverbType", 1 },
+                                                     "Reverb Type",
+                                                     juce::StringArray { "Dattorro", "ConcertHallB", "SmallRoom", "MediumRoom", "LargeRoom", "Freeverb" },
+                                                     0)
 })
 { 
     
@@ -257,8 +277,8 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
     //================ early reflections processor ================
     // early reflections parameters
     earlyParameters = earlyReflections.getParameters();
-    earlyParameters.decayTime = parameters.getRawParameterValue("feedback")->load();
-    earlyParameters.roomSize = parameters.getRawParameterValue("roomSize")->load();
+    earlyParameters.decayTime = parameters.getRawParameterValue("earlyDecay")->load();
+    earlyParameters.roomSize = parameters.getRawParameterValue("earlySize")->load();
     earlyReflections.setParameters(earlyParameters);
     
     //================ process early reflections ================
@@ -294,10 +314,12 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
         reverbParameters = reverbProcessor->getParameters();
         
         //============ new parameters in class ============
-        reverbParameters.roomSize = scale(parameters.getRawParameterValue("roomSize")->load(), 0.0f, 1.0f, 0.25f, 1.75f);
-        reverbParameters.decayTime = parameters.getRawParameterValue("feedback")->load();
         reverbParameters.damping = scale(parameters.getRawParameterValue("damping")->load() * -1.0f + 1.0f, 0.0f, 1.0f, 200.0f, 20000.0f);
+        reverbParameters.decayTime = parameters.getRawParameterValue("feedback")->load();
         reverbParameters.diffusion = parameters.getRawParameterValue("diffusion")->load();
+        reverbParameters.modDepth = parameters.getRawParameterValue("modDepth")->load();
+        reverbParameters.modRate = parameters.getRawParameterValue("modRate")->load();
+        reverbParameters.roomSize = scale(parameters.getRawParameterValue("roomSize")->load(), 0.0f, 1.0f, 0.25f, 1.75f);
         
         //============ set parameters ============
         reverbProcessor->setParameters(reverbParameters);
