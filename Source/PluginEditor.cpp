@@ -324,11 +324,11 @@ void RSAlgorithmicVerbAudioProcessorEditor::resized()
                              textLabelHeight);
     
     // menu
-    reverbMenuBox.setBounds(getWidth() - menuWidth - 45,
+    reverbMenuBox.setBounds(getWidth() - menuWidth - 25,
                             getHeight() - menuHeight - 45,
                             menuWidth,
                             menuHeight);
-    reverbMenuLabel.setBounds(getWidth() - menuWidth - textLabelWidth - 45,
+    reverbMenuLabel.setBounds(getWidth() - menuWidth - textLabelWidth - 25,
                               getHeight() - menuHeight - 45,
                               menuWidth,
                               menuHeight);
