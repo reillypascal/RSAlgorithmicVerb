@@ -298,13 +298,6 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
         reverbParameters.decayTime = parameters.getRawParameterValue("feedback")->load();
         reverbParameters.damping = scale(parameters.getRawParameterValue("damping")->load() * -1.0f + 1.0f, 0.0f, 1.0f, 200.0f, 20000.0f);
         reverbParameters.diffusion = parameters.getRawParameterValue("diffusion")->load();
-        // row 2
-        reverbParameters.preDelay = scale(parameters.getRawParameterValue("preDelay")->load(), 0.0f, 1.0f, 0.0f, 250.0f);
-        reverbParameters.lowCut = parameters.getRawParameterValue("lowCut")->load();
-        reverbParameters.highCut = parameters.getRawParameterValue("highCut")->load();
-        reverbParameters.earlyLateReflections = parameters.getRawParameterValue("earlyLateMix")->load();
-//        reverbParameters.dryWetMix = parameters.getRawParameterValue("dryWetMix")->load();
-        reverbParameters.dryWetMix = 1.0f;
         
         //============ set parameters ============
         reverbProcessor->setParameters(reverbParameters);

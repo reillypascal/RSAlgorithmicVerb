@@ -46,7 +46,7 @@ private:
     juce::dsp::DelayLine<float> modulatedAPF1 {22050};
     juce::dsp::DelayLine<float> modulatedAPF2 {22050};
     // delays
-    juce::dsp::DelayLine<float> preDelay {22050};
+//    juce::dsp::DelayLine<float> preDelay {22050};
     DelayLineWithSampleAccess<float> delay1 {22050};
     DelayLineWithSampleAccess<float> delay2 {22050};
     DelayLineWithSampleAccess<float> delay3 {22050};

@@ -32,7 +32,7 @@ void DattorroPlate::prepare(const juce::dsp::ProcessSpec& spec)
     modulatedAPF2.prepare(monoSpec);
     
     // prepare delays
-    preDelay.prepare(monoSpec);
+//    preDelay.prepare(monoSpec);
     
     delay1.prepare(monoSpec);
     delay2.prepare(monoSpec);
@@ -60,7 +60,7 @@ void DattorroPlate::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
 //    int numChannels = buffer.getNumChannels();
 
     // initialize input chain parameters
-    preDelay.setDelay(mParameters.preDelay);
+//    preDelay.setDelay(mParameters.preDelay);
     inputFilter.setCutoffFrequency(13500);
     allpass1.setDelay(210 * mParameters.roomSize);
     allpass2.setDelay(158 * mParameters.roomSize);
@@ -110,9 +110,10 @@ void DattorroPlate::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
         // LFO
         lfoOutput = lfo.renderAudioOutput();
 
-        // apply predelay, filter
-        preDelay.pushSample(channel, channelDataA[sample]);
-        channelDataA[sample] = inputFilter.processSample(channel, preDelay.popSample(channel));
+        // apply filter
+//        preDelay.pushSample(channel, channelDataA[sample]);
+//        channelDataA[sample] = inputFilter.processSample(channel, preDelay.popSample(channel));
+        channelDataA[sample] = inputFilter.processSample(channel, channelDataA[sample]);
 
         // apply allpasses
         allpassOutput = allpass1.popSample(channel);
