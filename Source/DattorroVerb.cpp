@@ -46,7 +46,7 @@ void DattorroPlate::prepare(const juce::dsp::ProcessSpec& spec)
     
     // prepare lfo
     lfoParameters.frequency_Hz = 0.25;
-    lfoParameters.waveform = generatorWaveform::kSin;
+    lfoParameters.waveform = generatorWaveform::kTriangle;
     lfo.setParameters(lfoParameters);
     lfo.reset(spec.sampleRate);
     reset();

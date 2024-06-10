@@ -67,7 +67,7 @@ void LargeConcertHallB::prepare(const juce::dsp::ProcessSpec& spec)
     allpassR4Outer.prepare(monoSpec);
     
     lfoParameters.frequency_Hz = 0.5;
-    lfoParameters.waveform = generatorWaveform::kSin;
+    lfoParameters.waveform = generatorWaveform::kTriangle;
     lfo.setParameters(lfoParameters);
     lfo.reset(spec.sampleRate);
 }
