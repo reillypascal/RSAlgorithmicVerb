@@ -60,15 +60,16 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													0.67f),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "preDelay", 1 },
 													"Pre-Delay",
-													0.0f,
-													150.0f,
+                                                    juce::NormalisableRange<float>(0.0f,
+                                                                                   150.0f,
+                                                                                   1.0f),
 													0.0f),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "lowCut", 1 },
 													"Low Cut",
-													juce::NormalisableRange<float>(0,
+													juce::NormalisableRange<float>(20,
 																				 1000,
 																				 5),
-													0),
+													20),
 		std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "highCut", 1 },
 													"High Cut",
 													juce::NormalisableRange<float>(200,
@@ -165,10 +166,22 @@ void RSAlgorithmicVerbAudioProcessor::prepareToPlay (double sampleRate, int samp
 	spec.maximumBlockSize = samplesPerBlock;
 	spec.numChannels = getMainBusNumInputChannels();
     
+    // pre-delay
     preDelay.prepare(spec);
     preDelay.setMaximumDelayInSamples((sampleRate / 4) + samplesPerBlock);
+    // low-cut
+    lowCutFilter.prepare(spec);
+    lowCutFilter.reset();
+    lowCutCoeff.makeHighPass(sampleRate, 20);
+    lowCutFilter.coefficients = lowCutCoeff;
+    //high-cut
+    highCutFilter.prepare(spec);
+    highCutFilter.reset();
+    highCutCoeff.makeLowPass(sampleRate, 20000);
+    highCutFilter.coefficients = highCutCoeff;
+    // early reflections
     earlyReflections.prepare(spec);
-	
+	// mixers
     earlyLevelMixer.prepare(spec);
     earlyLevelMixer.reset();
 	dryWetMixer.prepare(spec);
@@ -229,11 +242,22 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
     earlyLevelMixer.pushDrySamples(dryBlock);
     dryWetMixer.pushDrySamples(dryBlock);
     
-    //================ pre-delay ================
+    //================ filters, pre-delay ================
+    // context
+    juce::dsp::AudioBlock<float> preBlock { buffer };
+    juce::dsp::ProcessContextReplacing<float> preContext { preBlock };
+    
+    // filters
+    lowCutCoeff.makeHighPass(getSampleRate(), parameters.getRawParameterValue("lowCut")->load());
+    highCutCoeff.makeLowPass(getSampleRate(), parameters.getRawParameterValue("highCut")->load());
+//    lowCutFilter.coefficients = lowCutCoeff;
+//    highCutFilter.coefficients = highCutCoeff;
+    lowCutFilter.process(preContext);
+    highCutFilter.process(preContext);
+    
+    // pre-delay
     preDelay.setDelay(parameters.getRawParameterValue("preDelay")->load() * (getSampleRate() / 1000));
-    juce::dsp::AudioBlock<float> preDelayBlock { buffer };
-    juce::dsp::ProcessContextReplacing<float> preDelayContext { preDelayBlock };
-    preDelay.process(preDelayContext);
+    preDelay.process(preContext);
     
     //================ early reflections processor ================
     // early reflections parameters
