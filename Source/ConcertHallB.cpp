@@ -67,7 +67,7 @@ void LargeConcertHallB::prepare(const juce::dsp::ProcessSpec& spec)
     allpassR4Outer.prepare(monoSpec);
     
     lfoParameters.frequency_Hz = 0.5;
-    lfoParameters.waveform = generatorWaveform::kTriangle;
+    lfoParameters.waveform = generatorWaveform::kSin;
     lfo.setParameters(lfoParameters);
     lfo.reset(spec.sampleRate);
 }
@@ -338,7 +338,7 @@ void LargeConcertHallB::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
         {
             if (destChannel < 2)
             {
-                buffer.setSample(destChannel, sample, channelOutput.at(destChannel));
+                buffer.setSample(destChannel, sample, channelOutput.at(destChannel) * 3.0); // scale here, since output scalars are numerous and I don't want to mess with the ratio
             }
         }
     }

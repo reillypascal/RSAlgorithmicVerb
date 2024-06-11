@@ -46,7 +46,7 @@ void DattorroPlate::prepare(const juce::dsp::ProcessSpec& spec)
     
     // prepare lfo
     lfoParameters.frequency_Hz = 0.25;
-    lfoParameters.waveform = generatorWaveform::kTriangle;
+    lfoParameters.waveform = generatorWaveform::kSin;
     lfo.setParameters(lfoParameters);
     lfo.reset(spec.sampleRate);
     reset();
@@ -149,7 +149,7 @@ void DattorroPlate::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
         channelDataA[sample] += summingB * mParameters.decayTime;
 
         // modulated APF1
-        allpassOutput = modulatedAPF1.popSample(channel, modAPF1Delay + (lfoOutput.normalOutput * 12 * mParameters.modDepth));
+        allpassOutput = modulatedAPF1.popSample(channel, modAPF1Delay + (lfoOutput.normalOutput * 12.0f * mParameters.modDepth));
         feedback = allpassOutput * decayDiffusion1 * mParameters.diffusion;
         feedforward = -channelDataA[sample] - allpassOutput * decayDiffusion1 * mParameters.diffusion;
         modulatedAPF1.pushSample(channel, channelDataA[sample] + feedback);
@@ -195,7 +195,7 @@ void DattorroPlate::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
         channelDataB[sample] += summingA * mParameters.decayTime;
         
         // modulated APF2
-        allpassOutput = modulatedAPF2.popSample(channel, modAPF2Delay + (lfoOutput.quadPhaseOutput_pos * 12 * mParameters.modDepth));
+        allpassOutput = modulatedAPF2.popSample(channel, modAPF2Delay + (lfoOutput.quadPhaseOutput_pos * 12.0f * mParameters.modDepth));
         feedback = allpassOutput * decayDiffusion2 * mParameters.diffusion;
         feedforward = -channelDataB[sample] - allpassOutput * decayDiffusion2 * mParameters.diffusion;
         modulatedAPF2.pushSample(channel, channelDataB[sample] + feedback);

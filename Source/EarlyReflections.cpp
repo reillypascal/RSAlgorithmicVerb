@@ -64,13 +64,16 @@ void EarlyReflections::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
         channel1Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 3948 * mParameters.roomSize) * mInitialLevel * mParameters.decayTime;
         channel1Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 9462 * mParameters.roomSize) * mInitialLevel * pow(mParameters.decayTime, 2);
         
-        // right into left HRTF and vice versa
-        leftHRTFDelay.pushSample(0, channel1Output);
-        rightHRTFDelay.pushSample(0, channel0Output);
-        
-        // filter HRTFs and add to outputs
-        channel0Output += leftHRTFFilter.processSample(0, leftHRTFDelay.popSample(0));
-        channel1Output += rightHRTFFilter.processSample(0, rightHRTFDelay.popSample(0));
+        if (!monoFlag)
+        {
+            // right into left HRTF and vice versa
+            leftHRTFDelay.pushSample(0, channel1Output);
+            rightHRTFDelay.pushSample(0, channel0Output);
+            
+            // filter HRTFs and add to outputs
+            channel0Output += leftHRTFFilter.processSample(0, leftHRTFDelay.popSample(0));
+            channel1Output += rightHRTFFilter.processSample(0, rightHRTFDelay.popSample(0));
+        }
         
         // outputs into original stereo buffer
         for (int destChannel = 0; destChannel < numChannels; ++destChannel)

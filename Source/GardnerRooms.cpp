@@ -26,6 +26,18 @@ void GardnerSmallRoom::prepare(const juce::dsp::ProcessSpec &spec)
     
     dampingFilter.prepare(spec);
     dampingFilter.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
+    
+    // prepare lfo
+    lfoParameters.frequency_Hz = 0.25;
+    lfoParameters.waveform = generatorWaveform::kSin;
+    lfo.resize(spec.numChannels);
+    for (auto& osc : lfo)
+    {
+        osc.setParameters(lfoParameters);
+        osc.reset(spec.sampleRate);
+    }
+    
+    reset();
 }
 
 void GardnerSmallRoom::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &midiMessages)
@@ -40,17 +52,26 @@ void GardnerSmallRoom::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
     {
         auto* channelData = buffer.getWritePointer(channel);
         
+        lfoParameters = lfo[channel].getParameters();
+        lfoParameters.frequency_Hz = mParameters.modRate;
+        lfo[channel].setParameters(lfoParameters);
+        
         // segment 1
         delay1.setDelay(24 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
-        delay2.setDelay(22 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
+        float delay2Time = 22 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]; // for modulation
+        delay2.setDelay(delay2Time);
         delay3.setDelay(8.3 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
         delay4.setDelay(4.7 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
         // segment 2
-        delay5.setDelay(30 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
+        float delay5Time = 30 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]; // for modulation
+        delay5.setDelay(delay5Time);
         delay6.setDelay(36 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
         
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
+            // LFO
+            lfoOutput = lfo[channel].renderAudioOutput();
+            
             channelData[sample] += channelFeedback.at(channel);
             
             delay1.pushSample(channel, channelData[sample]);
@@ -64,7 +85,7 @@ void GardnerSmallRoom::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
             
             // inner 22ms allpass
             feedforwardInner = channelData[sample];
-            allpassOutputInner = delay2.popSample(channel);
+            allpassOutputInner = delay2.popSample(channel, delay2Time + (lfoOutput.normalOutput * 8.0f * mParameters.modDepth)); // modulate
             feedbackInner = (allpassOutputInner + (feedforwardInner * -0.4)) * 0.4;
             delay2.pushSample(channel, channelData[sample] + feedbackInner);
             channelData[sample] = allpassOutputInner + (feedforwardInner * -0.4);
@@ -81,7 +102,7 @@ void GardnerSmallRoom::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
             channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.3);
             
             // mix into output
-            channelOutput.at(channel) = channelData[sample] * 0.707;
+            channelOutput.at(channel) = channelData[sample] * 2.0; // up from 0.5
             
             // outer 66ms allpass
             feedforwardOuter = channelData[sample];
@@ -91,7 +112,7 @@ void GardnerSmallRoom::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
             
             // inner 30ms allpass
             feedforwardInner = channelData[sample];
-            allpassOutputInner = delay5.popSample(channel);
+            allpassOutputInner = delay5.popSample(channel, delay5Time + (lfoOutput.quadPhaseOutput_pos * 8.0f * mParameters.modDepth)); // modulate
             feedbackInner = (allpassOutputInner + (feedforwardInner * -0.4)) * 0.4;
             delay5.pushSample(channel, channelData[sample] + feedbackInner);
             channelData[sample] = allpassOutputInner + (feedforwardInner * -0.4);
@@ -102,7 +123,7 @@ void GardnerSmallRoom::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
             
             // make channel feedback; mix output
             channelFeedback.at(channel) = dampingFilter.processSample(channel, channelData[sample] * mParameters.decayTime);
-            channelOutput.at(channel) += channelData[sample] * 0.707;
+            channelOutput.at(channel) += channelData[sample] * 2.0; // up from 0.5
             channelData[sample] = channelOutput.at(channel);
         }
     }
@@ -151,6 +172,18 @@ void GardnerMediumRoom::prepare(const juce::dsp::ProcessSpec& spec)
     
     dampingFilter.prepare(spec);
     dampingFilter.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
+    
+    // prepare lfo
+    lfoParameters.frequency_Hz = 0.25;
+    lfoParameters.waveform = generatorWaveform::kSin;
+    lfo.resize(spec.numChannels);
+    for (auto& osc : lfo)
+    {
+        osc.setParameters(lfoParameters);
+        osc.reset(spec.sampleRate);
+    }
+    
+    reset();
 }
 
 void GardnerMediumRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -170,12 +203,18 @@ void GardnerMediumRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
         auto* channelData = buffer.getWritePointer(channel);
         auto* channelData2 = input2Buffer.getWritePointer(channel);
         
+        lfoParameters = lfo[channel].getParameters();
+        lfoParameters.frequency_Hz = mParameters.modRate;
+        lfo[channel].setParameters(lfoParameters);
+        
         // input 1
         delay1.setDelay(8.3 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
-        delay2.setDelay(22 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
+        float delay2Time = 22 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]; // for modulation
+        delay2.setDelay(delay2Time);
         delay3.setDelay(4.7 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
         // segment 2
         delay4.setDelay(5 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
+        float delay5Time = 30 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]; // for modulation
         delay5.setDelay(30 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
         delay6.setDelay(67 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
         // segment 3
@@ -188,6 +227,9 @@ void GardnerMediumRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
         
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
+            // LFO
+            lfoOutput = lfo[channel].renderAudioOutput();
+            
             channelData[sample] += channelFeedback.at(channel);
             
             // outer 35ms allpass
@@ -205,7 +247,7 @@ void GardnerMediumRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
             
             // inner 22ms allpass
             feedforwardInner = channelData[sample];
-            allpassOutputInner = delay2.popSample(channel);
+            allpassOutputInner = delay2.popSample(channel, delay2Time + (lfoOutput.normalOutput * 10.0f * mParameters.modDepth));
             feedbackInner = (allpassOutputInner + (feedforwardInner * -0.5)) * 0.5;
             delay2.pushSample(channel, channelData[sample] + feedbackInner);
             channelData[sample] = allpassOutputInner + (feedforwardInner * -0.5);
@@ -215,14 +257,14 @@ void GardnerMediumRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
             channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.3);
             
             // output tap 1
-            channelOutput.at(channel) = channelData[sample] * 0.5;
+            channelOutput.at(channel) = channelData[sample] * 1.0; // up from 0.5
             
             delay4.pushSample(channel, channelData[sample]);
             channelData[sample] = delay4.popSample(channel);
             
             // single 30ms allpass
             feedforwardInner = channelData[sample];
-            allpassOutputInner = delay5.popSample(channel);
+            allpassOutputInner = delay5.popSample(channel, delay5Time + (lfoOutput.quadPhaseOutput_pos * 10.0f * mParameters.modDepth));
             feedbackInner = (allpassOutputInner + (feedforwardInner * -0.5)) * 0.5;
             delay5.pushSample(channel, channelData[sample] + feedbackInner);
             channelData[sample] = allpassOutputInner + (feedforwardInner * -0.5);
@@ -231,7 +273,7 @@ void GardnerMediumRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
             channelData[sample] = delay6.popSample(channel);
             
             // output tap 2
-            channelOutput.at(channel) += channelData[sample] * 0.5;
+            channelOutput.at(channel) += channelData[sample] * 1.0; // up from 0.5
             
             delay7.pushSample(channel, channelData[sample]);
             channelData[sample] = delay7.popSample(channel);
@@ -258,7 +300,7 @@ void GardnerMediumRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
             channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.3);
             
             // output tap 3
-            channelOutput.at(channel) += channelData[sample] * 0.5;
+            channelOutput.at(channel) += channelData[sample] * 1.0; // up from 0.5
             
             delay10.pushSample(channel, channelData[sample]);
             channelData[sample] = delay10.popSample(channel);
@@ -317,6 +359,18 @@ void GardnerLargeRoom::prepare(const juce::dsp::ProcessSpec& spec)
     
     dampingFilter.prepare(spec);
     dampingFilter.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
+    
+    // prepare lfo
+    lfoParameters.frequency_Hz = 0.25;
+    lfoParameters.waveform = generatorWaveform::kSin;
+    lfo.resize(spec.numChannels);
+    for (auto& osc : lfo)
+    {
+        osc.setParameters(lfoParameters);
+        osc.reset(spec.sampleRate);
+    }
+    
+    reset();
 }
 
 void GardnerLargeRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -331,13 +385,19 @@ void GardnerLargeRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
     {
         auto* channelData = buffer.getWritePointer(channel);
         
+        lfoParameters = lfo[channel].getParameters();
+        lfoParameters.frequency_Hz = mParameters.modRate;
+        lfo[channel].setParameters(lfoParameters);
+        
         // input 1
         delay1.setDelay(8 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
-        delay2.setDelay(12 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
+        float delay2Time = 12 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]; // for modulation
+        delay2.setDelay(delay2Time);
         delay3.setDelay(4 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
         // segment 2
         delay4.setDelay(17 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
-        delay5.setDelay(62 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
+        float delay5Time = 62 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]; // for modulation
+        delay5.setDelay(delay5Time);
         delay6.setDelay(25 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
         delay7.setDelay(31 * samplesPerMs * mParameters.roomSize + channelDelayOffset[channel]);
         // segment 3
@@ -348,6 +408,9 @@ void GardnerLargeRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
         
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
+            // LFO
+            lfoOutput = lfo[channel].renderAudioOutput();
+            
             channelData[sample] += channelFeedback.at(channel);
             
             // inner 8ms allpass
@@ -359,7 +422,7 @@ void GardnerLargeRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
             
             // inner 12ms allpass (0.3)
             feedforwardInner = channelData[sample];
-            allpassOutputInner = delay2.popSample(channel);
+            allpassOutputInner = delay2.popSample(channel, delay2Time + (lfoOutput.normalOutput * 12.0f * mParameters.modDepth));
             feedbackInner = (allpassOutputInner + (feedforwardInner * -0.3)) * 0.3;
             delay2.pushSample(channel, channelData[sample] + feedbackInner);
             channelData[sample] = allpassOutputInner + (feedforwardInner * -0.3);
@@ -369,7 +432,7 @@ void GardnerLargeRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
             channelData[sample] = delay3.popSample(channel);
             
             // output tap 1
-            channelOutput.at(channel) = channelData[sample] * 0.68;
+            channelOutput.at(channel) = channelData[sample] * 0.68; // doubled from given 0.34
             
             // 17ms delay
             delay4.pushSample(channel, channelData[sample]);
@@ -383,7 +446,7 @@ void GardnerLargeRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
             
             // inner 62ms allpass (0.25)
             feedforwardInner = channelData[sample];
-            allpassOutputInner = delay5.popSample(channel);
+            allpassOutputInner = delay5.popSample(channel, delay5Time + (lfoOutput.quadPhaseOutput_pos * 12.0f * mParameters.modDepth));
             feedbackInner = (allpassOutputInner + (feedforwardInner * -0.25)) * 0.25;
             delay5.pushSample(channel, channelData[sample] + feedbackInner);
             channelData[sample] = allpassOutputInner + (feedforwardInner * -0.25);
@@ -397,7 +460,7 @@ void GardnerLargeRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
             channelData[sample] = delay7.popSample(channel);
             
             // output tap 2
-            channelOutput.at(channel) += channelData[sample] * 0.28;
+            channelOutput.at(channel) += channelData[sample] * 0.28; // doubled from given 0.14
             
             // 3ms delay
             delay8.pushSample(channel, channelData[sample]);
@@ -428,7 +491,7 @@ void GardnerLargeRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
             channelData[sample] = allpassOutputOuter + (feedforwardOuter * -0.5);
             
             // output tap 3
-            channelOutput.at(channel) += channelData[sample] * 0.28;
+            channelOutput.at(channel) += channelData[sample] * 0.28; // doubled from given 0.14
             
             // feedback/output
             channelFeedback.at(channel) = dampingFilter.processSample(channel, channelData[sample] * mParameters.decayTime);

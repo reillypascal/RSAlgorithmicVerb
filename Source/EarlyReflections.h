@@ -34,6 +34,8 @@ public:
     ReverbProcessorParameters& getParameters() override;
     
     void setParameters(const ReverbProcessorParameters& params) override;
+    
+    void setMonoFlag(const bool newMonoFlag) { monoFlag = newMonoFlag; }
 private:
     ReverbProcessorParameters mParameters;
     
@@ -43,11 +45,13 @@ private:
     juce::dsp::FirstOrderTPTFilter<float> leftHRTFFilter;
     juce::dsp::FirstOrderTPTFilter<float> rightHRTFFilter;
     
-    float channel0Output = 0;
-    float channel1Output = 0;
+    float channel0Output { 0 };
+    float channel1Output { 0 };
     
-    float mPreDelayTime = 441;
-    float mInitialLevel = 0.5;
+    float mPreDelayTime { 441 };
+    float mInitialLevel { 1.0 };
+    
+    bool monoFlag { false };
 };
 
 ////==============================================================================

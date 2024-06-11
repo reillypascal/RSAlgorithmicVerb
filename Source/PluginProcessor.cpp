@@ -73,8 +73,8 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
         std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "modRate", 1 },
                                                     "Mod Rate",
                                                     0.0f,
-                                                    8.0f,
-                                                    2.5f),
+                                                    5.0f,
+                                                    0.25f),
         std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "modDepth", 1 },
                                                     "Mod Depth",
                                                     0.0f,
@@ -280,6 +280,10 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
     earlyParameters.decayTime = parameters.getRawParameterValue("earlyDecay")->load();
     earlyParameters.roomSize = parameters.getRawParameterValue("earlySize")->load();
     earlyReflections.setParameters(earlyParameters);
+    
+    // early reflections mono/stereo - prevents comb filtering on reverbs that mix input to mono
+    std::vector<bool> earlyMonoFlagsPerProcessor {true, false, false, false, false, false};
+    earlyReflections.setMonoFlag(earlyMonoFlagsPerProcessor[static_cast<juce::AudioParameterChoice*>(parameters.getParameter("reverbType"))->getIndex()]);
     
     //================ process early reflections ================
     earlyReflections.processBlock(buffer, midiMessages);

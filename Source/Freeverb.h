@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 
+#include "LFO.h"
 #include "ProcessorBase.h"
 #include "Utilities.h"
 
@@ -50,10 +51,14 @@ private:
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter6;
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter7;
     
-    juce::dsp::DelayLine<float> allpass0 {1000};
-    juce::dsp::DelayLine<float> allpass1 {1000};
-    juce::dsp::DelayLine<float> allpass2 {1000};
-    juce::dsp::DelayLine<float> allpass3 {1000};
+    juce::dsp::DelayLine<float> allpass0 {22050};
+    juce::dsp::DelayLine<float> allpass1 {22050};
+    juce::dsp::DelayLine<float> allpass2 {22050};
+    juce::dsp::DelayLine<float> allpass3 {22050};
+    
+    OscillatorParameters lfoParameters;
+    SignalGenData lfoOutput;
+    std::vector<LFO> lfo;
     
     float comb0Output = 0;
     float comb1Output = 0;

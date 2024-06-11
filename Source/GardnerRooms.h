@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 
+#include "LFO.h"
 #include "ProcessorBase.h"
 #include "Utilities.h"
 
@@ -43,6 +44,10 @@ private:
     juce::dsp::DelayLine<float> delay6 { 22050 };
     
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
+    
+    OscillatorParameters lfoParameters;
+    SignalGenData lfoOutput;
+    std::vector<LFO> lfo;
         
     float allpassOutputInner = 0;
     float allpassOutputOuter = 0;
@@ -92,6 +97,10 @@ private:
     juce::dsp::DelayLine<float> delay10 { 22050 };
     
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
+    
+    OscillatorParameters lfoParameters;
+    SignalGenData lfoOutput;
+    std::vector<LFO> lfo;
         
     float allpassOutputInner = 0;
     float allpassOutputOuter = 0;
@@ -142,6 +151,10 @@ private:
     juce::dsp::DelayLine<float> delay11 { 22050 };
     
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
+    
+    OscillatorParameters lfoParameters;
+    SignalGenData lfoOutput;
+    std::vector<LFO> lfo;
         
     float allpassOutputInner = 0;
     float allpassOutputOuter = 0;
