@@ -2,6 +2,8 @@
 
 Implements a number of different reverb algorithms, including Dattorro's 1997 plate reverb "in the style of Griesinger;" another large concert hall from Dattorro; Gardner's 1992 room reverbs; and the popular "Freeverb" Schroeder reverb. FDN and other options to come.
 
+![Plugin interface for a reverb plugin, with two rows of knobs; 1 larger knob for decay time; and a dropdown to select reverb algorithm in the bottom right. There is a desaturated magenta rounded rectangle around the knob area.](https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/fd7959eb-73e9-4335-b7dd-5f516fd45e06)
+
 ## Build Dependencies:
 - JUCE (https://juce.com/download/)
 - Projucer (https://docs.juce.com/master/tutorial_new_projucer_project.html) (for creating Xcode/Visual Studio projects in order to build)
