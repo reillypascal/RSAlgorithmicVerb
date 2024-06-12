@@ -88,6 +88,7 @@ private:
         gardnerMediumRoom,
         gardnerLargeRoom,
         freeverb,
+        stautnerPuckette82FDN
     };
     
 	// attachments

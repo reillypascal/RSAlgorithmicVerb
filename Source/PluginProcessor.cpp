@@ -104,7 +104,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													0.35f),
         std::make_unique<juce::AudioParameterChoice>(juce::ParameterID { "reverbType", 1 },
                                                      "Reverb Type",
-                                                     juce::StringArray { "Dattorro", "ConcertHallB", "SmallRoom", "MediumRoom", "LargeRoom", "Freeverb" },
+                                                     juce::StringArray { "Dattorro", "ConcertHallB", "SmallRoom", "MediumRoom", "LargeRoom", "Freeverb", "StautnerPuckette82FDN" },
                                                      0)
 })
 { 
@@ -282,7 +282,7 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
     earlyReflections.setParameters(earlyParameters);
     
     // early reflections mono/stereo - prevents comb filtering on reverbs that mix input to mono
-    std::vector<bool> earlyMonoFlagsPerProcessor {true, false, false, false, false, false};
+    std::vector<bool> earlyMonoFlagsPerProcessor {true, false, false, false, false, true, false};
     earlyReflections.setMonoFlag(earlyMonoFlagsPerProcessor[static_cast<juce::AudioParameterChoice*>(parameters.getParameter("reverbType"))->getIndex()]);
     
     //================ process early reflections ================

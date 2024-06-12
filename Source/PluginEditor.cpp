@@ -78,11 +78,12 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
 	reverbMenuBox.addItem("Gardner Small Room", gardnerSmallRoom);
 	reverbMenuBox.addItem("Gardner Medium Room", gardnerMediumRoom);
 	reverbMenuBox.addItem("Gardner Large Room", gardnerLargeRoom);
-	reverbMenuBox.addSeparator();
-	//reverbMenuBox.addSectionHeading("Feedback Delay Networks");
-	//reverbMenuBox.addSeparator();
+    reverbMenuBox.addSeparator();
 	reverbMenuBox.addSectionHeading("Schroeder Reverbs");
 	reverbMenuBox.addItem("Freeverb", freeverb);
+    reverbMenuBox.addSeparator();
+    reverbMenuBox.addSectionHeading("Feedback Delay Networks");
+    reverbMenuBox.addItem("Stautner-Puckette '82 FDN", stautnerPuckette82FDN);
 	reverbMenuBox.setSelectedId(dattorro);
 	reverbMenuBox.setJustificationType(juce::Justification::centred);
 	reverbMenuAttachment.reset(new ComboBoxAttachment(valueTreeState, "reverbType", reverbMenuBox));

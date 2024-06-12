@@ -15,6 +15,7 @@
 #include "EarlyReflections.h"
 #include "Freeverb.h"
 #include "GardnerRooms.h"
+#include "SP82FDN.h"
 #include "ProcessorBase.h"
 #include "Utilities.h"
 
@@ -37,7 +38,8 @@ struct ProcessorFactory
         { 2, []() { return std::make_unique<GardnerSmallRoom>(); } },
         { 3, []() { return std::make_unique<GardnerMediumRoom>(); } },
         { 4, []() { return std::make_unique<GardnerLargeRoom>(); } },
-        { 5, []() { return std::make_unique<Freeverb>(); } }
+        { 5, []() { return std::make_unique<Freeverb>(); } },
+        { 6, []() { return std::make_unique<StautnerPuckette82FDN>(); } }
     };
 };
 
