@@ -29,13 +29,13 @@
             file="Source/EarlyReflections.cpp"/>
       <FILE id="jwqlsc" name="EarlyReflections.h" compile="0" resource="0"
             file="Source/EarlyReflections.h"/>
+      <FILE id="Zi5huK" name="FDNs.cpp" compile="1" resource="0" file="Source/FDNs.cpp"/>
+      <FILE id="UNNL69" name="FDNs.h" compile="0" resource="0" file="Source/FDNs.h"/>
       <FILE id="Gi16iB" name="Freeverb.cpp" compile="1" resource="0" file="Source/Freeverb.cpp"/>
       <FILE id="GtffiZ" name="Freeverb.h" compile="0" resource="0" file="Source/Freeverb.h"/>
       <FILE id="MEUfFR" name="GardnerRooms.cpp" compile="1" resource="0"
             file="Source/GardnerRooms.cpp"/>
       <FILE id="cg07wd" name="GardnerRooms.h" compile="0" resource="0" file="Source/GardnerRooms.h"/>
-      <FILE id="Zi5huK" name="SP82FDN.cpp" compile="1" resource="0" file="Source/SP82FDN.cpp"/>
-      <FILE id="UNNL69" name="SP82FDN.h" compile="0" resource="0" file="Source/SP82FDN.h"/>
       <FILE id="b5KXx0" name="GuiStyles.h" compile="0" resource="0" file="Source/GuiStyles.h"/>
       <FILE id="GqamHE" name="LFO.cpp" compile="1" resource="0" file="Source/LFO.cpp"/>
       <FILE id="aA7GG2" name="LFO.h" compile="0" resource="0" file="Source/LFO.h"/>

@@ -6,13 +6,13 @@
   ==============================================================================
 */
 
-#include "SP82FDN.h"
+#include "FDNs.h"
 
-StautnerPuckette82FDN::StautnerPuckette82FDN() = default;
+Anderson8xFDN::Anderson8xFDN() = default;
 
-StautnerPuckette82FDN::~StautnerPuckette82FDN() = default;
+Anderson8xFDN::~Anderson8xFDN() = default;
 
-void StautnerPuckette82FDN::prepare(const juce::dsp::ProcessSpec& spec)
+void Anderson8xFDN::prepare(const juce::dsp::ProcessSpec& spec)
 {
     feedbackSigMatrix.resize(spec.numChannels);
     delayOutputMatrix.resize(spec.numChannels);
@@ -48,7 +48,7 @@ void StautnerPuckette82FDN::prepare(const juce::dsp::ProcessSpec& spec)
     reset();
 }
 
-void StautnerPuckette82FDN::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void Anderson8xFDN::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
     
@@ -64,7 +64,7 @@ void StautnerPuckette82FDN::processBlock(juce::AudioBuffer<float>& buffer, juce:
     }
         
     for (int i = 0; i < delayCount; ++i)
-        delays[i].setDelay(delayTimes[i] * mParameters.roomSize * 4.0);
+        delays[i].setDelay(delayTimes[i] * mParameters.roomSize * 6.0);
     
     for (auto& filt : dampingFilters)
         filt.setCutoffFrequency(mParameters.damping);
@@ -113,7 +113,7 @@ void StautnerPuckette82FDN::processBlock(juce::AudioBuffer<float>& buffer, juce:
     }
 }
 
-void StautnerPuckette82FDN::reset() 
+void Anderson8xFDN::reset()
 {
     for (auto& del : delays)
         del.reset();
@@ -122,9 +122,9 @@ void StautnerPuckette82FDN::reset()
         filt.reset();
 }
 
-ReverbProcessorParameters& StautnerPuckette82FDN::getParameters() { return mParameters; }
+ReverbProcessorParameters& Anderson8xFDN::getParameters() { return mParameters; }
 
-void StautnerPuckette82FDN::setParameters(const ReverbProcessorParameters& params)
+void Anderson8xFDN::setParameters(const ReverbProcessorParameters& params)
 {
     if (!(params == mParameters))
         mParameters = params;

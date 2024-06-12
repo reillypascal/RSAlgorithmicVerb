@@ -14,12 +14,12 @@
 #include "ProcessorBase.h"
 #include "Utilities.h"
 
-class StautnerPuckette82FDN : public ReverbProcessorBase
+class Anderson8xFDN : public ReverbProcessorBase
 {
 public:
-    StautnerPuckette82FDN();
+    Anderson8xFDN();
     
-    ~StautnerPuckette82FDN() override;
+    ~Anderson8xFDN() override;
     
     void prepare(const juce::dsp::ProcessSpec& spec) override;
     

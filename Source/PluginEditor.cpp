@@ -83,7 +83,7 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
 	reverbMenuBox.addItem("Freeverb", freeverb);
     reverbMenuBox.addSeparator();
     reverbMenuBox.addSectionHeading("Feedback Delay Networks");
-    reverbMenuBox.addItem("Stautner-Puckette '82 FDN", stautnerPuckette82FDN);
+    reverbMenuBox.addItem("Anderson 8th Order FDN", stautnerPuckette82FDN);
 	reverbMenuBox.setSelectedId(dattorro);
 	reverbMenuBox.setJustificationType(juce::Justification::centred);
 	reverbMenuAttachment.reset(new ComboBoxAttachment(valueTreeState, "reverbType", reverbMenuBox));
