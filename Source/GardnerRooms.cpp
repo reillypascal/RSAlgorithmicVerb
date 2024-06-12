@@ -85,7 +85,7 @@ void GardnerSmallRoom::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
             
             // inner 22ms allpass
             feedforwardInner = channelData[sample];
-            allpassOutputInner = delay2.popSample(channel, delay2Time + (lfoOutput.normalOutput * 8.0f * mParameters.modDepth)); // modulate
+            allpassOutputInner = delay2.popSample(channel, delay2Time + (lfoOutput.normalOutput * 24.0f * mParameters.modDepth)); // modulate
             feedbackInner = (allpassOutputInner + (feedforwardInner * -0.4)) * 0.4;
             delay2.pushSample(channel, channelData[sample] + feedbackInner);
             channelData[sample] = allpassOutputInner + (feedforwardInner * -0.4);
@@ -112,7 +112,7 @@ void GardnerSmallRoom::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
             
             // inner 30ms allpass
             feedforwardInner = channelData[sample];
-            allpassOutputInner = delay5.popSample(channel, delay5Time + (lfoOutput.quadPhaseOutput_pos * 8.0f * mParameters.modDepth)); // modulate
+            allpassOutputInner = delay5.popSample(channel, delay5Time + (lfoOutput.quadPhaseOutput_pos * 24.0f * mParameters.modDepth)); // modulate
             feedbackInner = (allpassOutputInner + (feedforwardInner * -0.4)) * 0.4;
             delay5.pushSample(channel, channelData[sample] + feedbackInner);
             channelData[sample] = allpassOutputInner + (feedforwardInner * -0.4);
@@ -247,7 +247,7 @@ void GardnerMediumRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
             
             // inner 22ms allpass
             feedforwardInner = channelData[sample];
-            allpassOutputInner = delay2.popSample(channel, delay2Time + (lfoOutput.normalOutput * 10.0f * mParameters.modDepth));
+            allpassOutputInner = delay2.popSample(channel, delay2Time + (lfoOutput.normalOutput * 24.0f * mParameters.modDepth)); // modulate
             feedbackInner = (allpassOutputInner + (feedforwardInner * -0.5)) * 0.5;
             delay2.pushSample(channel, channelData[sample] + feedbackInner);
             channelData[sample] = allpassOutputInner + (feedforwardInner * -0.5);
@@ -264,7 +264,7 @@ void GardnerMediumRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
             
             // single 30ms allpass
             feedforwardInner = channelData[sample];
-            allpassOutputInner = delay5.popSample(channel, delay5Time + (lfoOutput.quadPhaseOutput_pos * 10.0f * mParameters.modDepth));
+            allpassOutputInner = delay5.popSample(channel, delay5Time + (lfoOutput.quadPhaseOutput_pos * 24.0f * mParameters.modDepth)); // modulate
             feedbackInner = (allpassOutputInner + (feedforwardInner * -0.5)) * 0.5;
             delay5.pushSample(channel, channelData[sample] + feedbackInner);
             channelData[sample] = allpassOutputInner + (feedforwardInner * -0.5);
@@ -422,7 +422,7 @@ void GardnerLargeRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
             
             // inner 12ms allpass (0.3)
             feedforwardInner = channelData[sample];
-            allpassOutputInner = delay2.popSample(channel, delay2Time + (lfoOutput.normalOutput * 12.0f * mParameters.modDepth));
+            allpassOutputInner = delay2.popSample(channel, delay2Time + (lfoOutput.normalOutput * 24.0f * mParameters.modDepth)); // modulate
             feedbackInner = (allpassOutputInner + (feedforwardInner * -0.3)) * 0.3;
             delay2.pushSample(channel, channelData[sample] + feedbackInner);
             channelData[sample] = allpassOutputInner + (feedforwardInner * -0.3);
@@ -446,7 +446,7 @@ void GardnerLargeRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
             
             // inner 62ms allpass (0.25)
             feedforwardInner = channelData[sample];
-            allpassOutputInner = delay5.popSample(channel, delay5Time + (lfoOutput.quadPhaseOutput_pos * 12.0f * mParameters.modDepth));
+            allpassOutputInner = delay5.popSample(channel, delay5Time + (lfoOutput.quadPhaseOutput_pos * 24.0f * mParameters.modDepth)); // modulate
             feedbackInner = (allpassOutputInner + (feedforwardInner * -0.25)) * 0.25;
             delay5.pushSample(channel, channelData[sample] + feedbackInner);
             channelData[sample] = allpassOutputInner + (feedforwardInner * -0.25);

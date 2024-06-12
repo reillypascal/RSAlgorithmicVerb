@@ -46,11 +46,13 @@ const SignalGenData LFO::renderAudioOutput()
 	{
 		double angle = modCounter * 2.0 * M_PI - M_PI;
 		
-		output.normalOutput = parabolicSine(-angle);
+//        output.normalOutput = parabolicSine(-angle);
+		output.normalOutput = std::sin(-angle);
 		
 		angle = modCounterQP * 2.0 * M_PI - M_PI;
 		
-		output.quadPhaseOutput_pos = parabolicSine(-angle);
+//        output.quadPhaseOutput_pos = parabolicSine(-angle);
+		output.quadPhaseOutput_pos = std::sin(-angle);
 	}
 	else if (lfoParameters.waveform == generatorWaveform::kTriangle)
 	{

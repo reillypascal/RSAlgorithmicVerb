@@ -137,7 +137,7 @@ void Freeverb::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& 
             // LFO
             lfoOutput = lfo[channel].renderAudioOutput();
             
-            allpass0Output = allpass0.popSample(channel, allpass0Delay + (lfoOutput.normalOutput * 1.0f * mParameters.modDepth));
+            allpass0Output = allpass0.popSample(channel, allpass0Delay + (lfoOutput.normalOutput * 12.0f * mParameters.modDepth));
             feedback = allpass0Output * allpassFeedbackCoefficient;
             feedforward = -channelData[sample] - allpass0Output * allpassFeedbackCoefficient;
             allpass0.pushSample(channel, channelData[sample] + feedback);
@@ -149,7 +149,7 @@ void Freeverb::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& 
             allpass1.pushSample(channel, channelData[sample] + feedback);
             channelData[sample] = allpass1Output + feedforward;
             
-            allpass2Output = allpass2.popSample(channel, allpass2Delay + (lfoOutput.quadPhaseOutput_neg * 1.0f * mParameters.modDepth));
+            allpass2Output = allpass2.popSample(channel, allpass2Delay + (lfoOutput.quadPhaseOutput_neg * 12.0f * mParameters.modDepth));
             feedback = allpass2Output * allpassFeedbackCoefficient;
             feedforward = -channelData[sample] - allpass2Output * allpassFeedbackCoefficient;
             allpass2.pushSample(channel, channelData[sample] + feedback);
