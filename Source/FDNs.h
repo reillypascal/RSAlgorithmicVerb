@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    FDN based on "Designing Multi-Channel Reverberators" by "John Stautner and Miller Puckette
+    Many FDN (feedback delay network) reverbs
 
   ==============================================================================
 */
