@@ -14,6 +14,7 @@ Anderson8xFDN::~Anderson8xFDN() = default;
 
 void Anderson8xFDN::prepare(const juce::dsp::ProcessSpec& spec)
 {
+    // initialize feedback/delay matrices to size channels x delays
     feedbackSigMatrix.resize(spec.numChannels);
     delayOutputMatrix.resize(spec.numChannels);
     for (int ch = 0; ch < spec.numChannels; ++ch)
@@ -24,6 +25,7 @@ void Anderson8xFDN::prepare(const juce::dsp::ProcessSpec& spec)
         std::fill(delayOutputMatrix[ch].begin(), delayOutputMatrix[ch].end(), 0.0f);
     }
     
+    // resize/prepare delays
     delays.resize(delayCount);
     for (auto& del : delays)
     {
@@ -31,6 +33,7 @@ void Anderson8xFDN::prepare(const juce::dsp::ProcessSpec& spec)
         del.setMaximumDelayInSamples(44100);
     }
     
+    // resize/prepare filters
     dampingFilters.resize(delayCount);
     for (auto& filt : dampingFilters)
         filt.prepare(spec);
@@ -62,10 +65,12 @@ void Anderson8xFDN::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
         lfoParameters.frequency_Hz = mParameters.modRate;
         osc.setParameters(lfoParameters);
     }
-        
-    for (int i = 0; i < delayCount; ++i)
-        delays[i].setDelay(delayTimes[i] * mParameters.roomSize * 6.0);
     
+    // set delay times
+    for (int i = 0; i < delayCount; ++i)
+        delays[i].setDelay(delayTimes[i] * mParameters.roomSize);
+    
+    // set damping
     for (auto& filt : dampingFilters)
         filt.setCutoffFrequency(mParameters.damping);
     
@@ -91,9 +96,10 @@ void Anderson8xFDN::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
                 }
             }
             
-            // signal in/out of delays
+            // signal/feedback into delays
             for (int del = 0; del < delayCount; ++del)
             {
+                // only include input if this delay is the input for the channel
                 if (channel < 2 && del == inDelays[channel])
                 {
                     delays[del].pushSample(channel, channelData[sample] + dampingFilters[del].processSample(channel, feedbackSigMatrix[channel][del] * mParameters.decayTime));
@@ -102,18 +108,23 @@ void Anderson8xFDN::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
                 }
             }
             
+            // zero-out channelData so all loops can use += without including dry signal
             channelData[sample] = 0;
             
+            // delays into channelData
             for (int del = 0; del < delayCount; ++del)
             {
+                // apply lfo if this delay is modulated
                 float delayMod = 0;
                 if (del == modDelays[0])
                     delayMod = lfoOutput.normalOutput;
                 if (del == modDelays[1])
                     delayMod = lfoOutput.quadPhaseOutput_pos;
                 
-                delayOutputMatrix[channel][del] = delays[del].popSample(channel, delayTimes[del] + (12.0f * delayMod));
+                // load delay outputs into output matrix for scaling/feedback
+                delayOutputMatrix[channel][del] = delays[del].popSample(channel, delayTimes[del] + (16.0f * delayMod));
                 
+                // load delay data from matrix to buffer for plugin output
                 channelData[sample] += delayOutputMatrix[channel][del];// / delayCount;
             }
         }

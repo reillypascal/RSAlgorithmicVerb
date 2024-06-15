@@ -40,15 +40,13 @@ private:
     // lowpass filters
     std::vector<juce::dsp::FirstOrderTPTFilter<float>> dampingFilters {};
     
+    // hold output/feedback signals
+    std::vector<std::vector<float>> delayOutputMatrix { };
+    std::vector<std::vector<float>> feedbackSigMatrix { };
+    
     OscillatorParameters lfoParameters;
     SignalGenData lfoOutput;
     std::vector<LFO> lfo;
-    
-//    std::vector<std::vector<float>> feedbackGainMatrix {
-//        { 0, 1, 1, 0 },
-//        { -1, 0, 0, -1 },
-//        { 1, 0, 0, -1 },
-//        { 0, 1, -1, 0 }};
     
 //    std::vector<std::vector<float>> feedbackAndersonMatrix {
 //        { 0, 0, 1, 1 },
@@ -56,7 +54,7 @@ private:
 //        { 1, 1, 0, 0 },
 //        { 1, -1, 0, 0 }};
     
-    std::vector<std::vector<float>> feedbackAndersonMatrix {
+    const std::vector<std::vector<float>> feedbackAndersonMatrix {
         { 0, 0, 0, 0, 0, 0, 1, 1 },
         { 0, 0, 0, 0, 0, 0, 1, -1 },
         { 1, 1, 0, 0, 0, 0, 0, 0 },
@@ -66,15 +64,12 @@ private:
         { 0, 0, 0, 0, 1, 1, 0, 0 },
         { 0, 0, 0, 0, 1, -1, 0, 0 }};
     
-    std::vector<int> delayTimes { 561, 2664, 410, 1343, 210, 3931, 158, 995 };
+    const std::vector<int> delayTimes { 561, 2664, 410, 1343, 210, 3931, 158, 995 };
     
-    std::vector<std::vector<float>> delayOutputMatrix { };
-    std::vector<std::vector<float>> feedbackSigMatrix { };
-    
-    int delayCount { 8 };
-    std::vector<int> inDelays { 4, 6 };
-    std::vector<int> modDelays { 1, 3 };
-    float sqrt2 = sqrt(2.0);
+    const int delayCount { 8 };
+    const std::vector<int> inDelays { 4, 6 };
+    const std::vector<int> modDelays { 1, 3 };
+    const float sqrt2 = sqrt(2.0);
 //    std::vector<int> delayTimes { 561, 2664, 1343, 995 };
 };
 
@@ -96,4 +91,10 @@ public:
     void setParameters(const ReverbProcessorParameters& params) override;
 private:
     
+    
+    const std::vector<std::vector<float>> feedbackSPMatrix {
+        { 0, 1, 1, 0 },
+        { -1, 0, 0, -1 },
+        { 1, 0, 0, -1 },
+        { 0, 1, -1, 0 }};
 };
