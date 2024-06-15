@@ -87,27 +87,34 @@ void Anderson8xFDN::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
                 {
                     // delIn = row; delOut = column
                     // can += all because feedbackSigMatrix starts with all zeroes
-                    feedbackSigMatrix[channel][delIn] += (delayOutputMatrix[channel][delOut] / 4) * feedbackAndersonMatrix[delIn][delOut];
+                    feedbackSigMatrix[channel][delIn] += delayOutputMatrix[channel][delOut] * (feedbackAndersonMatrix[delIn][delOut] / sqrt2);
                 }
             }
             
             // signal in/out of delays
             for (int del = 0; del < delayCount; ++del)
-                delays[del].pushSample(channel, channelData[sample] + dampingFilters[del].processSample(channel, feedbackSigMatrix[channel][del] * mParameters.decayTime));
+            {
+                if (channel < 2 && del == inDelays[channel])
+                {
+                    delays[del].pushSample(channel, channelData[sample] + dampingFilters[del].processSample(channel, feedbackSigMatrix[channel][del] * mParameters.decayTime));
+                } else {
+                    delays[del].pushSample(channel, dampingFilters[del].processSample(channel, feedbackSigMatrix[channel][del] * mParameters.decayTime));
+                }
+            }
             
             channelData[sample] = 0;
             
             for (int del = 0; del < delayCount; ++del)
             {
                 float delayMod = 0;
-                if (del == 0)
+                if (del == modDelays[0])
                     delayMod = lfoOutput.normalOutput;
-                if (del == 2)
+                if (del == modDelays[1])
                     delayMod = lfoOutput.quadPhaseOutput_pos;
                 
                 delayOutputMatrix[channel][del] = delays[del].popSample(channel, delayTimes[del] + (12.0f * delayMod));
                 
-                channelData[sample] += delayOutputMatrix[channel][del] / delayCount;
+                channelData[sample] += delayOutputMatrix[channel][del];// / delayCount;
             }
         }
     }

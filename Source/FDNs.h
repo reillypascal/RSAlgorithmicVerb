@@ -66,11 +66,34 @@ private:
         { 0, 0, 0, 0, 1, 1, 0, 0 },
         { 0, 0, 0, 0, 1, -1, 0, 0 }};
     
+    std::vector<int> delayTimes { 561, 2664, 410, 1343, 210, 3931, 158, 995 };
+    
     std::vector<std::vector<float>> delayOutputMatrix { };
     std::vector<std::vector<float>> feedbackSigMatrix { };
     
     int delayCount { 8 };
-//    std::vector<int> delayTimes { 1116, 1277, 1491, 1617 }; // every other from freeverb
-    std::vector<int> delayTimes { 561, 2664, 410, 1343, 210, 3931, 158, 995 };
+    std::vector<int> inDelays { 4, 6 };
+    std::vector<int> modDelays { 1, 3 };
+    float sqrt2 = sqrt(2.0);
 //    std::vector<int> delayTimes { 561, 2664, 1343, 995 };
+};
+
+class SP82FDN : public ReverbProcessorBase
+{
+public:
+    SP82FDN();
+    
+    ~SP82FDN() override;
+    
+    void prepare(const juce::dsp::ProcessSpec& spec) override;
+    
+    void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override;
+    
+    void reset() override;
+    
+    ReverbProcessorParameters& getParameters() override;
+    
+    void setParameters(const ReverbProcessorParameters& params) override;
+private:
+    
 };
