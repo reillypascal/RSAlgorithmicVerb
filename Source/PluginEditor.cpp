@@ -176,7 +176,7 @@ void RSAlgorithmicVerbAudioProcessorEditor::paint (juce::Graphics& g)
 	g.drawFittedText ("RS Algorithmic Verb", 25, 10, 350, 45, juce::Justification::left, 1);
     // Info
     g.setFont(16.0f);
-    g.drawFittedText("Version 0.5.1\n reillyspitzfaden.com", getWidth() - 375, 15, 350, 45, juce::Justification::right, 2);
+    g.drawFittedText("Version 0.5.2\n reillyspitzfaden.com", getWidth() - 375, 15, 350, 45, juce::Justification::right, 2);
     
     // panels
 //    g.setColour(juce::Colour::fromRGB(68, 81, 96));
