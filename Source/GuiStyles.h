@@ -31,6 +31,11 @@ public:
         setColour(juce::ComboBox::arrowColourId, juce::Colours::aliceblue);
         
         // fonts
-        setDefaultSansSerifTypeface(juce::LookAndFeel::getTypefaceForFont(juce::Font("Verdana", 18.0f, juce::Font::plain)));
+//        setDefaultSansSerifTypeface(juce::LookAndFeel::getTypefaceForFont(juce::Font("Open Sans", 18.0f, juce::Font::plain)));
     }
+    
+//    juce::Font getLabelFont(juce::Label& label) override
+//    {
+//        return juce::Font("Open Sans", 18.0f, juce::Font::plain);
+//    }
 };
