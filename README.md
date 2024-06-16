@@ -4,12 +4,15 @@ Implements a number of different reverb algorithms, including Dattorro's 1997 pl
 
 ![Plugin interface for a reverb plugin, with two rows of knobs; 1 larger knob for decay time; and a dropdown to select reverb algorithm in the bottom right. There is a desaturated magenta rounded rectangle around the knob area.](https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/fd7959eb-73e9-4335-b7dd-5f516fd45e06)
 
-![Demo of the Anderson 8th-Order FDN algorithm](https://media.hachyderm.io/media_attachments/files/112/627/499/986/724/161/original/4fca27db0969bac4.mp4)
+![Demo of the Anderson 8th-Order FDN algorithm](https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/a4c77f4b-dfc9-4437-9d90-56dca72af94c
+)
 
-![Demo of the Dattorro Large Concert Hall algorithm](https://media.hachyderm.io/media_attachments/files/112/599/355/124/485/914/original/8fba25ab42e9d587.mp4)
+![Demo of the Dattorro Large Concert Hall algorithm](https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/25fd80de-cff3-4200-b1a6-74c84107e8cc
+)
 
 ## Build Dependencies:
 - JUCE (https://juce.com/download/)
+
 - Projucer (https://docs.juce.com/master/tutorial_new_projucer_project.html) (for creating Xcode/Visual Studio projects in order to build)
 
 <!--Windows:
