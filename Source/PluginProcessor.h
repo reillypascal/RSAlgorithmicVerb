@@ -39,8 +39,9 @@ struct ProcessorFactory
         { 3, []() { return std::make_unique<GardnerMediumRoom>(); } },
         { 4, []() { return std::make_unique<GardnerLargeRoom>(); } },
         { 5, []() { return std::make_unique<Freeverb>(); } },
-        { 6, []() { return std::make_unique<Anderson8xFDN>(); } },
-        { 7, []() { return std::make_unique<Hadamard8xFDN>(); } }
+        { 6, []() { return std::make_unique<GeneralizedFDN>(8, "Anderson"); } },
+        { 7, []() { return std::make_unique<GeneralizedFDN>(8, "Hadamard"); } },
+        { 8, []() { return std::make_unique<GeneralizedFDN>(8, "Householder"); } }
     };
 };
 

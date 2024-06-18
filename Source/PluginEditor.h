@@ -89,7 +89,8 @@ private:
         gardnerLargeRoom,
         freeverb,
         anderson8xFDN,
-        hadamard8xFDN
+        hadamard8xFDN,
+        householder8xFDN
     };
     
 	// attachments

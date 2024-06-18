@@ -74,7 +74,7 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
 	addAndMakeVisible(reverbMenuBox);
 	reverbMenuBox.addSectionHeading("Allpass Rings");
 	reverbMenuBox.addItem("Dattorro Plate", dattorro);
-	reverbMenuBox.addItem("Large Concert Hall B", largeConcertHallB);
+	reverbMenuBox.addItem("Dattorro Hall", largeConcertHallB);
 	reverbMenuBox.addItem("Gardner Small Room", gardnerSmallRoom);
 	reverbMenuBox.addItem("Gardner Medium Room", gardnerMediumRoom);
 	reverbMenuBox.addItem("Gardner Large Room", gardnerLargeRoom);
@@ -85,6 +85,7 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
     reverbMenuBox.addSectionHeading("Feedback Delay Networks");
     reverbMenuBox.addItem("Anderson 8th Order FDN", anderson8xFDN);
     reverbMenuBox.addItem("Hadamard 8th Order FDN", hadamard8xFDN);
+    reverbMenuBox.addItem("Householder 8th Order FDN", householder8xFDN);
 	reverbMenuBox.setSelectedId(dattorro);
 	reverbMenuBox.setJustificationType(juce::Justification::centred);
 	reverbMenuAttachment.reset(new ComboBoxAttachment(valueTreeState, "reverbType", reverbMenuBox));
