@@ -104,7 +104,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													0.35f),
         std::make_unique<juce::AudioParameterChoice>(juce::ParameterID { "reverbType", 1 },
                                                      "Reverb Type",
-                                                     juce::StringArray { "DattorroPlate", "DattorroHall", "SmallRoom", "MediumRoom", "LargeRoom", "Freeverb", "Anderson8xFDN", "Hadamard8xFDN", "Householder8xFDN" },
+                                                     juce::StringArray { "DattorroPlate", "DattorroHall", "SmallRoom", "MediumRoom", "LargeRoom", "Freeverb", "Anderson8xFDN", "circulant8xFDN", "Hadamard8xFDN", "Householder8xFDN" },
                                                      0)
 })
 { 

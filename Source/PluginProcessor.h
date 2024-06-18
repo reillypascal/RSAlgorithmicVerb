@@ -40,8 +40,9 @@ struct ProcessorFactory
         { 4, []() { return std::make_unique<GardnerLargeRoom>(); } },
         { 5, []() { return std::make_unique<Freeverb>(); } },
         { 6, []() { return std::make_unique<GeneralizedFDN>(8, "Anderson"); } },
-        { 7, []() { return std::make_unique<GeneralizedFDN>(8, "Hadamard"); } },
-        { 8, []() { return std::make_unique<GeneralizedFDN>(8, "Householder"); } }
+        { 7, []() { return std::make_unique<GeneralizedFDN>(8, "circulant"); } },
+        { 8, []() { return std::make_unique<GeneralizedFDN>(8, "Hadamard"); } },
+        { 9, []() { return std::make_unique<GeneralizedFDN>(8, "Householder"); } }
     };
 };
 

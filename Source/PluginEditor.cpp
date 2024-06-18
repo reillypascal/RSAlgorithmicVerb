@@ -84,6 +84,7 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
     reverbMenuBox.addSeparator();
     reverbMenuBox.addSectionHeading("Feedback Delay Networks");
     reverbMenuBox.addItem("Anderson 8th Order FDN", anderson8xFDN);
+    reverbMenuBox.addItem("Circulant 8th Order FDN", circulant8xFDN);
     reverbMenuBox.addItem("Hadamard 8th Order FDN", hadamard8xFDN);
     reverbMenuBox.addItem("Householder 8th Order FDN", householder8xFDN);
 	reverbMenuBox.setSelectedId(dattorro);
@@ -198,7 +199,7 @@ void RSAlgorithmicVerbAudioProcessorEditor::resized()
     const int textLabelHeight = 20;
     const int textLabelSpacer = 7;
 	
-	const int menuWidth = 200;
+	const int menuWidth = 225;
 	const int menuHeight = 20;
 	const int sliderWidth1 = (getWidth() - (2 * xBorder)) / 8;
 	const int sliderWidth2 = sliderWidth1 * 2;
@@ -331,9 +332,10 @@ void RSAlgorithmicVerbAudioProcessorEditor::resized()
                             getHeight() - menuHeight - 45,
                             menuWidth,
                             menuHeight);
+    reverbMenuBox.setJustificationType(juce::Justification::left);
     reverbMenuLabel.setBounds(getWidth() - menuWidth - textLabelWidth - 25,
                               getHeight() - menuHeight - 45,
-                              menuWidth,
+                              textLabelWidth,
                               menuHeight);
-    reverbMenuLabel.setJustificationType(juce::Justification::centred);
+    reverbMenuLabel.setJustificationType(juce::Justification::right);
 }
