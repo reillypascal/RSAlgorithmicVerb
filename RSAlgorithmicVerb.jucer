@@ -2,10 +2,10 @@
 
 <JUCERPROJECT id="HKoeBg" name="RSAlgorithmicVerb" projectType="audioplug"
               useAppConfig="0" addUsingNamespaceToJuceHeader="0" displaySplashScreen="1"
-              jucerFormatVersion="1" companyWebsite="reillyspitzfaden.netlify.app"
+              jucerFormatVersion="1" companyWebsite="reillyspitzfaden.com"
               companyEmail="reillypascal@gmail.com" pluginManufacturer="Reilly Spitzfaden"
               pluginManufacturerCode="Rspi" pluginCode="Rsav" aaxIdentifier="com.reillyspitzfaden.RSAlgorithmicVerb"
-              bundleIdentifier="com.reillyspitzfaden.RSAlgorithmicVerb" version="0.5.2"
+              bundleIdentifier="com.reillyspitzfaden.RSAlgorithmicVerb" version="0.5.3"
               pluginFormats="buildAU,buildVST3" pluginAUMainType="'aufx'" pluginVST3Category="Fx"
               pluginAAXCategory="8" pluginVSTCategory="kPlugCategEffect" cppLanguageStandard="20">
   <MAINGROUP id="h5VveC" name="RSAlgorithmicVerb">
