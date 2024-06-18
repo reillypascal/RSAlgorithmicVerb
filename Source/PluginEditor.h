@@ -88,7 +88,8 @@ private:
         gardnerMediumRoom,
         gardnerLargeRoom,
         freeverb,
-        stautnerPuckette82FDN
+        anderson8xFDN,
+        hadamard8xFDN
     };
     
 	// attachments
