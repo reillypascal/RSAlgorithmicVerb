@@ -87,6 +87,9 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
     reverbMenuBox.addItem("Circulant 8th Order FDN", circulant8xFDN);
     reverbMenuBox.addItem("Hadamard 8th Order FDN", hadamard8xFDN);
     reverbMenuBox.addItem("Householder 8th Order FDN", householder8xFDN);
+    reverbMenuBox.addSeparator();
+    reverbMenuBox.addSectionHeading("Special FX");
+    reverbMenuBox.addItem("Constellation", constellation);
 	reverbMenuBox.setSelectedId(dattorro);
 	reverbMenuBox.setJustificationType(juce::Justification::centred);
 	reverbMenuAttachment.reset(new ComboBoxAttachment(valueTreeState, "reverbType", reverbMenuBox));

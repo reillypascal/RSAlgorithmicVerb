@@ -91,7 +91,8 @@ private:
         anderson8xFDN,
         circulant8xFDN,
         hadamard8xFDN,
-        householder8xFDN
+        householder8xFDN,
+        constellation
     };
     
 	// attachments

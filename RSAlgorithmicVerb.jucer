@@ -36,6 +36,8 @@
       <FILE id="MEUfFR" name="GardnerRooms.cpp" compile="1" resource="0"
             file="Source/GardnerRooms.cpp"/>
       <FILE id="cg07wd" name="GardnerRooms.h" compile="0" resource="0" file="Source/GardnerRooms.h"/>
+      <FILE id="I5XfjM" name="SpecialFX.cpp" compile="1" resource="0" file="Source/SpecialFX.cpp"/>
+      <FILE id="m5cIHP" name="SpecialFX.h" compile="0" resource="0" file="Source/SpecialFX.h"/>
       <FILE id="b5KXx0" name="GuiStyles.h" compile="0" resource="0" file="Source/GuiStyles.h"/>
       <FILE id="GqamHE" name="LFO.cpp" compile="1" resource="0" file="Source/LFO.cpp"/>
       <FILE id="aA7GG2" name="LFO.h" compile="0" resource="0" file="Source/LFO.h"/>

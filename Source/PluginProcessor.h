@@ -17,6 +17,7 @@
 #include "Freeverb.h"
 #include "GardnerRooms.h"
 #include "ProcessorBase.h"
+#include "SpecialFX.h"
 #include "Utilities.h"
 
 struct ProcessorFactory
@@ -42,7 +43,8 @@ struct ProcessorFactory
         { 6, []() { return std::make_unique<GeneralizedFDN>(8, "Anderson"); } },
         { 7, []() { return std::make_unique<GeneralizedFDN>(8, "circulant"); } },
         { 8, []() { return std::make_unique<GeneralizedFDN>(8, "Hadamard"); } },
-        { 9, []() { return std::make_unique<GeneralizedFDN>(8, "Householder"); } }
+        { 9, []() { return std::make_unique<GeneralizedFDN>(8, "Householder"); } },
+        { 10, []() { return std::make_unique<Constellation>(); } }
     };
 };
 
