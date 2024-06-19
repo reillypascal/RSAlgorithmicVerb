@@ -6,10 +6,7 @@ Implements a number of different reverb algorithms, including plate and hall rev
 
 https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/25fd80de-cff3-4200-b1a6-74c84107e8cc
 
-
-
-https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/9ce9651a-29d6-4ec2-9a4f-24d6ced8503d
-
+https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/352c736c-eec0-4abc-bbc5-bacccbba41c1
 
 <!-- https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/a4c77f4b-dfc9-4437-9d90-56dca72af94c -->
 
