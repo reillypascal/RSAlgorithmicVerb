@@ -397,7 +397,10 @@ ReverbProcessorParameters& LargeConcertHallB::getParameters() { return mParamete
 void LargeConcertHallB::setParameters(const ReverbProcessorParameters& params)
 {
     if (!(params == mParameters))
+    {
         mParameters = params;
+        mParameters.roomSize = scale(mParameters.roomSize, 0.0f, 1.0f, 0.25f, 1.75f);
+    }
 }
 
 ////==============================================================================

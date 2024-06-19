@@ -146,7 +146,10 @@ ReverbProcessorParameters& GardnerSmallRoom::getParameters() { return mParameter
 void GardnerSmallRoom::setParameters(const ReverbProcessorParameters &params)
 {
     if (!(params == mParameters))
+    {
         mParameters = params;
+        mParameters.roomSize = scale(mParameters.roomSize, 0.0f, 1.0f, 0.25f, 1.75f);
+    }
 }
 
 
@@ -333,7 +336,10 @@ ReverbProcessorParameters& GardnerMediumRoom::getParameters() { return mParamete
 void GardnerMediumRoom::setParameters(const ReverbProcessorParameters& params)
 {
     if (!(params == mParameters))
+    {
         mParameters = params;
+        mParameters.roomSize = scale(mParameters.roomSize, 0.0f, 1.0f, 0.25f, 1.75f);
+    }
 }
 
 //==============================================================================
@@ -522,7 +528,10 @@ ReverbProcessorParameters& GardnerLargeRoom::getParameters() { return mParameter
 void GardnerLargeRoom::setParameters(const ReverbProcessorParameters &params)
 {
     if (!(params == mParameters))
+    {
         mParameters = params;
+        mParameters.roomSize = scale(mParameters.roomSize, 0.0f, 1.0f, 0.25f, 1.75f);
+    }
 }
 
 ////==============================================================================

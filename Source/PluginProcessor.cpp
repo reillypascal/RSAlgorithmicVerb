@@ -323,7 +323,7 @@ void RSAlgorithmicVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
         reverbParameters.diffusion = parameters.getRawParameterValue("diffusion")->load();
         reverbParameters.modDepth = parameters.getRawParameterValue("modDepth")->load();
         reverbParameters.modRate = parameters.getRawParameterValue("modRate")->load();
-        reverbParameters.roomSize = scale(parameters.getRawParameterValue("roomSize")->load(), 0.0f, 1.0f, 0.25f, 1.75f);
+        reverbParameters.roomSize = parameters.getRawParameterValue("roomSize")->load();
         
         //============ set parameters ============
         reverbProcessor->setParameters(reverbParameters);

@@ -38,6 +38,7 @@ private:
     DelayLineWithSampleAccess<float> delay { 22050 };
     
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
+    juce::dsp::FirstOrderTPTFilter<float> dcFilter;
     
     OscillatorParameters lfoParameters;
     SignalGenData lfoOutput;
