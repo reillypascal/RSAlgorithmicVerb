@@ -84,7 +84,7 @@ void Constellation::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
                 else
                     selectedLfo = lfoOutput.normalOutput;
                 
-                channelFeedback[channel] += delay.getSampleAtDelay(channel, (feedbackDelayTimes[delFb] * mSamplesPerMs * mParameters.roomSize) + (selectedLfo * mParameters.modDepth * 64.0f)) / 16.0f;
+                channelFeedback[channel] += delay.getSampleAtDelay(channel, (feedbackDelayTimes[delFb] * mSamplesPerMs * mParameters.roomSize) + (selectedLfo * 32.0f)) / 13.0f;
             }
         }
     }
