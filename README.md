@@ -6,7 +6,9 @@ Implements a number of different reverb algorithms, including plate and hall rev
 
 https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/25fd80de-cff3-4200-b1a6-74c84107e8cc
 
-https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/a4c77f4b-dfc9-4437-9d90-56dca72af94c
+https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/11acc849-d96b-4788-9c50-0d228a4d3513
+
+<!-- https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/a4c77f4b-dfc9-4437-9d90-56dca72af94c -->
 
 ## Build Dependencies:
 - JUCE (https://juce.com/download/)
