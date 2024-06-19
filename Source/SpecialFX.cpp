@@ -61,6 +61,7 @@ void Constellation::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
             
             // input + damped feedback into delay
             delay.pushSample(channel, channelData[sample] + (dampingFilter.processSample(channel, channelFeedback[channel]) * mParameters.decayTime));
+            dampingFilter.snapToZero();
             
             // reset channelData, then sum outputs to channel
             channelData[sample] = 0.0f;
