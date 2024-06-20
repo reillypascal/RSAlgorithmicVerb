@@ -77,7 +77,7 @@ private:
     std::vector<Allpass<float>> mainAllpasses { };
     std::vector<std::vector<Allpass<float>>> outAllpasses { };
     
-    juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
+    std::vector<juce::dsp::FirstOrderTPTFilter<float>> dampingFilters { };
     
     OscillatorParameters lfoParameters;
     SignalGenData lfoOutput;
@@ -96,6 +96,7 @@ private:
     
     std::vector<float> outputAllpassValues { };
     
+    float mInputScalar { 0.5f };
     float mSampleRate { 44100 };
     float mSamplesPerMs { 44.1 };
 };

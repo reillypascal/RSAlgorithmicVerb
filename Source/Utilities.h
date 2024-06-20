@@ -60,12 +60,7 @@ template <typename SampleType>
 class Allpass
 {
 public:
-    Allpass(int maximumDelayInSamples)
-    {
-        jassert (maximumDelayInSamples >= 0);
-        
-        mDelayLine.setMaximumDelayInSamples(maximumDelayInSamples);
-    }
+    Allpass() = default;
     
     ~Allpass() = default;
     
@@ -95,9 +90,9 @@ public:
         feedforward.resize(spec.numChannels);
         feedback.resize(spec.numChannels);
         
-        std::fill(drySample.begin(), drySample.end, 0.0);
-        std::fill(delayOutput.begin(), delayOutput.end, 0.0);
-        std::fill(feedforward.begin(), feedforward.end, 0.0);
+        std::fill(drySample.begin(), drySample.end(), 0.0);
+        std::fill(delayOutput.begin(), delayOutput.end(), 0.0);
+        std::fill(feedforward.begin(), feedforward.end(), 0.0);
         std::fill(feedback.begin(), feedback.end(), 0.0);
         
         reset();
@@ -134,11 +129,11 @@ public:
     
     void setGain(SampleType newGain)
     {
-        mGain = std::clamp(newGain, 0.0, 1.0);
+        mGain = std::clamp(newGain, 0.0f, 1.0f);
     }
     
 private:
-    juce::dsp::DelayLine<SampleType> mDelayLine;
+    juce::dsp::DelayLine<SampleType> mDelayLine { 44100 };
     juce::dsp::FirstOrderTPTFilter<SampleType> mDampingFilter;
     
     int mDelayInSamples { 4 };

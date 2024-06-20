@@ -79,7 +79,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
                                                     "Mod Depth",
                                                     0.0f,
                                                     1.0f,
-                                                    0.0f),
+                                                    0.5f),
         std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "highCut", 1 },
                                                     "High Cut",
                                                     juce::NormalisableRange<float>(200,
