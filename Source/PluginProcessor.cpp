@@ -74,7 +74,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
                                                     "Mod Rate",
                                                     0.0f,
                                                     5.0f,
-                                                    0.25f),
+                                                    2.25f),
         std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { "modDepth", 1 },
                                                     "Mod Depth",
                                                     0.0f,
@@ -104,7 +104,7 @@ RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 													0.35f),
         std::make_unique<juce::AudioParameterChoice>(juce::ParameterID { "reverbType", 1 },
                                                      "Reverb Type",
-                                                     juce::StringArray { "DattorroPlate", "DattorroHall", "SmallRoom", "MediumRoom", "LargeRoom", "Freeverb", "Anderson8xFDN", "circulant8xFDN", "Hadamard8xFDN", "Householder8xFDN", "Constellation" },
+                                                     juce::StringArray { "DattorroPlate", "DattorroHall", "SmallRoom", "MediumRoom", "LargeRoom", "Freeverb", "Anderson8xFDN", "circulant8xFDN", "Hadamard8xFDN", "Householder8xFDN", "Constellation", "EventHorizon" },
                                                      0)
 })
 { 

@@ -92,7 +92,8 @@ private:
         circulant8xFDN,
         hadamard8xFDN,
         householder8xFDN,
-        constellation
+        constellation,
+        eventHorizon
     };
     
 	// attachments

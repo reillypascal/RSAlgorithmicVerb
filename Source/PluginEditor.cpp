@@ -90,6 +90,7 @@ RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RS
     reverbMenuBox.addSeparator();
     reverbMenuBox.addSectionHeading("Special FX");
     reverbMenuBox.addItem("Constellation", constellation);
+    reverbMenuBox.addItem("Event Horizon", eventHorizon);
 	reverbMenuBox.setSelectedId(dattorro);
 	reverbMenuBox.setJustificationType(juce::Justification::centred);
 	reverbMenuAttachment.reset(new ComboBoxAttachment(valueTreeState, "reverbType", reverbMenuBox));
