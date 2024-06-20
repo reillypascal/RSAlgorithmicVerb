@@ -74,14 +74,27 @@ private:
     // parameter struct
     ReverbProcessorParameters mParameters;
     
-    DelayLineWithSampleAccess<float> delay { 22050 };
+    std::vector<Allpass<float>> mainAllpasses { };
+    std::vector<std::vector<Allpass<float>>> outAllpasses { };
     
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
-    juce::dsp::FirstOrderTPTFilter<float> dcFilter;
     
     OscillatorParameters lfoParameters;
     SignalGenData lfoOutput;
-    std::vector<LFO> lfo;
+    LFO lfo;
+    
+    std::vector<float> delayTimes = { 271, 2003, 337, 1487, 2719, 1109, 
+                                      3121, 541, 3923, 1609, 701, 1303,
+                                      2549, 439, 3583, 977, 1877, 211,
+                                      2251, 487, 823, 2917, 3307, 3767 };
+    
+    std::vector<std::vector<float>> outDelayTimes = {{ 251, 919, 571, 389 },
+                                                     { 241, 577, 911, 397 }};
+    
+    int mNumSeriesAllpasses { 24 };
+    int mNumOutputAllpasses { 4 };
+    
+    std::vector<float> outputAllpassValues { };
     
     float mSampleRate { 44100 };
     float mSamplesPerMs { 44.1 };

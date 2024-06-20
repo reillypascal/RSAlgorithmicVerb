@@ -56,3 +56,100 @@ struct ReverbProcessorParameters
     float roomSize { 1.0f };
 };
 
+template <typename SampleType>
+class Allpass
+{
+public:
+    Allpass(int maximumDelayInSamples)
+    {
+        jassert (maximumDelayInSamples >= 0);
+        
+        mDelayLine.setMaximumDelayInSamples(maximumDelayInSamples);
+    }
+    
+    ~Allpass() = default;
+    
+    void setMaximumDelayInSamples(int maxDelayInSamples)
+    {
+        mDelayLine.setMaximumDelayInSamples(maxDelayInSamples);
+    }
+    
+    void setDelay(SampleType newDelayInSamples)
+    {
+        mDelayLine.setDelay(newDelayInSamples);
+    }
+    
+    void prepare(const juce::dsp::ProcessSpec& spec)
+    {
+        jassert(spec.numChannels > 0);
+        
+        mSampleRate = spec.sampleRate;
+        
+        mDelayLine.prepare(spec);
+        mDampingFilter.prepare(spec);
+        
+        mDampingFilter.setCutoffFrequency(mDamping);
+        
+        drySample.resize(spec.numChannels);
+        delayOutput.resize(spec.numChannels);
+        feedforward.resize(spec.numChannels);
+        feedback.resize(spec.numChannels);
+        
+        std::fill(drySample.begin(), drySample.end, 0.0);
+        std::fill(delayOutput.begin(), delayOutput.end, 0.0);
+        std::fill(feedforward.begin(), feedforward.end, 0.0);
+        std::fill(feedback.begin(), feedback.end(), 0.0);
+        
+        reset();
+    }
+    
+    void reset()
+    {
+        mDelayLine.reset();
+    }
+    
+    void pushSample(int channel, SampleType sample)
+    {
+        mDelayLine.pushSample(channel, sample + feedback[channel]);
+        drySample[channel] = sample;
+    }
+    
+    SampleType popSample(int channel, SampleType delayInSamples=-1, bool updateReadPointer=true)
+    {
+        delayOutput[channel] = mDelayLine.popSample(channel, delayInSamples, updateReadPointer);
+        
+//        feedback[channel] = mDampingFilter.processSample(channel, delayOutput[channel] * mGain);
+        feedback[channel] = delayOutput[channel] * mGain;
+        
+        feedforward[channel] = -drySample[channel] - delayOutput[channel] * mGain;
+        
+        return delayOutput[channel] + feedforward[channel];
+    }
+    
+    void setDamping(SampleType newDamping)
+    {
+        mDamping = std::clamp(newDamping, 20.0, 20000.0);
+        mDampingFilter.setCutoffFrequency(mDamping);
+    }
+    
+    void setGain(SampleType newGain)
+    {
+        mGain = std::clamp(newGain, 0.0, 1.0);
+    }
+    
+private:
+    juce::dsp::DelayLine<SampleType> mDelayLine;
+    juce::dsp::FirstOrderTPTFilter<SampleType> mDampingFilter;
+    
+    int mDelayInSamples { 4 };
+    
+    SampleType mDamping { 20000.0 };
+    SampleType mGain { 0.5 };
+    
+    std::vector<SampleType> drySample { };
+    std::vector<SampleType> delayOutput { };
+    std::vector<SampleType> feedforward { };
+    std::vector<SampleType> feedback { };
+    
+    SampleType mSampleRate { 44100.0 };
+};

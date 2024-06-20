@@ -124,16 +124,111 @@ void EventHorizon::prepare(const juce::dsp::ProcessSpec& spec)
 {
     mSampleRate = spec.sampleRate;
     mSamplesPerMs = mSampleRate / 1000.0f;
+    
+    mainAllpasses.resize(mNumSeriesAllpasses);
+    outAllpasses.resize(spec.numChannels);
+    for (auto& channel : outAllpasses)
+        channel.resize(mNumOutputAllpasses);
+    
+    for (int apf = 0; apf < mNumSeriesAllpasses; ++apf)
+    {
+        mainAllpasses[apf].prepare(spec);
+        mainAllpasses[apf].setMaximumDelayInSamples(22050);
+    }
+    
+    for (int channel = 0; channel < spec.numChannels; ++channel)
+    {
+        for (int apf = 0; apf < mNumOutputAllpasses; ++apf)
+        {
+            outAllpasses[channel][apf].prepare(spec);
+        }
+    }
+    
+    outputAllpassValues.resize(spec.numChannels);
+    std::fill(outputAllpassValues.begin(), outputAllpassValues.end(), 0.0f);
+    
+    // prepare lfo
+    lfoParameters.frequency_Hz = 0.25;
+    lfoParameters.waveform = generatorWaveform::kSin;
+    lfo.setParameters(lfoParameters);
+    lfo.reset(spec.sampleRate);
+    
+    reset();
 }
 
 void EventHorizon::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    juce::ScopedNoDenormals noDenormals;
     
+    int numSamples = buffer.getNumSamples();
+    int numChannels = buffer.getNumChannels();
+    
+    lfoParameters = lfo.getParameters();
+    lfoParameters.frequency_Hz = mParameters.modRate;
+    lfo.setParameters(lfoParameters);
+    
+    for (int apf = 0; apf < mNumSeriesAllpasses; ++apf)
+    {
+        mainAllpasses[apf].setDelay(delayTimes[apf] * mParameters.roomSize);
+        mainAllpasses[apf].setGain(mParameters.diffusion);
+    }
+    
+    for (int channel = 0; channel < numChannels; ++channel)
+    {
+        for (int apf = 0; apf < mNumOutputAllpasses; ++apf)
+        {
+            outAllpasses[channel][apf].setDelay(outDelayTimes[channel % 2][apf] * mParameters.roomSize);
+            outAllpasses[channel][apf].setGain(mParameters.diffusion);
+        }
+    }
+    
+    juce::AudioBuffer<float> monoBuffer(1, numSamples);
+    monoBuffer.clear();
+    
+    monoBuffer.copyFrom(0, 0, buffer, 0, 0, numSamples);
+    if (numChannels > 1)
+    {
+        monoBuffer.addFrom(0, 0, buffer, 1, 0, numSamples);
+        monoBuffer.applyGain(0.5f);
+    }
+    
+    auto* monoData = monoBuffer.getWritePointer(0);
+    
+    for (int sample = 0; sample < numSamples; ++sample)
+    {
+        // LFO
+        lfoOutput = lfo.renderAudioOutput();
+        
+        for (int apf = 0; apf < mNumSeriesAllpasses; ++apf)
+        {
+            mainAllpasses[apf].pushSample(0, monoData[sample]);
+            monoData[sample] = mainAllpasses[apf].popSample(0);
+        }
+        
+        for (int channel = 0; channel < numChannels; ++channel)
+        {
+            outputAllpassValues[channel] = monoData[sample];
+            
+            for (int apf = 0; apf < mNumOutputAllpasses; ++apf)
+            {
+                outAllpasses[channel][apf].pushSample(channel, outputAllpassValues[channel]);
+                outputAllpassValues[channel] = outAllpasses[channel][apf].popSample(channel);
+            }
+            
+            auto* channelData = buffer.getWritePointer(channel);
+            channelData[sample] = outputAllpassValues[channel];
+        }
+    }
 }
 
 void EventHorizon::reset()
 {
+    for (auto& apf : mainAllpasses)
+        apf.reset();
     
+    for (auto& channel : outAllpasses)
+        for (auto& apf : channel)
+            apf.reset();
 }
 
 ReverbProcessorParameters& EventHorizon::getParameters() { return mParameters; }
@@ -143,6 +238,6 @@ void EventHorizon::setParameters(const ReverbProcessorParameters& params)
     if (!(params == mParameters))
     {
         mParameters = params;
-        mParameters.roomSize = scale(mParameters.roomSize, 0.0f, 1.0f, 0.25f, 1.75f);
+        mParameters.roomSize = scale(mParameters.roomSize, 0.0f, 1.0f, 0.25f, 2.5f);
     }
 }
