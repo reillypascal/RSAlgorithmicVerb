@@ -51,3 +51,38 @@ private:
     float mSampleRate { 44100 };
     float mSamplesPerMs { 44.1 };
 };
+
+//=====================================================================================
+
+class EventHorizon : public ReverbProcessorBase
+{
+public:
+    EventHorizon();
+    
+    ~EventHorizon() override;
+    
+    void prepare(const juce::dsp::ProcessSpec& spec) override;
+    
+    void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override;
+    
+    void reset() override;
+    
+    ReverbProcessorParameters& getParameters() override;
+    
+    void setParameters(const ReverbProcessorParameters& params) override;
+private:
+    // parameter struct
+    ReverbProcessorParameters mParameters;
+    
+    DelayLineWithSampleAccess<float> delay { 22050 };
+    
+    juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
+    juce::dsp::FirstOrderTPTFilter<float> dcFilter;
+    
+    OscillatorParameters lfoParameters;
+    SignalGenData lfoOutput;
+    std::vector<LFO> lfo;
+    
+    float mSampleRate { 44100 };
+    float mSamplesPerMs { 44.1 };
+};

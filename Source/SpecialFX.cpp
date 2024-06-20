@@ -114,3 +114,35 @@ void Constellation::setParameters(const ReverbProcessorParameters& params)
     }
 }
 
+//=====================================================================================
+
+EventHorizon::EventHorizon() = default;
+
+EventHorizon::~EventHorizon() = default;
+
+void EventHorizon::prepare(const juce::dsp::ProcessSpec& spec)
+{
+    mSampleRate = spec.sampleRate;
+    mSamplesPerMs = mSampleRate / 1000.0f;
+}
+
+void EventHorizon::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+{
+    
+}
+
+void EventHorizon::reset()
+{
+    
+}
+
+ReverbProcessorParameters& EventHorizon::getParameters() { return mParameters; }
+
+void EventHorizon::setParameters(const ReverbProcessorParameters& params)
+{
+    if (!(params == mParameters))
+    {
+        mParameters = params;
+        mParameters.roomSize = scale(mParameters.roomSize, 0.0f, 1.0f, 0.25f, 1.75f);
+    }
+}
