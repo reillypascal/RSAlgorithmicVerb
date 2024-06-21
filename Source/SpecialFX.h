@@ -96,7 +96,7 @@ private:
     
     std::vector<float> outputAllpassValues { };
     
-    float mInputScalar { 0.5f };
+    float mOutputScalar { 0.5f };
     float mSampleRate { 44100 };
     float mSamplesPerMs { 44.1 };
 };

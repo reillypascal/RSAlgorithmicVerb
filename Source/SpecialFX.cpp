@@ -215,17 +215,18 @@ void EventHorizon::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuff
         {
             float selectedLfo { 0.0f };
             
-            if (apf % 4 == 0)
+            int lfoPhase = apf % 4;
+            if (lfoPhase == 3)
                 selectedLfo = lfoOutput.quadPhaseOutput_neg;
-            else if (apf % 3 == 0)
+            else if (lfoPhase == 2)
                 selectedLfo = lfoOutput.invertedOutput;
-            else if (apf % 2 == 0)
+            else if (lfoPhase == 1)
                 selectedLfo = lfoOutput.quadPhaseOutput_pos;
-            else
+            else if (lfoPhase == 0)
                 selectedLfo = lfoOutput.normalOutput;
             
             mainAllpasses[apf].pushSample(0, monoData[sample]);
-            monoData[sample] = dampingFilters[apf].processSample(0, mainAllpasses[apf].popSample(0, delayTimes[apf] + selectedLfo * 32.0f * mParameters.modDepth) * mInputScalar);
+            monoData[sample] = dampingFilters[apf].processSample(0, mainAllpasses[apf].popSample(0, delayTimes[apf] + selectedLfo * 32.0f * mParameters.modDepth));
         }
         
         for (int channel = 0; channel < numChannels; ++channel)
@@ -234,12 +235,24 @@ void EventHorizon::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuff
             
             for (int apf = 0; apf < mNumOutputAllpasses; ++apf)
             {
+                float selectedLfo { 0.0f };
+                
+                int lfoPhase = apf % 4;
+                if (lfoPhase == 3)
+                    selectedLfo = lfoOutput.quadPhaseOutput_neg;
+                else if (lfoPhase == 2)
+                    selectedLfo = lfoOutput.invertedOutput;
+                else if (lfoPhase == 1)
+                    selectedLfo = lfoOutput.quadPhaseOutput_pos;
+                else if (lfoPhase == 0)
+                    selectedLfo = lfoOutput.normalOutput;
+                
                 outAllpasses[channel][apf].pushSample(channel, outputAllpassValues[channel]);
-                outputAllpassValues[channel] = outAllpasses[channel][apf].popSample(channel);
+                outputAllpassValues[channel] = outAllpasses[channel][apf].popSample(channel, outDelayTimes[channel][apf] + selectedLfo * 32.0f * mParameters.modDepth);
             }
             
             auto* channelData = buffer.getWritePointer(channel);
-            channelData[sample] = outputAllpassValues[channel];
+            channelData[sample] = outputAllpassValues[channel] * mOutputScalar;
         }
     }
 }
@@ -262,6 +275,7 @@ void EventHorizon::setParameters(const ReverbProcessorParameters& params)
     {
         mParameters = params;
         mParameters.roomSize = scale(mParameters.roomSize, 0.0f, 1.0f, 0.25f, 2.5f);
-        mInputScalar = scale(mParameters.decayTime, 0.0f, 1.0f, 0.675f, 1.0f);
+        mParameters.decayTime = std::clamp(mParameters.decayTime, 0.1f, 1.0f);
+        mOutputScalar = scale(std::clamp(pow(mParameters.decayTime, 5.5f), 0.0f, pow(0.8f, 5.5f)), 0.0f, pow(0.8f, 5.5f), 0.0005f, 0.45f);
     }
 }
