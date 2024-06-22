@@ -14,7 +14,8 @@
 
 #include <JuceHeader.h>
 
-#include "DelayLineWithSampleAccess.h"
+//#include "DelayLineWithSampleAccess.h"
+#include "CustomDelays.h"
 #include "ProcessorBase.h"
 #include "Utilities.h"
 

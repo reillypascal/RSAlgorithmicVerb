@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+
 #include "GuiStyles.h"
 #include "PluginProcessor.h"
 

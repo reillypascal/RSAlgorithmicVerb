@@ -23,8 +23,6 @@
       <FILE id="XAbMe6" name="DattorroVerb.cpp" compile="1" resource="0"
             file="Source/DattorroVerb.cpp"/>
       <FILE id="l80Jn6" name="DattorroVerb.h" compile="0" resource="0" file="Source/DattorroVerb.h"/>
-      <FILE id="mCFD5y" name="DelayLineWithSampleAccess.h" compile="0" resource="0"
-            file="Source/DelayLineWithSampleAccess.h"/>
       <FILE id="tXGyRQ" name="EarlyReflections.cpp" compile="1" resource="0"
             file="Source/EarlyReflections.cpp"/>
       <FILE id="jwqlsc" name="EarlyReflections.h" compile="0" resource="0"
@@ -39,6 +37,9 @@
       <FILE id="I5XfjM" name="SpecialFX.cpp" compile="1" resource="0" file="Source/SpecialFX.cpp"/>
       <FILE id="m5cIHP" name="SpecialFX.h" compile="0" resource="0" file="Source/SpecialFX.h"/>
       <FILE id="b5KXx0" name="GuiStyles.h" compile="0" resource="0" file="Source/GuiStyles.h"/>
+      <FILE id="MWM6ce" name="CustomDelays.cpp" compile="1" resource="0"
+            file="Source/CustomDelays.cpp"/>
+      <FILE id="g0bLEt" name="CustomDelays.h" compile="0" resource="0" file="Source/CustomDelays.h"/>
       <FILE id="GqamHE" name="LFO.cpp" compile="1" resource="0" file="Source/LFO.cpp"/>
       <FILE id="aA7GG2" name="LFO.h" compile="0" resource="0" file="Source/LFO.h"/>
       <FILE id="mYaXC8" name="ProcessorBase.h" compile="0" resource="0" file="Source/ProcessorBase.h"/>
