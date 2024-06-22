@@ -276,9 +276,6 @@ void EventHorizon::setParameters(const ReverbProcessorParameters& params)
         mParameters = params;
         mParameters.roomSize = scale(mParameters.roomSize, 0.0f, 1.0f, 0.25f, 2.5f);
         mParameters.decayTime = std::clamp(mParameters.decayTime, 0.1f, 1.0f);
-        mOutputScalar = scale(std::clamp(pow(mParameters.decayTime, 5.5f), 0.0f, pow(0.8f, 5.5f)), 0.0f, pow(0.8f, 5.5f), 0.0005f, 0.45f);
-        
-//        float outputScalarInput = std::clamp(mParameters.decayTime, 0.1f, 0.8f);
-//        mOutputScalar = -0.002574331 + 0.1086542 * outputScalarInput - 1.417617 * pow(outputScalarInput, 2.0f) + 7.297175 * pow(outputScalarInput, 3.0f - 15.24476 * pow(outputScalarInput, 4.0f)) + 11.53878 * pow(outputScalarInput, 5.0f);
+        mOutputScalar = scale(std::clamp(pow(mParameters.decayTime, 5.0f), 0.0f, pow(0.8f, 5.0f)), 0.0f, pow(0.8f, 5.0f), 0.0005f, 0.45f) - 0.0001f;
     }
 }
