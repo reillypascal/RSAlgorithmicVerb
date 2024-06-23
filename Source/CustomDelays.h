@@ -10,6 +10,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Utilities.h"
 
 template <typename SampleType>
 class DelayLineWithSampleAccess
@@ -34,8 +35,6 @@ public:
     void prepare(const juce::dsp::ProcessSpec& spec);
     
     void reset();
-    
-    int wrapInt(int a, int b) const;
 private:
     juce::AudioBuffer<SampleType> mDelayBuffer;
     std::vector<SampleType> v;

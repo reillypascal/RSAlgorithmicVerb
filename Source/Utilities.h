@@ -17,6 +17,12 @@ inline float scale(float input, float inLow, float inHi, float outLow, float out
     return (input * scaleFactor) + offset;
 }
 
+inline int wrapInt(int a, int b)
+{
+    int c = a % b;
+    return (c < 0) ? c + b : c;
+}
+
 struct ReverbProcessorParameters
 {
     ReverbProcessorParameters() {}

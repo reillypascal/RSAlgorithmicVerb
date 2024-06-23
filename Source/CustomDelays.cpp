@@ -85,13 +85,6 @@ void DelayLineWithSampleAccess<SampleType>::reset()
     mDelayBuffer.clear();
 }
 
-template <typename SampleType>
-int DelayLineWithSampleAccess<SampleType>::wrapInt(int a, int b) const 
-{
-    int c = a % b;
-    return (c < 0) ? c + b : c;
-}
-
 //============================================================================
 
 template <typename SampleType>
