@@ -17,6 +17,7 @@ void Constellation::prepare(const juce::dsp::ProcessSpec& spec)
     mSampleRate = spec.sampleRate;
     mSamplesPerMs = mSampleRate / 1000.0f;
     
+    // 1 feedback value per channel
     channelFeedback.resize(spec.numChannels);
     std::fill(channelFeedback.begin(), channelFeedback.end(), 0.0f);
     
@@ -27,7 +28,7 @@ void Constellation::prepare(const juce::dsp::ProcessSpec& spec)
     dcFilter.setType(juce::dsp::FirstOrderTPTFilterType::highpass);
     dcFilter.setCutoffFrequency(20.0f);
     
-    // prepare lfo
+    // prepare lfo; 1 per channel
     lfoParameters.frequency_Hz = 0.25;
     lfoParameters.waveform = generatorWaveform::kSin;
     lfo.resize(spec.numChannels);
@@ -47,6 +48,7 @@ void Constellation::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
     int numSamples = buffer.getNumSamples();
     int numChannels = buffer.getNumChannels();
     
+    // 1 lfo per channel
     for (auto& osc : lfo)
     {
         lfoParameters = osc.getParameters();
@@ -82,11 +84,13 @@ void Constellation::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
             {
                 float selectedLfo { 0.0f };
                 
-                if (delTime % 4 == 0)
+                // cycle through 4 quadrature phases every 4 delays
+                int lfoPhase = delTime % 4;
+                if (lfoPhase == 3)
                     selectedLfo = lfoOutput.quadPhaseOutput_neg;
-                else if (delTime % 3 == 0)
+                else if (lfoPhase == 2)
                     selectedLfo = lfoOutput.invertedOutput;
-                else if (delTime % 2 == 0)
+                else if (lfoPhase == 1)
                     selectedLfo = lfoOutput.quadPhaseOutput_pos;
                 else
                     selectedLfo = lfoOutput.normalOutput;
@@ -111,6 +115,7 @@ void Constellation::setParameters(const ReverbProcessorParameters& params)
     if (!(params == mParameters))
     {
         mParameters = params;
+        // scale room for each reverb processor - accept from GUI as 0.0-1.0
         mParameters.roomSize = scale(mParameters.roomSize, 0.0f, 1.0f, 0.25f, 4.0f);
     }
 }
@@ -126,17 +131,22 @@ void EventHorizon::prepare(const juce::dsp::ProcessSpec& spec)
     mSampleRate = spec.sampleRate;
     mSamplesPerMs = mSampleRate / 1000.0f;
     
+    // set number of allpasses in member variables; only 1 channel, so don't need to resize to num channels
     mainAllpasses.resize(mNumSeriesAllpasses);
+    // 1 set of output allpasses per channel
     outAllpasses.resize(spec.numChannels);
+    // set num output allpasses per channel
     for (auto& channel : outAllpasses)
         channel.resize(mNumOutputAllpasses);
     
+    // prepare main allpasses (just 1 channel)
     for (int apf = 0; apf < mNumSeriesAllpasses; ++apf)
     {
         mainAllpasses[apf].prepare(spec);
         mainAllpasses[apf].setMaximumDelayInSamples(22050);
     }
     
+    // prepare output allpasses over each channel
     for (int channel = 0; channel < spec.numChannels; ++channel)
     {
         for (int apf = 0; apf < mNumOutputAllpasses; ++apf)
@@ -145,9 +155,11 @@ void EventHorizon::prepare(const juce::dsp::ProcessSpec& spec)
         }
     }
     
+    // resize output allpass storage to num channels, fill w/ 0.0f
     outputAllpassValues.resize(spec.numChannels);
     std::fill(outputAllpassValues.begin(), outputAllpassValues.end(), 0.0f);
     
+    // damping filters - 1 per channel
     dampingFilters.resize(mNumSeriesAllpasses);
     for (auto& filter : dampingFilters)
     {
@@ -175,27 +187,33 @@ void EventHorizon::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuff
     lfoParameters.frequency_Hz = mParameters.modRate;
     lfo.setParameters(lfoParameters);
     
+    // delay times for main allpasses
     for (int apf = 0; apf < mNumSeriesAllpasses; ++apf)
     {
         mainAllpasses[apf].setDelay(delayTimes[apf] * mParameters.roomSize);
         mainAllpasses[apf].setGain(mParameters.decayTime);
     }
     
+    // delay times for output allpasses over total num channels
     for (int channel = 0; channel < numChannels; ++channel)
     {
         for (int apf = 0; apf < mNumOutputAllpasses; ++apf)
         {
+            // assumes stereo, but if more, alternates between two output delay lists
             outAllpasses[channel][apf].setDelay(outDelayTimes[channel % 2][apf] * mParameters.roomSize);
             outAllpasses[channel][apf].setGain(mParameters.decayTime);
         }
     }
     
+    // filters are per channel; set damping amt
     for (auto& filter : dampingFilters)
         filter.setCutoffFrequency(mParameters.damping);
     
+    // mono buffer for single chain of allpasses
     juce::AudioBuffer<float> monoBuffer(1, numSamples);
     monoBuffer.clear();
     
+    // if stereo, copy in R channel. If more, ignore channels other than 0/1
     monoBuffer.copyFrom(0, 0, buffer, 0, 0, numSamples);
     if (numChannels > 1)
     {
@@ -205,6 +223,7 @@ void EventHorizon::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuff
     
     auto* monoData = monoBuffer.getWritePointer(0);
     
+    // through samples 1 time - only 1 channel of main allpasses
     for (int sample = 0; sample < numSamples; ++sample)
     {
         // LFO
@@ -212,10 +231,12 @@ void EventHorizon::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuff
         
 //        monoData[sample] *= mInputScalar;
         
+        // pass sample through each main allpass in series
         for (int apf = 0; apf < mNumSeriesAllpasses; ++apf)
         {
             float selectedLfo { 0.0f };
             
+            // cycle through 4 quadrature phases every 4 delays
             int lfoPhase = apf % 4;
             if (lfoPhase == 3)
                 selectedLfo = lfoOutput.quadPhaseOutput_neg;
@@ -223,21 +244,23 @@ void EventHorizon::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuff
                 selectedLfo = lfoOutput.invertedOutput;
             else if (lfoPhase == 1)
                 selectedLfo = lfoOutput.quadPhaseOutput_pos;
-            else if (lfoPhase == 0)
+            else
                 selectedLfo = lfoOutput.normalOutput;
             
             mainAllpasses[apf].pushSample(0, monoData[sample]);
             monoData[sample] = dampingFilters[apf].processSample(0, mainAllpasses[apf].popSample(0, delayTimes[apf] + selectedLfo * 32.0f * mParameters.modDepth));
         }
         
+        // pass sample through each output allpass, channel by channel
         for (int channel = 0; channel < numChannels; ++channel)
         {
             outputAllpassValues[channel] = monoData[sample];
-            
+            // pass output values through allpasses in series
             for (int apf = 0; apf < mNumOutputAllpasses; ++apf)
             {
                 float selectedLfo { 0.0f };
                 
+                // cycle through 4 quadrature phases every 4 delays
                 int lfoPhase = apf % 4;
                 if (lfoPhase == 3)
                     selectedLfo = lfoOutput.quadPhaseOutput_neg;
@@ -245,13 +268,13 @@ void EventHorizon::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuff
                     selectedLfo = lfoOutput.invertedOutput;
                 else if (lfoPhase == 1)
                     selectedLfo = lfoOutput.quadPhaseOutput_pos;
-                else if (lfoPhase == 0)
+                else
                     selectedLfo = lfoOutput.normalOutput;
                 
                 outAllpasses[channel][apf].pushSample(channel, outputAllpassValues[channel]);
                 outputAllpassValues[channel] = outAllpasses[channel][apf].popSample(channel, outDelayTimes[channel][apf] + selectedLfo * 32.0f * mParameters.modDepth);
             }
-            
+            // output of final allpass into correct channel of main buffer
             auto* channelData = buffer.getWritePointer(channel);
             channelData[sample] = outputAllpassValues[channel] * mOutputScalar;
         }
@@ -275,8 +298,11 @@ void EventHorizon::setParameters(const ReverbProcessorParameters& params)
     if (!(params == mParameters))
     {
         mParameters = params;
+        // different for each reverb processor
         mParameters.roomSize = scale(mParameters.roomSize, 0.0f, 1.0f, 0.25f, 2.5f);
+        // clamp to avoid out-of-control behavior below 0.1
         mParameters.decayTime = std::clamp(mParameters.decayTime, 0.1f, 1.0f);
+        // exponentially mapped to decay time — necessary to control very large output at low decay values
         mOutputScalar = scale(std::clamp(pow(mParameters.decayTime, 5.0f), 0.0f, pow(0.8f, 5.0f)), 0.0f, pow(0.8f, 5.0f), 0.0005f, 0.45f) - 0.0001f;
     }
 }
