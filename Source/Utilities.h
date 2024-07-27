@@ -41,7 +41,7 @@ struct ReverbProcessorParameters
         return *this;
     }
     
-    bool operator==(const ReverbProcessorParameters& params)
+    bool operator==(const ReverbProcessorParameters& params) const
     {
         if (params.damping == damping &&
             params.decayTime == decayTime &&
