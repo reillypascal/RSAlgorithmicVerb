@@ -6,6 +6,7 @@
   ==============================================================================
 */
 
+#include <algorithm>
 #include "SpecialFX.h"
 
 Constellation::Constellation() = default;
@@ -303,6 +304,6 @@ void EventHorizon::setParameters(const ReverbProcessorParameters& params)
         // clamp to avoid out-of-control behavior below 0.1
         mParameters.decayTime = std::clamp(mParameters.decayTime, 0.1f, 1.0f);
         // exponentially mapped to decay time — necessary to control very large output at low decay values
-        mOutputScalar = scale(std::clamp(pow(mParameters.decayTime, 5.0f), 0.0f, pow(0.8f, 5.0f)), 0.0f, pow(0.8f, 5.0f), 0.0005f, 0.45f) - 0.0001f;
+        mOutputScalar = scale(std::clamp(powf(mParameters.decayTime, 5.0f), 0.0f, powf(0.8f, 5.0f)), 0.0f, powf(0.8f, 5.0f), 0.0005f, 0.45f) - 0.0001f;
     }
 }

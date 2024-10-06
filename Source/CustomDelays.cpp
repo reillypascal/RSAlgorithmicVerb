@@ -6,6 +6,7 @@
   ==============================================================================
 */
 
+#include <algorithm>
 #include "CustomDelays.h"
 
 template <typename SampleType>
