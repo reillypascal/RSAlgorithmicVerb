@@ -12,8 +12,7 @@ https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/352c736c-eec0-
 
 ## Build Dependencies:
 - JUCE (https://juce.com/download/)
-
-- Projucer (https://docs.juce.com/master/tutorial_new_projucer_project.html) (for creating Xcode/Visual Studio projects in order to build)
+- Projucer (https://docs.juce.com/master/tutorial_new_projucer_project.html) (for creating Xcode/Visual Studio projects or Linux Makefiles in order to build)
 
 <!--Windows:
 - Compiled Windows files are available under "Releases". Unzip the files and place them in 
@@ -46,3 +45,6 @@ spctl --add
 ```
 
 ...(with a space at the end) and dragging the plugin file into the terminal, which will automatically add the file path.
+
+## Linux/Windows:
+Compiler targets are available for Linux and Windows. Set up JUCE on your computer, open the .jucer file in the Projucer, generate the Linux Makefile or Visual Studio project, and then you can compile the plugins.
