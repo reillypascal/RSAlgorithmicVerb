@@ -114,17 +114,17 @@ void Freeverb::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& 
             
             for (int i = 0; i < allpassCount; ++i)
             {
-                float allpassOutput;
+                float delayOutput;
                 
                 if (i % 2 == 0)
-                    allpassOutput = allpasses[i].popSample(channel, allpassDelayTimes[i] + (lfoOutput.normalOutput * 12.0f * parameters.modDepth));
+                    delayOutput = allpasses[i].popSample(channel, allpassDelayTimes[i] + (lfoOutput.normalOutput * 12.0f * parameters.modDepth));
                 else
-                    allpassOutput = allpasses[i].popSample(channel);
+                    delayOutput = allpasses[i].popSample(channel);
                 
-                float feedback = allpassOutput * -allpassFeedbackCoefficient;
+                float feedback = delayOutput * -allpassFeedbackCoefficient;
                 float vn = channelData[sample] + feedback;
                 allpasses[i].pushSample(channel, vn);
-                channelData[sample] = allpassOutput + (vn * allpassFeedbackCoefficient);
+                channelData[sample] = delayOutput + (vn * allpassFeedbackCoefficient);
             }
         }
     }
