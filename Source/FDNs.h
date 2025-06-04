@@ -34,7 +34,7 @@ public:
     void setParameters(const ReverbProcessorParameters& params) override;
 private:
     // parameter class
-    ReverbProcessorParameters mParameters;
+    ReverbProcessorParameters parameters;
     
     // delays
     std::vector<juce::dsp::DelayLine<float>> delays {};

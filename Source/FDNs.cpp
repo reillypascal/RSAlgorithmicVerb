@@ -163,17 +163,17 @@ void GeneralizedFDN::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBu
     for (auto& osc : lfo)
     {
         lfoParameters = osc.getParameters();
-        lfoParameters.frequency_Hz = mParameters.modRate;
+        lfoParameters.frequency_Hz = parameters.modRate;
         osc.setParameters(lfoParameters);
     }
     
     // set delay times
     for (int i = 0; i < delayCount; ++i)
-        delays[i].setDelay(delayTimes[i] * mParameters.roomSize);
+        delays[i].setDelay(delayTimes[i] * parameters.roomSize);
     
     // set damping
     for (auto& filt : dampingFilters)
-        filt.setCutoffFrequency(mParameters.damping);
+        filt.setCutoffFrequency(parameters.damping);
     
     for (int channel = 0; channel < numChannels; ++channel)
     {
@@ -203,9 +203,9 @@ void GeneralizedFDN::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBu
                 // only include input if this delay is the input for the channel
                 if (channel < 2 && del == inDelays[channel])
                 {
-                    delays[del].pushSample(channel, channelData[sample] + dampingFilters[del].processSample(channel, feedbackSigMatrix[channel][del] * mParameters.decayTime));
+                    delays[del].pushSample(channel, channelData[sample] + dampingFilters[del].processSample(channel, feedbackSigMatrix[channel][del] * parameters.decayTime));
                 } else {
-                    delays[del].pushSample(channel, dampingFilters[del].processSample(channel, feedbackSigMatrix[channel][del] * mParameters.decayTime));
+                    delays[del].pushSample(channel, dampingFilters[del].processSample(channel, feedbackSigMatrix[channel][del] * parameters.decayTime));
                 }
             }
             
@@ -241,14 +241,14 @@ void GeneralizedFDN::reset()
         filt.reset();
 }
 
-ReverbProcessorParameters& GeneralizedFDN::getParameters() { return mParameters; }
+ReverbProcessorParameters& GeneralizedFDN::getParameters() { return parameters; }
 
 void GeneralizedFDN::setParameters(const ReverbProcessorParameters& params)
 {
-    if (!(params == mParameters))
+    if (!(params == parameters))
     {
-        mParameters = params;
-        mParameters.roomSize = scale(mParameters.roomSize, 0.0f, 1.0f, 0.25f, 1.75f);
+        parameters = params;
+        parameters.roomSize = scale(parameters.roomSize, 0.0f, 1.0f, 0.25f, 1.75f);
     }
 }
 

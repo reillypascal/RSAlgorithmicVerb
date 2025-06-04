@@ -31,7 +31,11 @@ public:
     
     void setParameters(const ReverbProcessorParameters& params) override;
 private:
-    ReverbProcessorParameters mParameters;
+    ReverbProcessorParameters parameters;
+    
+    std::vector<juce::dsp::DelayLine<float>> combs {};
+    std::vector<juce::dsp::DelayLine<float>> allpasses {};
+    std::vector<juce::dsp::FirstOrderTPTFilter<float>> dampingFilters {};
     
     juce::dsp::DelayLine<float> comb0 {22050};
     juce::dsp::DelayLine<float> comb1 {22050};
@@ -60,6 +64,12 @@ private:
     SignalGenData lfoOutput;
     std::vector<LFO> lfo;
     
+    int combCount = 8;
+    int allpassCount = 4;
+    
+    std::vector<float> combDelayTimes { 1557, 1617, 1491, 1422, 1277, 1356, 1188, 1116 };
+    std::vector<float> allpassDelayTimes { 225, 441, 556, 341 };
+    
     float comb0Output = 0;
     float comb1Output = 0;
     float comb2Output = 0;
@@ -74,10 +84,12 @@ private:
     float allpass2Output = 0;
     float allpass3Output = 0;
     
-    float feedback;
-    float feedforward;
+    float combOutput = 0;
+    float allpassOutput = 0;
+    float feedback = 0;
+    float feedforward = 0;
         
-    float mWidth = 23;
+    float stereoWidth = 23;
 };
 
 //class Freeverb : public ProcessorBase

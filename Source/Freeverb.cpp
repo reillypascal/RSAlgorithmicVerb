@@ -16,36 +16,57 @@ Freeverb::~Freeverb() = default;
 
 void Freeverb::prepare(const juce::dsp::ProcessSpec& spec)
 {
-    comb0.prepare(spec);
-    comb1.prepare(spec);
-    comb2.prepare(spec);
-    comb3.prepare(spec);
-    comb4.prepare(spec);
-    comb5.prepare(spec);
-    comb6.prepare(spec);
-    comb7.prepare(spec);
+    // 8 combs/damping filters in parallel; 4 allpasses in series
+    combs.resize(combCount);
+    dampingFilters.resize(combCount);
+    allpasses.resize(allpassCount);
     
-    dampingFilter0.prepare(spec);
-    dampingFilter0.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
-    dampingFilter1.prepare(spec);
-    dampingFilter1.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
-    dampingFilter2.prepare(spec);
-    dampingFilter2.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
-    dampingFilter3.prepare(spec);
-    dampingFilter3.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
-    dampingFilter4.prepare(spec);
-    dampingFilter4.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
-    dampingFilter5.prepare(spec);
-    dampingFilter5.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
-    dampingFilter6.prepare(spec);
-    dampingFilter6.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
-    dampingFilter7.prepare(spec);
-    dampingFilter7.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
+    for (auto& comb : combs)
+    {
+        comb.prepare(spec);
+        comb.setMaximumDelayInSamples(spec.sampleRate * 0.5);
+    }
+    for (auto& filter : dampingFilters)
+    {
+        filter.prepare(spec);
+        filter.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
+    }
+    for (auto& allpass : allpasses)
+    {
+        allpass.prepare(spec);
+        allpass.setMaximumDelayInSamples(spec.sampleRate * 0.5);
+    }
     
-    allpass0.prepare(spec);
-    allpass1.prepare(spec);
-    allpass2.prepare(spec);
-    allpass3.prepare(spec);
+//    comb0.prepare(spec);
+//    comb1.prepare(spec);
+//    comb2.prepare(spec);
+//    comb3.prepare(spec);
+//    comb4.prepare(spec);
+//    comb5.prepare(spec);
+//    comb6.prepare(spec);
+//    comb7.prepare(spec);
+//    
+//    dampingFilter0.prepare(spec);
+//    dampingFilter0.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
+//    dampingFilter1.prepare(spec);
+//    dampingFilter1.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
+//    dampingFilter2.prepare(spec);
+//    dampingFilter2.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
+//    dampingFilter3.prepare(spec);
+//    dampingFilter3.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
+//    dampingFilter4.prepare(spec);
+//    dampingFilter4.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
+//    dampingFilter5.prepare(spec);
+//    dampingFilter5.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
+//    dampingFilter6.prepare(spec);
+//    dampingFilter6.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
+//    dampingFilter7.prepare(spec);
+//    dampingFilter7.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
+//    
+//    allpass0.prepare(spec);
+//    allpass1.prepare(spec);
+//    allpass2.prepare(spec);
+//    allpass3.prepare(spec);
     
     // prepare lfo
     lfoParameters.frequency_Hz = 0.25;
@@ -64,69 +85,106 @@ void Freeverb::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& 
 {
     juce::ScopedNoDenormals noDenormals;
     
-    dampingFilter0.setCutoffFrequency(mParameters.damping);
-    dampingFilter1.setCutoffFrequency(mParameters.damping);
-    dampingFilter2.setCutoffFrequency(mParameters.damping);
-    dampingFilter3.setCutoffFrequency(mParameters.damping);
-    dampingFilter4.setCutoffFrequency(mParameters.damping);
-    dampingFilter5.setCutoffFrequency(mParameters.damping);
-    dampingFilter6.setCutoffFrequency(mParameters.damping);
-    dampingFilter7.setCutoffFrequency(mParameters.damping);
+    int numChannels = buffer.getNumChannels();
+    int numSamples = buffer.getNumSamples();
     
-    for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
+    // set LFO rate
+    for (auto& osc : lfo)
+    {
+        lfoParameters = osc.getParameters();
+        lfoParameters.frequency_Hz = parameters.modRate;
+        osc.setParameters(lfoParameters);
+    }
+    
+    // set up comb damping filters
+    for (int i = 0; i < combCount; ++i)
+        dampingFilters[i].setCutoffFrequency(parameters.damping);
+    
+//    dampingFilter0.setCutoffFrequency(parameters.damping);
+//    dampingFilter1.setCutoffFrequency(parameters.damping);
+//    dampingFilter2.setCutoffFrequency(parameters.damping);
+//    dampingFilter3.setCutoffFrequency(parameters.damping);
+//    dampingFilter4.setCutoffFrequency(parameters.damping);
+//    dampingFilter5.setCutoffFrequency(parameters.damping);
+//    dampingFilter6.setCutoffFrequency(parameters.damping);
+//    dampingFilter7.setCutoffFrequency(parameters.damping);
+    
+    for (int channel = 0; channel < numChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
         
         lfoParameters = lfo[channel].getParameters();
-        lfoParameters.frequency_Hz = mParameters.modRate;
+        lfoParameters.frequency_Hz = parameters.modRate;
         lfo[channel].setParameters(lfoParameters);
         
-        comb0.setDelay(1557 * mParameters.roomSize + (channel * mWidth));
-        comb1.setDelay(1617 * mParameters.roomSize + (channel * mWidth));
-        comb2.setDelay(1491 * mParameters.roomSize + (channel * mWidth));
-        comb3.setDelay(1422 * mParameters.roomSize + (channel * mWidth));
-        comb4.setDelay(1277 * mParameters.roomSize + (channel * mWidth));
-        comb5.setDelay(1356 * mParameters.roomSize + (channel * mWidth));
-        comb6.setDelay(1188 * mParameters.roomSize + (channel * mWidth));
-        comb7.setDelay(1116 * mParameters.roomSize + (channel * mWidth));
+        // set up combs - need to be in channel loop to have channel spread
+        for (int i = 0; i < combCount; ++i)
+            combs[i].setDelay(combDelayTimes[i] * parameters.roomSize + (channel * stereoWidth));
         
-        int allpass0Delay = 225 + (channel * mWidth);
-        int allpass2Delay = 441 + (channel * mWidth);
-        allpass0.setDelay(allpass0Delay);
-        allpass1.setDelay(556 + (channel * mWidth));
-        allpass2.setDelay(allpass2Delay);
-        allpass3.setDelay(341 + (channel * mWidth));
+        // set up allpasses
+        for (int i = 0; i < allpassCount; ++i)
+            allpasses[i].setDelay(allpassDelayTimes[i] * parameters.roomSize + (channel * stereoWidth));
+        
+//        comb0.setDelay(1557 * parameters.roomSize + (channel * stereoWidth));
+//        comb1.setDelay(1617 * parameters.roomSize + (channel * stereoWidth));
+//        comb2.setDelay(1491 * parameters.roomSize + (channel * stereoWidth));
+//        comb3.setDelay(1422 * parameters.roomSize + (channel * stereoWidth));
+//        comb4.setDelay(1277 * parameters.roomSize + (channel * stereoWidth));
+//        comb5.setDelay(1356 * parameters.roomSize + (channel * stereoWidth));
+//        comb6.setDelay(1188 * parameters.roomSize + (channel * stereoWidth));
+//        comb7.setDelay(1116 * parameters.roomSize + (channel * stereoWidth));
+        
+        
+//        int allpass0Delay = 225 + (channel * stereoWidth);
+//        int allpass2Delay = 441 + (channel * stereoWidth);
+//        allpass0.setDelay(allpass0Delay);
+//        allpass1.setDelay(556 + (channel * stereoWidth));
+//        allpass2.setDelay(allpass2Delay);
+//        allpass3.setDelay(341 + (channel * stereoWidth));
         
         // comb processing in parallel
-        for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+        for (int sample = 0; sample < numSamples; ++sample)
         {
-            auto currentSample = channelData[sample]/8;
+//            auto currentSample = channelData[sample]/8;
             
-            comb0Output = comb0.popSample(channel);
-            comb0.pushSample(channel, dampingFilter0.processSample(channel, currentSample + comb0Output * (mParameters.decayTime)));
+            float combMix = 0;
             
-            comb1Output = comb1.popSample(channel);
-            comb1.pushSample(channel, dampingFilter1.processSample(channel, currentSample + comb1Output * (mParameters.decayTime)));
+            for (int i = 0; i < combCount; ++i)
+            {
+                float combOutput = combs[i].popSample(channel);
+                combs[i].pushSample(channel,
+                                    dampingFilters[i].processSample(channel,
+                                                                    channelData[sample] + combOutput * parameters.decayTime));
+                combMix += combOutput;
+            }
             
-            comb2Output = comb2.popSample(channel);
-            comb2.pushSample(channel, dampingFilter2.processSample(channel, currentSample + comb2Output * (mParameters.decayTime)));
+            channelData[sample] = combMix / combCount;
             
-            comb3Output = comb3.popSample(channel);
-            comb3.pushSample(channel, dampingFilter3.processSample(channel, currentSample + comb3Output * (mParameters.decayTime)));
+//            comb0Output = comb0.popSample(channel);
+//            comb0.pushSample(channel, dampingFilter0.processSample(channel, currentSample + comb0Output * (parameters.decayTime)));
+//            
+//            comb1Output = comb1.popSample(channel);
+//            comb1.pushSample(channel, dampingFilter1.processSample(channel, currentSample + comb1Output * (parameters.decayTime)));
+//            
+//            comb2Output = comb2.popSample(channel);
+//            comb2.pushSample(channel, dampingFilter2.processSample(channel, currentSample + comb2Output * (parameters.decayTime)));
+//            
+//            comb3Output = comb3.popSample(channel);
+//            comb3.pushSample(channel, dampingFilter3.processSample(channel, currentSample + comb3Output * (parameters.decayTime)));
+//            
+//            comb4Output = comb4.popSample(channel);
+//            comb4.pushSample(channel, dampingFilter4.processSample(channel, currentSample + comb4Output * (parameters.decayTime)));
+//            
+//            comb5Output = comb5.popSample(channel);
+//            comb5.pushSample(channel, dampingFilter5.processSample(channel, currentSample + comb5Output * (parameters.decayTime)));
+//            
+//            comb6Output = comb6.popSample(channel);
+//            comb6.pushSample(channel, dampingFilter6.processSample(channel, currentSample + comb6Output * (parameters.decayTime)));
+//            
+//            comb7Output = comb7.popSample(channel);
+//            comb7.pushSample(channel, dampingFilter7.processSample(channel, currentSample + comb7Output * (parameters.decayTime)));
             
-            comb4Output = comb4.popSample(channel);
-            comb4.pushSample(channel, dampingFilter4.processSample(channel, currentSample + comb4Output * (mParameters.decayTime)));
-            
-            comb5Output = comb5.popSample(channel);
-            comb5.pushSample(channel, dampingFilter5.processSample(channel, currentSample + comb5Output * (mParameters.decayTime)));
-            
-            comb6Output = comb6.popSample(channel);
-            comb6.pushSample(channel, dampingFilter6.processSample(channel, currentSample + comb6Output * (mParameters.decayTime)));
-            
-            comb7Output = comb7.popSample(channel);
-            comb7.pushSample(channel, dampingFilter7.processSample(channel, currentSample + comb7Output * (mParameters.decayTime)));
-            
-            channelData[sample] = comb0Output + comb1Output + comb2Output + comb3Output + comb4Output + comb5Output + comb6Output + comb7Output;
+//            channelData[sample] = comb0Output + comb1Output + comb2Output + comb3Output + comb4Output + comb5Output + comb6Output + comb7Output;
         }
         
         // allpass processing in series
@@ -137,67 +195,91 @@ void Freeverb::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& 
             // LFO
             lfoOutput = lfo[channel].renderAudioOutput();
             
-            allpass0Output = allpass0.popSample(channel, allpass0Delay + (lfoOutput.normalOutput * 12.0f * mParameters.modDepth));
-            feedback = allpass0Output * allpassFeedbackCoefficient;
-            feedforward = -channelData[sample] - allpass0Output * allpassFeedbackCoefficient;
-            allpass0.pushSample(channel, channelData[sample] + feedback);
-            channelData[sample] = allpass0Output + feedforward;
+            for (int i = 0; i < allpassCount; ++i)
+            {
+                float allpassOutput;
+                
+                if (i % 2 == 0)
+                    allpassOutput = allpasses[i].popSample(channel, allpassDelayTimes[i] + (lfoOutput.normalOutput * 12.0f * parameters.modDepth));
+                else
+                    allpassOutput = allpasses[i].popSample(channel);
+                
+                float feedback = allpassOutput * -allpassFeedbackCoefficient;
+                float vn = channelData[sample] + feedback;
+                allpasses[i].pushSample(channel, vn);
+                channelData[sample] = allpassOutput + (vn * allpassFeedbackCoefficient);
+            }
             
-            allpass1Output = allpass1.popSample(channel);
-            feedback = allpass1Output * allpassFeedbackCoefficient;
-            feedforward = -channelData[sample]  - allpass1Output * allpassFeedbackCoefficient;
-            allpass1.pushSample(channel, channelData[sample] + feedback);
-            channelData[sample] = allpass1Output + feedforward;
+//            allpass0Output = allpass0.popSample(channel, allpass0Delay + (lfoOutput.normalOutput * 12.0f * parameters.modDepth));
+//            feedback = allpass0Output * allpassFeedbackCoefficient;
+//            feedforward = -channelData[sample] - allpass0Output * allpassFeedbackCoefficient;
+//            allpass0.pushSample(channel, channelData[sample] + feedback);
+//            channelData[sample] = allpass0Output + feedforward;
             
-            allpass2Output = allpass2.popSample(channel, allpass2Delay + (lfoOutput.quadPhaseOutput_neg * 12.0f * mParameters.modDepth));
-            feedback = allpass2Output * allpassFeedbackCoefficient;
-            feedforward = -channelData[sample] - allpass2Output * allpassFeedbackCoefficient;
-            allpass2.pushSample(channel, channelData[sample] + feedback);
-            channelData[sample] = allpass2Output + feedforward;
+//            allpass1Output = allpass1.popSample(channel);
+//            feedback = allpass1Output * allpassFeedbackCoefficient;
+//            feedforward = -channelData[sample]  - allpass1Output * allpassFeedbackCoefficient;
+//            allpass1.pushSample(channel, channelData[sample] + feedback);
+//            channelData[sample] = allpass1Output + feedforward;
             
-            allpass3Output = allpass3.popSample(channel);
-            feedback = allpass3Output * allpassFeedbackCoefficient;
-            feedforward = -channelData[sample] - allpass2Output * allpassFeedbackCoefficient;
-            allpass3.pushSample(channel, channelData[sample] + feedback);
-            channelData[sample] = allpass3Output + feedforward;
+//            allpass2Output = allpass2.popSample(channel, allpass2Delay + (lfoOutput.quadPhaseOutput_neg * 12.0f * parameters.modDepth));
+//            feedback = allpass2Output * allpassFeedbackCoefficient;
+//            feedforward = -channelData[sample] - allpass2Output * allpassFeedbackCoefficient;
+//            allpass2.pushSample(channel, channelData[sample] + feedback);
+//            channelData[sample] = allpass2Output + feedforward;
+            
+//            allpass3Output = allpass3.popSample(channel);
+//            feedback = allpass3Output * allpassFeedbackCoefficient;
+//            feedforward = -channelData[sample] - allpass2Output * allpassFeedbackCoefficient;
+//            allpass3.pushSample(channel, channelData[sample] + feedback);
+//            channelData[sample] = allpass3Output + feedforward;
         }
     }
 }
 
 void Freeverb::reset()
 {
-    comb0.reset();
-    comb1.reset();
-    comb2.reset();
-    comb3.reset();
-    comb4.reset();
-    comb5.reset();
-    comb6.reset();
-    comb7.reset();
+    for (auto& comb : combs)
+        comb.reset();
     
-    dampingFilter0.reset();
-    dampingFilter1.reset();
-    dampingFilter2.reset();
-    dampingFilter3.reset();
-    dampingFilter4.reset();
-    dampingFilter5.reset();
-    dampingFilter6.reset();
-    dampingFilter7.reset();
+    for (auto& filter : dampingFilters)
+        filter.reset();
     
-    allpass0.reset();
-    allpass1.reset();
-    allpass2.reset();
-    allpass3.reset();
+    for (auto& allpass : allpasses)
+        allpass.reset();
+    
+//    comb0.reset();
+//    comb1.reset();
+//    comb2.reset();
+//    comb3.reset();
+//    comb4.reset();
+//    comb5.reset();
+//    comb6.reset();
+//    comb7.reset();
+//    
+//    dampingFilter0.reset();
+//    dampingFilter1.reset();
+//    dampingFilter2.reset();
+//    dampingFilter3.reset();
+//    dampingFilter4.reset();
+//    dampingFilter5.reset();
+//    dampingFilter6.reset();
+//    dampingFilter7.reset();
+//    
+//    allpass0.reset();
+//    allpass1.reset();
+//    allpass2.reset();
+//    allpass3.reset();
 }
 
-ReverbProcessorParameters& Freeverb::getParameters() { return mParameters; }
+ReverbProcessorParameters& Freeverb::getParameters() { return parameters; }
 
 void Freeverb::setParameters(const ReverbProcessorParameters& params)
 {
-    if (!(params == mParameters))
+    if (!(params == parameters))
     {
-        mParameters = params;
-        mParameters.roomSize = scale(mParameters.roomSize, 0.0f, 1.0f, 0.25f, 1.75f);
+        parameters = params;
+        parameters.roomSize = scale(parameters.roomSize, 0.0f, 1.0f, 0.25f, 1.75f);
     }
 }
 
@@ -283,19 +365,19 @@ void Freeverb::setParameters(const ReverbProcessorParameters& params)
 //	{
 //		auto* channelData = buffer.getWritePointer (channel);
 //		
-//		comb0.setDelay(1557 * mSize + (channel * mWidth));
-//		comb1.setDelay(1617 * mSize + (channel * mWidth));
-//		comb2.setDelay(1491 * mSize + (channel * mWidth));
-//		comb3.setDelay(1422 * mSize + (channel * mWidth));
-//		comb4.setDelay(1277 * mSize + (channel * mWidth));
-//		comb5.setDelay(1356 * mSize + (channel * mWidth));
-//		comb6.setDelay(1188 * mSize + (channel * mWidth));
-//		comb7.setDelay(1116 * mSize + (channel * mWidth));
+//		comb0.setDelay(1557 * mSize + (channel * stereoWidth));
+//		comb1.setDelay(1617 * mSize + (channel * stereoWidth));
+//		comb2.setDelay(1491 * mSize + (channel * stereoWidth));
+//		comb3.setDelay(1422 * mSize + (channel * stereoWidth));
+//		comb4.setDelay(1277 * mSize + (channel * stereoWidth));
+//		comb5.setDelay(1356 * mSize + (channel * stereoWidth));
+//		comb6.setDelay(1188 * mSize + (channel * stereoWidth));
+//		comb7.setDelay(1116 * mSize + (channel * stereoWidth));
 //		
-//		allpass0.setDelay(225 + (channel * mWidth));
-//		allpass1.setDelay(556 + (channel * mWidth));
-//		allpass2.setDelay(441 + (channel * mWidth));
-//		allpass3.setDelay(341 + (channel * mWidth));
+//		allpass0.setDelay(225 + (channel * stereoWidth));
+//		allpass1.setDelay(556 + (channel * stereoWidth));
+//		allpass2.setDelay(441 + (channel * stereoWidth));
+//		allpass3.setDelay(341 + (channel * stereoWidth));
 //		
 //		// comb processing in parallel
 //		for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
