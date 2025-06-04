@@ -37,29 +37,6 @@ private:
     std::vector<juce::dsp::DelayLine<float>> allpasses {};
     std::vector<juce::dsp::FirstOrderTPTFilter<float>> dampingFilters {};
     
-    juce::dsp::DelayLine<float> comb0 {22050};
-    juce::dsp::DelayLine<float> comb1 {22050};
-    juce::dsp::DelayLine<float> comb2 {22050};
-    juce::dsp::DelayLine<float> comb3 {22050};
-    juce::dsp::DelayLine<float> comb4 {22050};
-    juce::dsp::DelayLine<float> comb5 {22050};
-    juce::dsp::DelayLine<float> comb6 {22050};
-    juce::dsp::DelayLine<float> comb7 {22050};
-    
-    juce::dsp::FirstOrderTPTFilter<float> dampingFilter0;
-    juce::dsp::FirstOrderTPTFilter<float> dampingFilter1;
-    juce::dsp::FirstOrderTPTFilter<float> dampingFilter2;
-    juce::dsp::FirstOrderTPTFilter<float> dampingFilter3;
-    juce::dsp::FirstOrderTPTFilter<float> dampingFilter4;
-    juce::dsp::FirstOrderTPTFilter<float> dampingFilter5;
-    juce::dsp::FirstOrderTPTFilter<float> dampingFilter6;
-    juce::dsp::FirstOrderTPTFilter<float> dampingFilter7;
-    
-    juce::dsp::DelayLine<float> allpass0 {22050};
-    juce::dsp::DelayLine<float> allpass1 {22050};
-    juce::dsp::DelayLine<float> allpass2 {22050};
-    juce::dsp::DelayLine<float> allpass3 {22050};
-    
     OscillatorParameters lfoParameters;
     SignalGenData lfoOutput;
     std::vector<LFO> lfo;
@@ -69,25 +46,6 @@ private:
     
     std::vector<float> combDelayTimes { 1557, 1617, 1491, 1422, 1277, 1356, 1188, 1116 };
     std::vector<float> allpassDelayTimes { 225, 441, 556, 341 };
-    
-    float comb0Output = 0;
-    float comb1Output = 0;
-    float comb2Output = 0;
-    float comb3Output = 0;
-    float comb4Output = 0;
-    float comb5Output = 0;
-    float comb6Output = 0;
-    float comb7Output = 0;
-    
-    float allpass0Output = 0;
-    float allpass1Output = 0;
-    float allpass2Output = 0;
-    float allpass3Output = 0;
-    
-    float combOutput = 0;
-    float allpassOutput = 0;
-    float feedback = 0;
-    float feedforward = 0;
         
     float stereoWidth = 23;
 };

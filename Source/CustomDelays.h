@@ -36,15 +36,15 @@ public:
     
     void reset();
 private:
-    juce::AudioBuffer<SampleType> mDelayBuffer;
+    juce::AudioBuffer<SampleType> delayBuffer;
     std::vector<SampleType> v;
-    int mNumSamples = 0;
-    std::vector<int> mWritePosition, mReadPosition;
+    int numSamples = 0;
+    std::vector<int> writePosition, readPosition;
     SampleType delay = 0.0, delayFrac = 0.0;
-    int mDelayInSamples {0};
-    int mTotalSize = 4;
+    int delayInSamples = 0;
+    int totalSize = 4;
     
-    double mSampleRate = 44100.0;
+    double sampleRate = 44100.0;
 };
 
 //============================================================================
@@ -72,16 +72,16 @@ public:
     void setGain(SampleType newGain);
     
 private:
-    juce::dsp::DelayLine<SampleType> mDelayLine { 44100 };
+    juce::dsp::DelayLine<SampleType> delayLine { 44100 };
     
-    int mDelayInSamples { 4 };
+    int delayInSamples = 4;
     
-    SampleType mGain { 0.5 };
+    SampleType gain = 0.5;
     
     std::vector<SampleType> drySample { };
     std::vector<SampleType> delayOutput { };
     std::vector<SampleType> feedforward { };
     std::vector<SampleType> feedback { };
     
-    SampleType mSampleRate { 44100.0 };
+    SampleType sampleRate = 44100.0;
 };

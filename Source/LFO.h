@@ -34,7 +34,7 @@ public:
 };
 
 //==============================================================================
-enum class generatorWaveform { kTriangle, kSin, kSaw };
+enum class generatorWaveform { triangle, sin, saw };
 
 struct OscillatorParameters
 {
@@ -50,7 +50,7 @@ struct OscillatorParameters
 		return *this;
 	}
 	
-	generatorWaveform waveform = generatorWaveform::kTriangle;
+	generatorWaveform waveform = generatorWaveform::triangle;
 	double frequency_Hz = 0.0;
 };
 

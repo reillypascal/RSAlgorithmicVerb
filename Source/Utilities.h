@@ -54,12 +54,12 @@ struct ReverbProcessorParameters
         return false;
     }
     
-    float damping { 20000.0f };
-    float decayTime { 0.35f };
-    float diffusion { 0.75f };
-    float modDepth { 0 };
-    float modRate { 0.35f };
-    float roomSize { 1.0f };
+    float damping = 20000.0f;
+    float decayTime = 0.35f;
+    float diffusion = 0.75f;
+    float modDepth = 0;
+    float modRate = 0.35f;
+    float roomSize = 1.0f;
 };
 
 //template <typename SampleType>

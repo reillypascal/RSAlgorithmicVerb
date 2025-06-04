@@ -36,7 +36,7 @@ public:
     void setParameters(const ReverbProcessorParameters& params) override;
 private:    
     // parameter class
-    ReverbProcessorParameters mParameters;
+    ReverbProcessorParameters parameters;
     
     // filters
     juce::dsp::DelayLine<float> inputBandwidth { 4 };

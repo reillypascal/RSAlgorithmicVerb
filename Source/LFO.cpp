@@ -42,7 +42,7 @@ const SignalGenData LFO::renderAudioOutput()
 	
 	SignalGenData output;
 	
-	if (lfoParameters.waveform == generatorWaveform::kSin)
+    if (lfoParameters.waveform == generatorWaveform::sin)
 	{
 		double angle = modCounter * 2.0 * M_PI - M_PI;
 		
@@ -54,7 +54,7 @@ const SignalGenData LFO::renderAudioOutput()
 //        output.quadPhaseOutput_pos = parabolicSine(-angle);
 		output.quadPhaseOutput_pos = std::sin(-angle);
 	}
-	else if (lfoParameters.waveform == generatorWaveform::kTriangle)
+    else if (lfoParameters.waveform == generatorWaveform::triangle)
 	{
 		// bipolar saw
 		output.normalOutput = unipolarToBipolar(modCounter);
@@ -65,7 +65,7 @@ const SignalGenData LFO::renderAudioOutput()
 		
 		output.quadPhaseOutput_pos = 2.0 * fabs(output.quadPhaseOutput_pos) -1.0;
 	}
-	else if (lfoParameters.waveform == generatorWaveform::kSaw)
+    else if (lfoParameters.waveform == generatorWaveform::saw)
 	{
 		output.normalOutput = unipolarToBipolar(modCounter);
 		

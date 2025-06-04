@@ -34,7 +34,7 @@ public:
     void setParameters(const ReverbProcessorParameters& params) override;
 private:
     // parameter struct
-    ReverbProcessorParameters mParameters;
+    ReverbProcessorParameters parameters;
     
     DelayLineWithSampleAccess<float> delay { 22050 };
     
@@ -49,8 +49,8 @@ private:
     std::vector<std::vector<float>> channelOutDelayTimes { { 175, 60, 190, 137 }, { 160, 77, 212, 112 } };
     std::vector<float> feedbackDelayTimes { 47, 158, 200, 233, 120, 169, 209, 240, 134, 180, 217, 244, 146, 190, 225, 247 };
     
-    float mSampleRate { 44100 };
-    float mSamplesPerMs { 44.1 };
+    float sampleRate { 44100 };
+    float samplesPerMs { 44.1 };
 };
 
 //=====================================================================================
@@ -73,7 +73,7 @@ public:
     void setParameters(const ReverbProcessorParameters& params) override;
 private:
     // parameter struct
-    ReverbProcessorParameters mParameters;
+    ReverbProcessorParameters parameters;
     
     std::vector<Allpass<float>> mainAllpasses { };
     std::vector<std::vector<Allpass<float>>> outAllpasses { };
@@ -92,12 +92,12 @@ private:
     std::vector<std::vector<float>> outDelayTimes = {{ 251, 919, 571, 389 },
                                                      { 241, 577, 911, 397 }};
     
-    int mNumSeriesAllpasses { 24 };
-    int mNumOutputAllpasses { 4 };
+    int numSeriesAllpasses { 24 };
+    int numOutputAllpasses { 4 };
     
     std::vector<float> outputAllpassValues { };
     
-    float mOutputScalar { 0.5f };
-    float mSampleRate { 44100 };
-    float mSamplesPerMs { 44.1 };
+    float outputScalar { 0.5f };
+    float sampleRate { 44100 };
+    float samplesPerMs { 44.1 };
 };

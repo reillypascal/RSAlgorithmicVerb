@@ -34,7 +34,7 @@ public:
     void setParameters(const ReverbProcessorParameters& params) override;
 private:
     // parameter struct
-    ReverbProcessorParameters mParameters;
+    ReverbProcessorParameters parameters;
     
     juce::dsp::DelayLine<float> delay1 { 22050 };
     juce::dsp::DelayLine<float> delay2 { 22050 };
@@ -83,7 +83,7 @@ public:
     void setParameters(const ReverbProcessorParameters& params) override;
 private:
     // parameter struct
-    ReverbProcessorParameters mParameters;
+    ReverbProcessorParameters parameters;
     
     juce::dsp::DelayLine<float> delay1 { 22050 };
     juce::dsp::DelayLine<float> delay2 { 22050 };
@@ -136,7 +136,7 @@ public:
     void setParameters(const ReverbProcessorParameters& params) override;
 private:
     // parameter struct
-    ReverbProcessorParameters mParameters;
+    ReverbProcessorParameters parameters;
     
     juce::dsp::DelayLine<float> delay1 { 22050 };
     juce::dsp::DelayLine<float> delay2 { 22050 };

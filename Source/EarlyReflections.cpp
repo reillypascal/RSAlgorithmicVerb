@@ -55,14 +55,14 @@ void EarlyReflections::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
         earlyReflectionsDelayLine.pushSample(0, channelData[sample]);
         
         // sum left 3 taps
-        channel0Output = earlyReflectionsDelayLine.getSampleAtDelay(0, 441 * mParameters.roomSize) * mInitialLevel;
-        channel0Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 2929 * mParameters.roomSize) * mInitialLevel * mParameters.decayTime;
-        channel0Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 6319 * mParameters.roomSize) * mInitialLevel * pow(mParameters.decayTime, 2);
+        channel0Output = earlyReflectionsDelayLine.getSampleAtDelay(0, 441 * parameters.roomSize) * mInitialLevel;
+        channel0Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 2929 * parameters.roomSize) * mInitialLevel * parameters.decayTime;
+        channel0Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 6319 * parameters.roomSize) * mInitialLevel * pow(parameters.decayTime, 2);
         
         // sum right 3 taps (interleaved w/ left)
-        channel1Output = earlyReflectionsDelayLine.getSampleAtDelay(0, 1191 * mParameters.roomSize) * mInitialLevel;
-        channel1Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 3948 * mParameters.roomSize) * mInitialLevel * mParameters.decayTime;
-        channel1Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 9462 * mParameters.roomSize) * mInitialLevel * pow(mParameters.decayTime, 2);
+        channel1Output = earlyReflectionsDelayLine.getSampleAtDelay(0, 1191 * parameters.roomSize) * mInitialLevel;
+        channel1Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 3948 * parameters.roomSize) * mInitialLevel * parameters.decayTime;
+        channel1Output += earlyReflectionsDelayLine.getSampleAtDelay(0, 9462 * parameters.roomSize) * mInitialLevel * pow(parameters.decayTime, 2);
         
         if (!monoFlag)
         {
@@ -95,13 +95,13 @@ void EarlyReflections::reset()
     rightHRTFFilter.reset();
 }
 
-ReverbProcessorParameters& EarlyReflections::getParameters() { return mParameters; }
+ReverbProcessorParameters& EarlyReflections::getParameters() { return parameters; }
 
 void EarlyReflections::setParameters(const ReverbProcessorParameters& params)
 {
-    if (!(params == mParameters))
+    if (!(params == parameters))
     {
-        mParameters = params;
-        mParameters.roomSize = scale(mParameters.roomSize, 0.0f, 1.0f, 0.25f, 1.75f);
+        parameters = params;
+        parameters.roomSize = scale(parameters.roomSize, 0.0f, 1.0f, 0.25f, 1.75f);
     }
 }

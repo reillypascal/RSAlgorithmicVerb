@@ -38,7 +38,7 @@ public:
     
     void setMonoFlag(const bool newMonoFlag) { monoFlag = newMonoFlag; }
 private:
-    ReverbProcessorParameters mParameters;
+    ReverbProcessorParameters parameters;
     
     DelayLineWithSampleAccess<float> earlyReflectionsDelayLine {22050};
     juce::dsp::DelayLine<float> leftHRTFDelay {441};
