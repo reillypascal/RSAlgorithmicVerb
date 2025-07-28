@@ -16,8 +16,9 @@ https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/352c736c-eec0-
   - Projucer (https://docs.juce.com/master/tutorial_new_projucer_project.html) (for creating Xcode/Visual Studio projects or Linux Makefiles in order to build)
   - CMake
 
-## Compiling
-- Using CMake:
+## Compiling with CMake
+- Clone the [JUCE repo](https://github.com/juce-framework/JUCE) into the working folder
+- Run the following:
 ```sh
 cmake -S . -B build
 cmake --build build
