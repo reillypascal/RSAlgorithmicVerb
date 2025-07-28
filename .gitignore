@@ -1,6 +1,8 @@
 .vscode/
+build/
 Builds/
 Images/
+JUCE/
 JuceLibraryCode/
 Releases/
 Unused/

@@ -107,7 +107,7 @@ void Freeverb::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& 
         // allpass processing in series
         float allpassFeedbackCoefficient = 0.5;
         
-        for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+        for (int sample = 0; sample < numSamples; ++sample)
         {
             // LFO
             lfoOutput = lfo[channel].renderAudioOutput();

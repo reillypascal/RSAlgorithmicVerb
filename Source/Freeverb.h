@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    "Freeverb"-style Schroeder reverb; 8 parallel combs -> 4 series allpasses, with added Dattorro FIR early reflections
+    "Freeverb"-style Schroeder reverb; 8 parallel combs -> 4 series allpasses
 
   ==============================================================================
 */

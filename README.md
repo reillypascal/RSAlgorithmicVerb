@@ -12,7 +12,16 @@ https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/352c736c-eec0-
 
 ## Build Dependencies:
 - JUCE (https://juce.com/download/)
-- Projucer (https://docs.juce.com/master/tutorial_new_projucer_project.html) (for creating Xcode/Visual Studio projects or Linux Makefiles in order to build)
+- Either:
+  - Projucer (https://docs.juce.com/master/tutorial_new_projucer_project.html) (for creating Xcode/Visual Studio projects or Linux Makefiles in order to build)
+  - CMake
+
+## Compiling
+- Using CMake:
+```sh
+cmake -S . -B build
+cmake --build build
+```
 
 <!--Windows:
 - Compiled Windows files are available under "Releases". Unzip the files and place them in 
