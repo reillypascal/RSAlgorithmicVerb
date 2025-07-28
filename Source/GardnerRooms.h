@@ -60,7 +60,7 @@ private:
     
     std::vector<float> channelDelayOffset {0, 7};
     
-    int mSampleRate { 44100 };
+    int sampleRate = 44100;
 };
 
 

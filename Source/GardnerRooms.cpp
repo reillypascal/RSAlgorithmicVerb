@@ -15,7 +15,7 @@ GardnerSmallRoom::~GardnerSmallRoom() = default;
 
 void GardnerSmallRoom::prepare(const juce::dsp::ProcessSpec &spec)
 {
-    mSampleRate = spec.sampleRate;
+    sampleRate = spec.sampleRate;
         
     delay1.prepare(spec);
     delay2.prepare(spec);
@@ -44,7 +44,7 @@ void GardnerSmallRoom::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
 {
     juce::ScopedNoDenormals noDenormals;
     
-    float samplesPerMs = mSampleRate / 1000;
+    float samplesPerMs = sampleRate / 1000;
     
     dampingFilter.setCutoffFrequency(parameters.damping);
     

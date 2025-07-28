@@ -18,11 +18,30 @@ https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/352c736c-eec0-
 
 ## Compiling with CMake
 - Clone the [JUCE repo](https://github.com/juce-framework/JUCE) into the working folder
-- Run the following:
+- Run the following for a CLI build:
 ```sh
+# sets up a default build:
 cmake -S . -B build
+# alternatively, you can explicitly set up a debug or release build:
+cmake -S . -B build/ -D CMAKE_BUILD_TYPE=Debug
+# or
+cmake -S . -B build/ -D CMAKE_BUILD_TYPE=Release
+# after running one of the above three options, run
 cmake --build build
 ```
+
+You can also use CMake to generate Xcode/Visual Studio projects:
+- Run the following to generate an Xcode project:
+```sh
+cmake -B Builds -G Xcode
+```
+- Run the following to generate a Visual Studio project:
+```sh
+cmake -B Builds -G "Visual Studio 17 2022"
+```
+
+### Debugging
+`launch.json` sets up the ability to launch an app of your choice (e.g., REAPER, JUCE's AudioPluginHost, etc.) as part of a debugging session. You can configure which app in your editor; e.g., for Zed, see [the debugger documentation](https://zed.dev/docs/debugger#configuration).
 
 <!--Windows:
 - Compiled Windows files are available under "Releases". Unzip the files and place them in 
