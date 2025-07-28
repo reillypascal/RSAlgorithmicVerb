@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <cstddef>
 
 #include "LFO.h"
 #include "ProcessorBase.h"
@@ -41,8 +42,8 @@ private:
     SignalGenData lfoOutput;
     std::vector<LFO> lfo;
     
-    int combCount = 8;
-    int allpassCount = 4;
+    size_t combCount = 8;
+    size_t allpassCount = 4;
     
     std::vector<float> combDelayTimes { 1557, 1617, 1491, 1422, 1277, 1356, 1188, 1116 };
     std::vector<float> allpassDelayTimes { 225, 441, 556, 341 };

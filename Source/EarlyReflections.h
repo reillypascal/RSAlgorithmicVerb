@@ -36,23 +36,28 @@ public:
     
     void setParameters(const ReverbProcessorParameters& params) override;
     
-    void setMonoFlag(const bool newMonoFlag) { monoFlag = newMonoFlag; }
+    void setMonoFlag(const bool newMonoFlag);
 private:
     ReverbProcessorParameters parameters;
     
     DelayLineWithSampleAccess<float> earlyReflectionsDelayLine {22050};
-    juce::dsp::DelayLine<float> leftHRTFDelay {441};
-    juce::dsp::DelayLine<float> rightHRTFDelay {441};
-    juce::dsp::FirstOrderTPTFilter<float> leftHRTFFilter;
-    juce::dsp::FirstOrderTPTFilter<float> rightHRTFFilter;
+    std::vector<juce::dsp::DelayLine<float>> hrtfDelays;
+    std::vector<juce::dsp::FirstOrderTPTFilter<float>> hrtfFilters;
+    // juce::dsp::DelayLine<float> leftHRTFDelay {441};
+    // juce::dsp::DelayLine<float> rightHRTFDelay {441};
+    // juce::dsp::FirstOrderTPTFilter<float> leftHRTFFilter;
+    // juce::dsp::FirstOrderTPTFilter<float> rightHRTFFilter;
     
-    float channel0Output { 0 };
-    float channel1Output { 0 };
+    std::vector<std::vector<int>> hrtfDelayTimes { { 441, 2929, 6319 }, { 1191, 3948, 9462 } };
+    std::vector<float> channelOutputs;
+    // float channel0Output = 0;
+    // float channel1Output = 0;
     
-    float mPreDelayTime { 441 };
-    float mInitialLevel { 1.0 };
+    // float preDelayTime = 441;
+    float initialLevel = 1.0;
     
-    bool monoFlag { false };
+    // early reflections mono/stereo - prevents comb filtering on reverbs that mix input to mono; PluginProcessor sets mono/stereo by processor
+    bool monoFlag = false;
 };
 
 ////==============================================================================
