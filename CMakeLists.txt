@@ -46,13 +46,16 @@ juce_add_plugin(${PROJECT_NAME}
     # VERSION ...                               # Set this if the plugin version is different to the project version
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
-    # COMPANY_NAME ...                          # Specify the name of the plugin's author
-    # IS_SYNTH TRUE/FALSE                       # Is this a synth or an effect?
+    COMPANY_NAME "Reilly Spitzfaden"                          # Specify the name of the plugin's author
+    BUNDLE_ID "com.reillyspitzfaden.RSAlgorithmicVerb"
+    IS_SYNTH FALSE                       # Is this a synth or an effect?
     # NEEDS_MIDI_INPUT TRUE/FALSE               # Does the plugin need midi input?
     # NEEDS_MIDI_OUTPUT TRUE/FALSE              # Does the plugin need midi output?
-    # IS_MIDI_EFFECT TRUE/FALSE                 # Is this plugin a MIDI effect?
+    IS_MIDI_EFFECT FALSE                 # Is this plugin a MIDI effect?
     # EDITOR_WANTS_KEYBOARD_FOCUS TRUE/FALSE    # Does the editor need keyboard focus?
-    # COPY_PLUGIN_AFTER_BUILD TRUE/FALSE        # Should the plugin be installed to a default location after building?
+    COPY_PLUGIN_AFTER_BUILD TRUE        # Should the plugin be installed to a default location after building?
+    VST3_COPY_DIR "/Library/Audio/Plug-Ins/VST3"
+    AU_COPY_DIR "/Library/Audio/Plug-Ins/Components"
     PLUGIN_MANUFACTURER_CODE Rspi               # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE Rsav                            # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
@@ -65,7 +68,7 @@ juce_add_plugin(${PROJECT_NAME}
 # include all your JUCE module headers; if you're happy to include module headers directly, you
 # probably don't need to call this.
 
-# juce_generate_juce_header(AudioPluginExample)
+juce_generate_juce_header(${PROJECT_NAME})
 
 # `target_sources` adds source files to a target. We pass the target that needs the sources as the
 # first argument, then a visibility parameter for the sources which should normally be PRIVATE.
@@ -139,5 +142,3 @@ target_link_libraries(${PROJECT_NAME}
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
-
-juce_generate_juce_header(${PROJECT_NAME})
