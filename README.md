@@ -70,7 +70,7 @@ cmake -S . -B build/ -D CMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-You can also use CMake to generate Xcode/Visual Studio projects:
+You can also use CMake to generate Xcode/Visual Studio projects.
 - Run the following to generate an Xcode project:
 ```sh
 cmake -B Builds -G Xcode

@@ -1,12 +1,4 @@
-/*
-  ==============================================================================
-
-    ConcertHallB.h
-    Created: 4 Jun 2023 4:38:39pm
-    Author:  Reilly Spitzfaden
-
-  ==============================================================================
-*/
+// Concert Hall B algorithm, based on Dattorro
 
 #pragma once
 
@@ -98,7 +90,7 @@ private:
     std::vector<float> channelFeedback {0, 0};
     std::vector<float> channelOutput {0, 0};
     
-    int mSampleRate = 44100;
+    int sampleRate = 44100;
 };
 
 //class LargeConcertHallB : public ProcessorBase

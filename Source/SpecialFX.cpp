@@ -1,10 +1,4 @@
-/*
-  ==============================================================================
-
-    Special-effect reverbs (delay/reverb hybrids, nonlinear decay times, etc.)
-    
-  ==============================================================================
-*/
+// Special-effect reverbs (delay/reverb hybrids, nonlinear decay times, etc.)
 
 #include <algorithm>
 #include "SpecialFX.h"

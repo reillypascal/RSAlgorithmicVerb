@@ -1,12 +1,8 @@
-/*
-  ==============================================================================
-
-    LookAndFeel class definition
- 
-  ==============================================================================
-*/
+// LookAndFeel class definition
 
 #pragma once
+
+#include <JuceHeader.h>
 
 //look and feel of sliders/labels
 class GrayBlueLookAndFeel : public juce::LookAndFeel_V4

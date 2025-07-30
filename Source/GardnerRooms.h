@@ -14,6 +14,8 @@
 #include "ProcessorBase.h"
 #include "Utilities.h"
 
+// want shorter alias because of repetitive syntax for std::vector with size as *member* variable
+typedef juce::dsp::DelayLine<float> DelayLine;
 
 //==============================================================================
 class GardnerSmallRoom :public ReverbProcessorBase
@@ -42,6 +44,9 @@ private:
     juce::dsp::DelayLine<float> delay4 { 22050 };
     juce::dsp::DelayLine<float> delay5 { 22050 };
     juce::dsp::DelayLine<float> delay6 { 22050 };
+    // need to use this verbose syntax for initializing with size as *member* variable
+    std::vector<DelayLine> delays = std::vector<DelayLine>(6, DelayLine(22050));
+    std::vector<float> delayTimesMs { 24.0f, 22.0f, 8.3f, 4.7f, 30.0f, 36.0f };
     
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
     
@@ -113,7 +118,7 @@ private:
     
     std::vector<float> channelDelayOffset {0, 15};
     
-    int mSampleRate { 44100 };
+    int sampleRate = 44100;
 };
 
 
@@ -167,7 +172,7 @@ private:
     
     std::vector<float> channelDelayOffset {0, 23};
     
-    int mSampleRate { 44100 };
+    int sampleRate = 44100;
 };
 
 //class GardnerSmallRoom : public ProcessorBase

@@ -1,14 +1,8 @@
-/*
-  ==============================================================================
-
-    Sine/tri/saw LFO with quadrature output
-
-  ==============================================================================
-*/
+// Sine/tri/saw LFO with quadrature output
 
 #pragma once
 
-#include <cmath>
+// #include <cmath>
 
 #include <JuceHeader.h>
 

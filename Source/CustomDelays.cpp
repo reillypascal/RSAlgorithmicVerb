@@ -1,13 +1,8 @@
-/*
-  ==============================================================================
-
-    Tapped delay line, Allpass classes
-
-  ==============================================================================
-*/
+// Tapped delay line, Allpass classes
 
 #include <algorithm>
 #include "CustomDelays.h"
+#include "Utilities.h"
 
 template <typename SampleType>
 DelayLineWithSampleAccess<SampleType>::DelayLineWithSampleAccess(int maximumDelayInSamples)

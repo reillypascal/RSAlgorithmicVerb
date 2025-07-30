@@ -1,17 +1,11 @@
-/*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
+// Audio processor for the plugin
 
 #pragma once
 
 #include <JuceHeader.h>
 
 #include "ConcertHallB.h"
-#include "CustomDelays.h"
+// #include "CustomDelays.h"
 #include "DattorroVerb.h"
 #include "EarlyReflections.h"
 #include "FDNs.h"

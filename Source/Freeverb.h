@@ -1,10 +1,4 @@
-/*
-  ==============================================================================
-
-    "Freeverb"-style Schroeder reverb; 8 parallel combs -> 4 series allpasses
-
-  ==============================================================================
-*/
+// "Freeverb"-style Schroeder reverb; 8 parallel combs -> 4 series allpasses
 
 #pragma once
 

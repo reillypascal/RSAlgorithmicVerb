@@ -24,6 +24,9 @@ void GardnerSmallRoom::prepare(const juce::dsp::ProcessSpec &spec)
     delay5.prepare(spec);
     delay6.prepare(spec);
     
+    // for (auto& delay : delays)
+    //     delay.prepare(spec);
+    
     dampingFilter.prepare(spec);
     dampingFilter.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
     
@@ -66,6 +69,8 @@ void GardnerSmallRoom::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
         float delay5Time = 30 * samplesPerMs * parameters.roomSize + channelDelayOffset[channel]; // for modulation
         delay5.setDelay(delay5Time);
         delay6.setDelay(36 * samplesPerMs * parameters.roomSize + channelDelayOffset[channel]);
+        
+        // for (size_t delay = 0; delay < delayTimesMs.size(); ++delay) {}
         
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
@@ -160,7 +165,7 @@ GardnerMediumRoom::~GardnerMediumRoom() = default;
 
 void GardnerMediumRoom::prepare(const juce::dsp::ProcessSpec& spec)
 {
-    mSampleRate = spec.sampleRate;
+    sampleRate = spec.sampleRate;
         
     delay1.prepare(spec);
     delay2.prepare(spec);
@@ -197,7 +202,7 @@ void GardnerMediumRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
     input2Buffer.clear();
     input2Buffer.makeCopyOf(buffer, false);
     
-    float samplesPerMs = mSampleRate / 1000;
+    float samplesPerMs = sampleRate / 1000;
     
     dampingFilter.setCutoffFrequency(parameters.damping);
     
@@ -349,7 +354,7 @@ GardnerLargeRoom::~GardnerLargeRoom() = default;
 
 void GardnerLargeRoom::prepare(const juce::dsp::ProcessSpec& spec)
 {
-    mSampleRate = spec.sampleRate;
+    sampleRate = spec.sampleRate;
         
     delay1.prepare(spec);
     delay2.prepare(spec);
@@ -383,7 +388,7 @@ void GardnerLargeRoom::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
 {
     juce::ScopedNoDenormals noDenormals;
     
-    float samplesPerMs = mSampleRate / 1000;
+    float samplesPerMs = sampleRate / 1000;
     
     dampingFilter.setCutoffFrequency(parameters.damping);
     

@@ -1,10 +1,4 @@
-/*
-  ==============================================================================
-
-    Collection of FDN (feedback delay network) algorithms
-
-  ==============================================================================
-*/
+// Collection of FDN (feedback delay network) algorithms
 
 #pragma once
 
@@ -50,7 +44,7 @@ private:
     SignalGenData lfoOutput;
     std::vector<LFO> lfo;
     
-    float feedbackScalar { sqrt(2.0f) };
+    float feedbackScalar = sqrt(2.0f);
     
     std::vector<std::vector<float>> feedbackMatrix {
         { 0, 0, 0, 0, 0, 0, 1, 1 },
@@ -67,7 +61,7 @@ private:
     std::vector<int> inDelays { 4, 6 };
     std::vector<int> modDelays { 1, 3 };
     
-    int delayCount { 8 };
+    int delayCount = 8;
 };
 
 //===================================================================

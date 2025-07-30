@@ -1,12 +1,4 @@
-/*
-  ==============================================================================
-
-    Freeverb.cpp
-    Created: 3 Jun 2023 4:34:15pm
-    Author:  Reilly Spitzfaden
-
-  ==============================================================================
-*/
+// "Freeverb"-style Schroeder reverb; 8 parallel combs -> 4 series allpasses
 
 #include "Freeverb.h"
 

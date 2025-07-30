@@ -1,10 +1,4 @@
-/*
-  ==============================================================================
-
-	Sine/tri/saw LFO with quadrature output
-
-  ==============================================================================
-*/
+// Sine/tri/saw LFO with quadrature output
 
 #include "LFO.h"
 LFO::LFO() { srand(static_cast<uint32_t>(time(NULL))); }

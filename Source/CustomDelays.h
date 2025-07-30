@@ -1,16 +1,12 @@
 /*
-  ==============================================================================
-
-    Tapped delay line, Allpass classes
-    Delay based on juce::dsp::DelayLine, but allows access to the underlying buffer at specified sample offsets for multiple-tap delays.
-
-  ==============================================================================
+Tapped delay line, Allpass classes
+Delay based on juce::dsp::DelayLine, but allows access to the underlying buffer at specified sample offsets for multiple-tap delays.
 */
 
 #pragma once
 
 #include <JuceHeader.h>
-#include "Utilities.h"
+// #include "Utilities.h"
 
 template <typename SampleType>
 class DelayLineWithSampleAccess

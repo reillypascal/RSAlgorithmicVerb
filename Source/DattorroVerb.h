@@ -1,10 +1,4 @@
-/*
-  ==============================================================================
-
-    Plate reverb "in the style of Griesinger" from Dattorro 1997
-
-  ==============================================================================
-*/
+// Plate reverb "in the style of Griesinger" from Dattorro 1997
 
 #pragma once
 

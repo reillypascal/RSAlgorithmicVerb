@@ -1,12 +1,4 @@
-/*
-  ==============================================================================
-
-    EarlyReflections.cpp
-    Created: 9 Jun 2024 3:48:05pm
-    Author:  Reilly Spitzfaden
-
-  ==============================================================================
-*/
+// FIR-based early reflections with 6 taps and HRTF for binaural stereo. Based on Dattorro
 
 #include "EarlyReflections.h"
 

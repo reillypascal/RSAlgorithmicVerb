@@ -1,20 +1,20 @@
-/*
-  ==============================================================================
+// Audio processor for the plugin
 
+/*
 TODO:
+ - unbalanced sound on FDNs (https://github.com/reillypascal/RSAlgorithmicVerb/issues/5)
+ - nonlinear decay knob? (https://github.com/reillypascal/RSAlgorithmicVerb/issues/6)
  - louder wet sound on rooms
  - EQ to wet only
  - Barr allpass ring
  - early reflections
-	- add parallel/series at 0.33/0.67 mark
-	- note that series early -> late slows onset/suggests larger hall!
+	- parallel/series toggle?
+	    - note that series early -> late slows onset/suggests larger hall!
  - "Bloom" effect & more moderate version for room/chamber
 	- early -> late series
 	- nested allpasses - echoes build up when recirculated
- - disable appropriate parameters when changing algorithms
- - fix decay parameter name
- 
-  ==============================================================================
+ - disable appropriate parameters when changing algorithms?
+ - fix decay parameter name (what did I mean here?)
 */
 
 #include "PluginProcessor.h"

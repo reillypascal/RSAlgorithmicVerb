@@ -1,12 +1,4 @@
-/*
-  ==============================================================================
-
-    ConcertHallB.cpp
-    Created: 4 Jun 2023 4:38:39pm
-    Author:  Reilly Spitzfaden
-
-  ==============================================================================
-*/
+// Concert Hall B algorithm, based on Dattorro
 
 #include "ConcertHallB.h"
 
@@ -16,7 +8,7 @@ LargeConcertHallB::~LargeConcertHallB() = default;
 
 void LargeConcertHallB::prepare(const juce::dsp::ProcessSpec& spec)
 {
-    mSampleRate = spec.sampleRate;
+    sampleRate = spec.sampleRate;
     
     // prepare filters
     inputBandwidth.prepare(spec);
@@ -389,7 +381,7 @@ void LargeConcertHallB::reset()
     allpassR4Inner.reset();
     allpassR4Outer.reset();
         
-    lfo.reset(mSampleRate);
+    lfo.reset(sampleRate);
 }
 
 ReverbProcessorParameters& LargeConcertHallB::getParameters() { return parameters; }

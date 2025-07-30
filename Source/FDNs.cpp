@@ -1,12 +1,7 @@
-/*
-  ==============================================================================
-
-    Collection of FDN (feedback delay network) algorithms
-
-  ==============================================================================
-*/
+// Collection of FDN (feedback delay network) algorithms
 
 #include "FDNs.h"
+#include <cstddef>
 
 GeneralizedFDN::GeneralizedFDN() = default;
 
@@ -22,7 +17,7 @@ GeneralizedFDN::GeneralizedFDN(int order, std::string type)
         { "Householder", 4 }
     };
     
-    int switchCase { 1 };
+    int switchCase = 1;
     
     auto iter = typeMapping.find(type);
     if (iter != typeMapping.end())
@@ -45,7 +40,7 @@ GeneralizedFDN::GeneralizedFDN(int order, std::string type)
             inDelays = { 4, 6 };
             modDelays = { 1, 3 };
             
-            feedbackScalar = 1 / sqrt(2.0);
+            feedbackScalar = 1.0f / sqrt(2.0f);
             break;
         
         case 2: // circulant
@@ -168,7 +163,7 @@ void GeneralizedFDN::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBu
     }
     
     // set delay times
-    for (int i = 0; i < delayCount; ++i)
+    for (size_t i = 0; i < delayCount; ++i)
         delays[i].setDelay(delayTimes[i] * parameters.roomSize);
     
     // set damping
@@ -201,6 +196,7 @@ void GeneralizedFDN::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBu
             for (int del = 0; del < delayCount; ++del)
             {
                 // only include input if this delay is the input for the channel
+                // inDelays is input delay *indices*
                 if (channel < 2 && del == inDelays[channel])
                 {
                     delays[del].pushSample(channel, channelData[sample] + dampingFilters[del].processSample(channel, feedbackSigMatrix[channel][del] * parameters.decayTime));
