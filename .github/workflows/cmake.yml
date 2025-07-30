@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-latest, macos-latest]
 
     steps:
       - name: "Preparation"
@@ -28,4 +28,4 @@ jobs:
 
       - name: "Build"
         working-directory: ${{runner.workspace}}/RSAlgorithmicVerb
-        run: cmake --build build -DCMAKE_BUILD_TYPE=Release
+        run: cmake --build build --config Release
