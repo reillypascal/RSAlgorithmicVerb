@@ -28,4 +28,4 @@ jobs:
 
       - name: "Build"
         working-directory: ${{runner.workspace}}/RSAlgorithmicVerb
-        run: cmake --build build -D CMAKE_BUILD_TYPE=Release
+        run: cmake --build build -DCMAKE_BUILD_TYPE=Release
