@@ -2,8 +2,8 @@ name: juce-ci
 
 on: [push]
 
-env:
-  BUILD_TYPE: Release
+# env:
+#   BUILD_TYPE: Release
 
 jobs:
   build:

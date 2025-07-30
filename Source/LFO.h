@@ -2,7 +2,9 @@
 
 #pragma once
 
-// #include <cmath>
+// needed for M_PI
+#define _USE_MATH_DEFINES
+#include <cmath>
 
 #include <JuceHeader.h>
 
