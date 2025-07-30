@@ -7,16 +7,12 @@
 #include "GuiStyles.h"
 #include "PluginProcessor.h"
 
-//==============================================================================
-/**
-*/
 class RSAlgorithmicVerbAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
     RSAlgorithmicVerbAudioProcessorEditor (RSAlgorithmicVerbAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~RSAlgorithmicVerbAudioProcessorEditor() override;
-
-    //==============================================================================
+    
     void paint (juce::Graphics&) override;
     void resized() override;
 	

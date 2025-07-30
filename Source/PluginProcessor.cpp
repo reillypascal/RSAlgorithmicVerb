@@ -20,7 +20,6 @@ TODO:
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-//==============================================================================
 RSAlgorithmicVerbAudioProcessor::RSAlgorithmicVerbAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()

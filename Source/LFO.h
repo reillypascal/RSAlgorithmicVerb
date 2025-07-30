@@ -6,7 +6,6 @@
 
 #include <JuceHeader.h>
 
-//==============================================================================
 struct SignalGenData
 {
 	SignalGenData() {}
@@ -27,7 +26,6 @@ public:
 	virtual const SignalGenData renderAudioOutput() = 0;
 };
 
-//==============================================================================
 enum class generatorWaveform { triangle, sin, saw };
 
 struct OscillatorParameters

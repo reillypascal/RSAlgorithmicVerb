@@ -1,14 +1,7 @@
-/*
-  ==============================================================================
-    
-    
-
-  ==============================================================================
-*/
+// Allpass loop room reverbs from Gardner, 1992
 
 #include "GardnerRooms.h"
 
-//==============================================================================
 GardnerSmallRoom::GardnerSmallRoom() = default;
 
 GardnerSmallRoom::~GardnerSmallRoom() = default;
@@ -23,9 +16,6 @@ void GardnerSmallRoom::prepare(const juce::dsp::ProcessSpec &spec)
     delay4.prepare(spec);
     delay5.prepare(spec);
     delay6.prepare(spec);
-    
-    // for (auto& delay : delays)
-    //     delay.prepare(spec);
     
     dampingFilter.prepare(spec);
     dampingFilter.setType(juce::dsp::FirstOrderTPTFilterType::lowpass);
@@ -69,9 +59,7 @@ void GardnerSmallRoom::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
         float delay5Time = 30 * samplesPerMs * parameters.roomSize + channelDelayOffset[channel]; // for modulation
         delay5.setDelay(delay5Time);
         delay6.setDelay(36 * samplesPerMs * parameters.roomSize + channelDelayOffset[channel]);
-        
-        // for (size_t delay = 0; delay < delayTimesMs.size(); ++delay) {}
-        
+                
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
             // LFO

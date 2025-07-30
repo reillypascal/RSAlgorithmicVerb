@@ -57,7 +57,7 @@ Linux/Windows releases are coming! For now, compiler targets are available for L
 
 ## Compiling with CMake
 - Clone the [JUCE repo](https://github.com/juce-framework/JUCE) into the working folder
-- Run the following for a CLI build:
+- Run the following for a CLI build. Note that you may need to run these with `sudo`:
 ```sh
 # sets up a default build:
 cmake -S . -B build
@@ -65,6 +65,8 @@ cmake -S . -B build
 cmake -S . -B build/ -D CMAKE_BUILD_TYPE=Debug
 # or
 cmake -S . -B build/ -D CMAKE_BUILD_TYPE=Release
+
+# you can add the flag -D COPY_PLUGIN_AFTER_BUILD=TRUE to copy the built files to the default location on macOS
 
 # after running one of the above three options, run
 cmake --build build

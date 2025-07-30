@@ -1,10 +1,8 @@
 // Graphical interface for the plugin
 
-
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-//==============================================================================
 RSAlgorithmicVerbAudioProcessorEditor::RSAlgorithmicVerbAudioProcessorEditor (RSAlgorithmicVerbAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts)
 {

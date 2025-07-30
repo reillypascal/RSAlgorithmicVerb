@@ -1,10 +1,4 @@
-/*
-  ==============================================================================
-
-	Allpass loop rooms from Gardner 1992
-
-  ==============================================================================
-*/
+// Allpass loop room reverbs from Gardner, 1992
 
 #pragma once
 
@@ -14,10 +8,6 @@
 #include "ProcessorBase.h"
 #include "Utilities.h"
 
-// want shorter alias because of repetitive syntax for std::vector with size as *member* variable
-typedef juce::dsp::DelayLine<float> DelayLine;
-
-//==============================================================================
 class GardnerSmallRoom :public ReverbProcessorBase
 {
 public:
@@ -44,9 +34,6 @@ private:
     juce::dsp::DelayLine<float> delay4 { 22050 };
     juce::dsp::DelayLine<float> delay5 { 22050 };
     juce::dsp::DelayLine<float> delay6 { 22050 };
-    // need to use this verbose syntax for initializing with size as *member* variable
-    std::vector<DelayLine> delays = std::vector<DelayLine>(6, DelayLine(22050));
-    std::vector<float> delayTimesMs { 24.0f, 22.0f, 8.3f, 4.7f, 30.0f, 36.0f };
     
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
     

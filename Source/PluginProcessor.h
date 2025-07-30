@@ -44,9 +44,6 @@ struct ProcessorFactory
     };
 };
 
-//==============================================================================
-/**
-*/
 class RSAlgorithmicVerbAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension

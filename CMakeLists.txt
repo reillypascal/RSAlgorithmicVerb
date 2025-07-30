@@ -12,13 +12,13 @@ cmake_minimum_required(VERSION 3.22)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_BUILD_TYPE Debug)
+# set(CMAKE_BUILD_TYPE Debug)
 
 # The top-level CMakeLists.txt file for a project must contain a literal, direct call to the
 # `project()` command. `project()` sets up some helpful variables that describe source/binary
 # directories, and the current project version. This is a standard CMake command.
 
-project(RSAlgorithmicVerb VERSION 0.5.4)
+project(RSAlgorithmicVerb VERSION 0.5.5)
 
 # If you've installed JUCE somehow (via a package manager, or directly using the CMake install
 # target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
@@ -53,9 +53,9 @@ juce_add_plugin(${PROJECT_NAME}
     # NEEDS_MIDI_OUTPUT TRUE/FALSE              # Does the plugin need midi output?
     IS_MIDI_EFFECT FALSE                 # Is this plugin a MIDI effect?
     # EDITOR_WANTS_KEYBOARD_FOCUS TRUE/FALSE    # Does the editor need keyboard focus?
-    COPY_PLUGIN_AFTER_BUILD TRUE        # Should the plugin be installed to a default location after building?
-    VST3_COPY_DIR "/Library/Audio/Plug-Ins/VST3"
-    AU_COPY_DIR "/Library/Audio/Plug-Ins/Components"
+    # COPY_PLUGIN_AFTER_BUILD TRUE        # Should the plugin be installed to a default location after building?
+    # VST3_COPY_DIR "/Library/Audio/Plug-Ins/VST3"
+    # AU_COPY_DIR "/Library/Audio/Plug-Ins/Components"
     PLUGIN_MANUFACTURER_CODE Rspi               # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE Rsav                            # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case

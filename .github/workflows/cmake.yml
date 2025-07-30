@@ -1,0 +1,31 @@
+name: juce-ci
+
+on: [push]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    steps:
+      - name: "Preparation"
+        uses: actions/checkout@v2
+
+      - name: "(JUCE) Clone Repository"
+        uses: actions/checkout@v2
+        with:
+          repository: juce-framework/JUCE
+          path: ${{runner.workspace}}/RSAlgorithmicVerb/JUCE
+
+      - name: "Create Build Environment"
+        working-directory: ${{runner.workspace}}/RSAlgorithmicVerb
+        run: cmake -S . -B build
+
+      - name: "Build"
+        working-directory: ${{runner.workspace}}/RSAlgorithmicVerb
+        run: cmake --build build --config $BUILD_TYPE
