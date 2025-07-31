@@ -53,7 +53,8 @@ juce_add_plugin(${PROJECT_NAME}
     # NEEDS_MIDI_OUTPUT TRUE/FALSE              # Does the plugin need midi output?
     IS_MIDI_EFFECT FALSE                 # Is this plugin a MIDI effect?
     # EDITOR_WANTS_KEYBOARD_FOCUS TRUE/FALSE    # Does the editor need keyboard focus?
-    # COPY_PLUGIN_AFTER_BUILD TRUE        # Should the plugin be installed to a default location after building?
+    # Should the plugin be installed to a default location after building?
+    # COPY_PLUGIN_AFTER_BUILD TRUE
     # VST3_COPY_DIR "/Library/Audio/Plug-Ins/VST3"
     # AU_COPY_DIR "/Library/Audio/Plug-Ins/Components"
     PLUGIN_MANUFACTURER_CODE Rspi               # A four-character manufacturer id with at least one upper-case character
@@ -121,23 +122,23 @@ target_compile_definitions(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         # AudioPluginData           # If we'd created a binary data target, we'd link to it here
-        juce::juce_analytics
+        # juce::juce_analytics
         juce::juce_audio_basics
         juce::juce_audio_devices
         juce::juce_audio_formats
         juce::juce_audio_processors
         juce::juce_audio_utils
         juce::juce_core
-        juce::juce_cryptography
+        # juce::juce_cryptography
         juce::juce_data_structures
         juce::juce_dsp
         juce::juce_events
         juce::juce_graphics
         juce::juce_gui_basics
         juce::juce_gui_extra
-        juce::juce_opengl
-        juce::juce_osc
-        juce::juce_video
+        # juce::juce_opengl
+        # juce::juce_osc
+        # juce::juce_video
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
