@@ -1,4 +1,4 @@
-name: rsav-juce-ci
+name: rsav-compile
 
 on: [workflow_dispatch]
 
