@@ -1,6 +1,6 @@
-name: juce-ci
+name: rsav-juce-ci
 
-on: [push]
+on: [workflow_dispatch]
 
 # env:
 #   BUILD_TYPE: Release
