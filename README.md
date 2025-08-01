@@ -12,19 +12,7 @@ https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/352c736c-eec0-
 
 # Precompiled Releases
 - Compiled Linux, macOS, and Windows files are available under "Releases". Unzip the files and place them in the directories listed below for your operating system.
-
-## Linux
-- `~/.vst3/` (VST3 user folder)
-- `/usr/lib/vst3/` (VST3 global folder)
-<!--- `/usr/local/lib/vst3/` (VST3 global folder—lower priority)-->
-
-## macOS:
-- Compiled macOS files are available under "Releases". Unzip the files and place them in 
-	- `/Library/Audio/Plug-Ins/Components/` (AU)
-	- `/Library/Audio/Plug-Ins/VST3/` (VST3)
-<!--	- `/Library/Application Support/Avid/Audio/Plug-Ins` (AAX) -->
-
-- You will likely need to disable Gatekeeper for the plugins. To do this for AU, type...
+- Note that you will likely need to disable Gatekeeper for the plugins on macOS. To do this for AU, type...
 ```sh
 spctl --add "/Library/Audio/Plug-Ins/Components/RSAlgorithmicVerb.component"
 ```
@@ -46,7 +34,17 @@ spctl --add
 
 ...(with a space at the end) and dragging the plugin file into the terminal, which will automatically add the file path.
 
-## Windows:
+## Linux Paths
+- `~/.vst3/` (VST3 user folder)
+- `/usr/lib/vst3/` (VST3 global folder)
+<!--- `/usr/local/lib/vst3/` (VST3 global folder—lower priority)-->
+
+## macOS Paths
+- `/Library/Audio/Plug-Ins/Components/` (AU)
+- `/Library/Audio/Plug-Ins/VST3/` (VST3)
+<!--	- `/Library/Application Support/Avid/Audio/Plug-Ins` (AAX) -->
+
+## Windows Paths
 - `C:\Program Files\Common Files\VST3` (VST3)
 <!-- - C:\Program Files\Common Files\Avid\Audio\Plug-Ins (AAX) -->
 
