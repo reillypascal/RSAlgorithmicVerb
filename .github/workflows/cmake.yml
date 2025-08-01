@@ -61,14 +61,14 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: juce-framework/JUCE
-          path: ${{runner.workspace}}/RSAlgorithmicVerb/JUCE
+          path: ${{runner.workspace}}/JUCE
 
       - name: "Create Build Environment"
-        working-directory: ${{runner.workspace}}/RSAlgorithmicVerb
+        working-directory: ${{runner.workspace}}
         run: cmake -S . -B build
 
       - name: "Build"
-        working-directory: ${{runner.workspace}}/RSAlgorithmicVerb
+        working-directory: ${{runner.workspace}}
         run: cmake --build build --config Release
       # https://github.com/sudara/cmake-includes/blob/1f5ccb8c040d0a7ec489fdab11831ff310df1077/GitHubENV.cmake#L4
       # - name: Read in .env from CMake # see GitHubENV.cmake
