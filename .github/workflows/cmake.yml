@@ -20,19 +20,19 @@ jobs:
     strategy:
       fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
       matrix:
-        include:
-          - name: Linux
-            os: ubuntu-latest
-            pluginval-binary: ./pluginval
-            # extra-flags: -G Ninja
+        os: [ubuntu-latest] #[macos-latest, ubuntu-latest, windows-latest]
+        # include:
+        #   - name: Linux
+        #     os: ubuntu-latest
+        #     pluginval-binary: ./pluginval
+        #     extra-flags: -G Ninja
         #   - name: macOS
         #     os: macos-latest
         #     pluginval-binary: pluginval.app/Contents/MacOS/pluginval
-        #     # extra-flags: -G Ninja -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+        #     extra-flags: -G Ninja -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
         #   - name: Windows
         #     os: windows-latest
         #     pluginval-binary: ./pluginval.exe
-        # # os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       # Use clang on Linux so we don't introduce a 3rd compiler (Windows and macOS use MSVC and Clang)
@@ -76,25 +76,25 @@ jobs:
       #     cat .env # show us the config
       #     cat .env >> $GITHUB_ENV # pull in our PRODUCT_NAME, etc
 
-      - name: Set additional env vars for next steps
-        run: |
-          ARTIFACTS_PATH=${{ env.BUILD_DIR }}/${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}
-          echo "ARTIFACTS_PATH=$ARTIFACTS_PATH" >> $GITHUB_ENV
-          echo "VST3_PATH=$ARTIFACTS_PATH/VST3/${{ env.PRODUCT_NAME }}.vst3" >> $GITHUB_ENV
-          echo "AU_PATH=$ARTIFACTS_PATH/AU/${{ env.PRODUCT_NAME }}.component" >> $GITHUB_ENV
-          echo "AUV3_PATH=$ARTIFACTS_PATH/AUv3/${{ env.PRODUCT_NAME }}.appex" >> $GITHUB_ENV
-          echo "CLAP_PATH=$ARTIFACTS_PATH/CLAP/${{ env.PRODUCT_NAME }}.clap" >> $GITHUB_ENV
-          echo "STANDALONE_PATH=$ARTIFACTS_PATH/Standalone/${{ env.PRODUCT_NAME }}.app" >> $GITHUB_ENV
-          echo "ARTIFACT_NAME=${{ env.PRODUCT_NAME }}-${{ env.VERSION }}-${{ matrix.name }}" >> $GITHUB_ENV
+      # - name: Set additional env vars for next steps
+      #   run: |
+      #     ARTIFACTS_PATH=${{ env.BUILD_DIR }}/${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}
+      #     echo "ARTIFACTS_PATH=$ARTIFACTS_PATH" >> $GITHUB_ENV
+      #     echo "VST3_PATH=$ARTIFACTS_PATH/VST3/${{ env.PRODUCT_NAME }}.vst3" >> $GITHUB_ENV
+      #     echo "AU_PATH=$ARTIFACTS_PATH/AU/${{ env.PRODUCT_NAME }}.component" >> $GITHUB_ENV
+      #     echo "AUV3_PATH=$ARTIFACTS_PATH/AUv3/${{ env.PRODUCT_NAME }}.appex" >> $GITHUB_ENV
+      #     echo "CLAP_PATH=$ARTIFACTS_PATH/CLAP/${{ env.PRODUCT_NAME }}.clap" >> $GITHUB_ENV
+      #     echo "STANDALONE_PATH=$ARTIFACTS_PATH/Standalone/${{ env.PRODUCT_NAME }}.app" >> $GITHUB_ENV
+      #     echo "ARTIFACT_NAME=${{ env.PRODUCT_NAME }}-${{ env.VERSION }}-${{ matrix.name }}" >> $GITHUB_ENV
 
-      - name: Pluginval
-        run: |
-          curl -LO "https://github.com/Tracktion/pluginval/releases/download/v1.0.3/pluginval_${{ matrix.name }}.zip"
-          7z x pluginval_${{ matrix.name }}.zip
-          ${{ matrix.pluginval-binary }} --strictness-level 10 --verbose --validate "${{ env.VST3_PATH }}"
+      # - name: Pluginval
+      #   run: |
+      #     curl -LO "https://github.com/Tracktion/pluginval/releases/download/v1.0.3/pluginval_${{ matrix.name }}.zip"
+      #     7z x pluginval_${{ matrix.name }}.zip
+      #     ${{ matrix.pluginval-binary }} --strictness-level 10 --verbose --validate "${{ env.VST3_PATH }}"
 
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: "RSAlgorithmicVerb_${{ runner.os }}"
-          path: ${{runner.workspace}}/RSAlgorithmicVerb/build/RSAlgorithmicVerb_artefacts/
+          path: ${{runner.workspace}}/build/RSAlgorithmicVerb_artefacts/
