@@ -11,17 +11,19 @@ https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/352c736c-eec0-
 <!-- https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/a4c77f4b-dfc9-4437-9d90-56dca72af94c -->
 
 # Precompiled Releases
+- Compiled Linux, macOS, and Windows files are available under "Releases". Unzip the files and place them in the directories listed below for your operating system.
 
-<!--Windows:
-- Compiled Windows files are available under "Releases". Unzip the files and place them in 
-	- C:\Program Files\Common Files\VST3 (VST3)
-	- C:\Program Files\Common Files\Avid\Audio\Plug-Ins (AAX) 
--->
+## Linux
+- `~/.vst3/` (VST3 user folder)
+- `/usr/lib/vst3/` (VST3 global folder)
+<!--- `/usr/local/lib/vst3/` (VST3 global folder—lower priority)-->
+
 ## macOS:
 - Compiled macOS files are available under "Releases". Unzip the files and place them in 
-	- Macintosh HD/Library/Audio/Plug-Ins/Components/ (AU)
-	- Macintosh HD/Library/Audio/Plug-Ins/VST3/ (VST3)
-<!--	- Macintosh HD/Library/Application Support/Avid/Audio/Plug-Ins (AAX) -->
+	- `/Library/Audio/Plug-Ins/Components/` (AU)
+	- `/Library/Audio/Plug-Ins/VST3/` (VST3)
+<!--	- `/Library/Application Support/Avid/Audio/Plug-Ins` (AAX) -->
+
 - You will likely need to disable Gatekeeper for the plugins. To do this for AU, type...
 ```sh
 spctl --add "/Library/Audio/Plug-Ins/Components/RSAlgorithmicVerb.component"
@@ -35,8 +37,8 @@ spctl --add "/Library/Audio/Plug-Ins/VST3/RSAlgorithmicVerb.vst3"
 <!--...or for AAX...
 ```sh
 spctl --add "/Library/Application Support/Avid/Audio/Plug-Ins/RSAlgorithmicVerb.aaxplugin"
-```
--->
+``` -->
+
 - You can also add the file path by typing...
 ```sh
 spctl --add 
@@ -44,8 +46,9 @@ spctl --add
 
 ...(with a space at the end) and dragging the plugin file into the terminal, which will automatically add the file path.
 
-## Linux/Windows:
-Linux/Windows releases are coming! For now, compiler targets are available for Linux and Windows. Set up JUCE on your computer, open the .jucer file in the Projucer, generate the Linux Makefile or Visual Studio project, and then you can compile the plugins. Alternatively, see below for CMake instructions.
+## Windows:
+- `C:\Program Files\Common Files\VST3` (VST3)
+<!-- - C:\Program Files\Common Files\Avid\Audio\Plug-Ins (AAX) -->
 
 # Building from Source
 
@@ -54,6 +57,9 @@ Linux/Windows releases are coming! For now, compiler targets are available for L
 - Either:
   - Projucer (https://docs.juce.com/master/tutorial_new_projucer_project.html) (for creating Xcode/Visual Studio projects or Linux Makefiles in order to build)
   - CMake
+
+## Compiling with the Projucer
+Download the [JUCE repo](https://github.com/juce-framework/JUCE) onto your computer. You will need to set up the Projucer to know where this folder is. Open the .jucer file in the Projucer, generate the Linux Makefile, Visual Studio project, or Xcode project, and then you can compile the plugins using those respective tools. Alternatively, see below for CMake instructions.
 
 ## Compiling with CMake
 - Clone the [JUCE repo](https://github.com/juce-framework/JUCE) into the working folder
