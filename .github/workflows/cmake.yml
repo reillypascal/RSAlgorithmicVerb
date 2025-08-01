@@ -3,6 +3,10 @@ name: rsav-compile
 on: [workflow_dispatch]
 
 env:
+  BUILD_TYPE: Release
+  BUILD_DIR: build
+  PROJECT_NAME: RSAlgorithmicVerb
+  PRODUCT_NAME: RSAlgorithmicVerb
   DISPLAY: :0 # linux pluginval needs this
   # BUILD_TYPE: Release
 
@@ -66,11 +70,11 @@ jobs:
       - name: "Build"
         working-directory: ${{runner.workspace}}/RSAlgorithmicVerb
         run: cmake --build build --config Release
-
-      - name: Read in .env from CMake # see GitHubENV.cmake
-        run: |
-          cat .env # show us the config
-          cat .env >> $GITHUB_ENV # pull in our PRODUCT_NAME, etc
+      # https://github.com/sudara/cmake-includes/blob/1f5ccb8c040d0a7ec489fdab11831ff310df1077/GitHubENV.cmake#L4
+      # - name: Read in .env from CMake # see GitHubENV.cmake
+      #   run: |
+      #     cat .env # show us the config
+      #     cat .env >> $GITHUB_ENV # pull in our PRODUCT_NAME, etc
 
       - name: Set additional env vars for next steps
         run: |
