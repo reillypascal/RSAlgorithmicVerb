@@ -60,7 +60,7 @@ spctl --add
 Download the [JUCE repo](https://github.com/juce-framework/JUCE) onto your computer. You will need to set up the Projucer to know where this folder is. Open the .jucer file in the Projucer, generate the Linux Makefile, Visual Studio project, or Xcode project, and then you can compile the plugins using those respective tools. Alternatively, see below for CMake instructions.
 
 ## Compiling with CMake
-- Clone the [JUCE repo](https://github.com/juce-framework/JUCE) into the working folder
+- Clone the [JUCE repo](https://github.com/juce-framework/JUCE) into the working folder (`git clone https://github.com/juce-framework/JUCE.git`)
 - Run the following for a CLI build. Note that you may need to run these with `sudo`:
 ```sh
 # sets up a default build:
@@ -88,3 +88,7 @@ cmake -B Builds -G "Visual Studio 17 2022"
 
 ### Debugging
 `launch.json` sets up the ability to launch an app of your choice (e.g., REAPER, JUCE's AudioPluginHost, etc.) as part of a debugging session. You can configure which app in your editor; e.g., for Zed, see [the debugger documentation](https://zed.dev/docs/debugger#configuration).
+
+You can also use [Pluginval](https://github.com/Tracktion/pluginval). After installing Pluginval and adding the binary to your PATH, run `pluginval --strictness-level 5 <path-to-plugin>`. Strictness level 5 is the baseline, and it can go up to 10 for more rigorous testing.
+
+Pluginval uses aufx under the hood for AU plugins on macOS. You can run auval directly with `auval -strict -v aufx Rsav Rspi` if this plugin is installed on the computer.
