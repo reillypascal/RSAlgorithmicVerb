@@ -11,13 +11,16 @@ https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/352c736c-eec0-
 <!-- https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/a4c77f4b-dfc9-4437-9d90-56dca72af94c -->
 
 # Precompiled Releases
+
 - Compiled Linux, macOS, and Windows files are available under "Releases". Unzip the files and place them in the directories listed below for your operating system.
 - Note that you will likely need to disable Gatekeeper for the plugins on macOS. To do this for AU, type...
+
 ```sh
 spctl --add "/Library/Audio/Plug-Ins/Components/RSAlgorithmicVerb.component"
 ```
 
 ...for VST3...
+
 ```sh
 spctl --add "/Library/Audio/Plug-Ins/VST3/RSAlgorithmicVerb.vst3"
 ```
@@ -28,40 +31,48 @@ spctl --add "/Library/Application Support/Avid/Audio/Plug-Ins/RSAlgorithmicVerb.
 ``` -->
 
 - You can also add the file path by typing...
+
 ```sh
-spctl --add 
+spctl --add
 ```
 
 ...(with a space at the end) and dragging the plugin file into the terminal, which will automatically add the file path.
 
 ## Linux Paths
+
 - `~/.vst3/` (VST3 user folder)
 - `/usr/lib/vst3/` (VST3 global folder)
 <!--- `/usr/local/lib/vst3/` (VST3 global folder—lower priority)-->
 
 ## macOS Paths
+
 - `/Library/Audio/Plug-Ins/Components/` (AU)
 - `/Library/Audio/Plug-Ins/VST3/` (VST3)
 <!--	- `/Library/Application Support/Avid/Audio/Plug-Ins` (AAX) -->
 
 ## Windows Paths
+
 - `C:\Program Files\Common Files\VST3` (VST3)
 <!-- - C:\Program Files\Common Files\Avid\Audio\Plug-Ins (AAX) -->
 
 # Building from Source
 
 ## Build Dependencies:
+
 - JUCE (https://juce.com/download/)
 - Either:
   - Projucer (https://docs.juce.com/master/tutorial_new_projucer_project.html) (for creating Xcode/Visual Studio projects or Linux Makefiles in order to build)
   - CMake
 
 ## Compiling with the Projucer
+
 Download the [JUCE repo](https://github.com/juce-framework/JUCE) onto your computer. You will need to set up the Projucer to know where this folder is. Open the .jucer file in the Projucer, generate the Linux Makefile, Visual Studio project, or Xcode project, and then you can compile the plugins using those respective tools. Alternatively, see below for CMake instructions.
 
 ## Compiling with CMake
+
 - Clone the [JUCE repo](https://github.com/juce-framework/JUCE) into the working folder (`git clone https://github.com/juce-framework/JUCE.git`)
 - Run the following for a CLI build. Note that you may need to run these with `sudo`:
+
 ```sh
 # sets up a default build:
 cmake -S . -B build
@@ -77,17 +88,24 @@ cmake --build build
 ```
 
 You can also use CMake to generate Xcode/Visual Studio projects.
+
 - Run the following to generate an Xcode project:
+
 ```sh
 cmake -B Builds -G Xcode
 ```
+
 - Run the following to generate a Visual Studio project:
+
 ```sh
 cmake -B Builds -G "Visual Studio 17 2022"
 ```
 
 ### Debugging
-`launch.json` sets up the ability to launch an app of your choice (e.g., REAPER, JUCE's AudioPluginHost, etc.) as part of a debugging session. You can configure which app in your editor; e.g., for Zed, see [the debugger documentation](https://zed.dev/docs/debugger#configuration).
+
+`launch.json` sets up the ability to launch an app of your choice (e.g., REAPER, JUCE's AudioPluginHost, etc.) as part of a debugging session. Change the path for the app in `launch.json` to match the one on your system.
+
+<!-- You can configure which app in your editor; e.g., for Zed, see [the debugger documentation](https://zed.dev/docs/debugger#configuration). -->
 
 You can also use [Pluginval](https://github.com/Tracktion/pluginval). After installing Pluginval and adding the binary to your PATH, run `pluginval --strictness-level 5 <path-to-plugin>`. Strictness level 5 is the baseline, and it can go up to 10 for more rigorous testing.
 
