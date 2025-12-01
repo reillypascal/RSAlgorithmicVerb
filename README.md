@@ -66,11 +66,18 @@ spctl --add
 
 ## Compiling with the Projucer
 
-Download the [JUCE repo](https://github.com/juce-framework/JUCE) onto your computer. You will need to set up the Projucer to know where this folder is. Open the .jucer file in the Projucer, generate the Linux Makefile, Visual Studio project, or Xcode project, and then you can compile the plugins using those respective tools. Alternatively, see below for CMake instructions.
+Download the [JUCE repo](https://github.com/juce-framework/JUCE) onto your computer. You will need to set the Projucer so that it knows where this folder is. Open the .jucer file in the Projucer, generate the Linux Makefile, Visual Studio project, or Xcode project, and then you can compile the plugins using those respective tools. Alternatively, see below for CMake instructions.
 
 ## Compiling with CMake
 
-- Clone the [JUCE repo](https://github.com/juce-framework/JUCE) into the working folder (`git clone https://github.com/juce-framework/JUCE.git`)
+<!-- - Clone the [JUCE repo](https://github.com/juce-framework/JUCE) into the working folder (`git clone https://github.com/juce-framework/JUCE.git`) -->
+
+- Clone JUCE as a Git submodule by running the following:
+
+```sh
+git submodule update --init --recursive
+```
+
 - Run the following for a CLI build. Note that you may need to run these with `sudo`:
 
 ```sh
