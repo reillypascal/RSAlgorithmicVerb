@@ -4,10 +4,10 @@
 
 #include <JuceHeader.h>
 
-//look and feel of sliders/labels
+// look and feel of sliders/labels
 class GrayBlueLookAndFeel : public juce::LookAndFeel_V4
 {
-public:
+  public:
     GrayBlueLookAndFeel()
     {
         // colors
@@ -25,13 +25,14 @@ public:
         setColour(juce::ComboBox::textColourId, juce::Colours::aliceblue);
         setColour(juce::ComboBox::outlineColourId, juce::Colours::aliceblue);
         setColour(juce::ComboBox::arrowColourId, juce::Colours::aliceblue);
-        
+
         // fonts
-//        setDefaultSansSerifTypeface(juce::LookAndFeel::getTypefaceForFont(juce::Font("Open Sans", 18.0f, juce::Font::plain)));
+        //        setDefaultSansSerifTypeface(juce::LookAndFeel::getTypefaceForFont(juce::Font("Open Sans", 18.0f,
+        //        juce::Font::plain)));
     }
-    
-//    juce::Font getLabelFont(juce::Label& label) override
-//    {
-//        return juce::Font("Open Sans", 18.0f, juce::Font::plain);
-//    }
+
+    //    juce::Font getLabelFont(juce::Label& label) override
+    //    {
+    //        return juce::Font("Open Sans", 18.0f, juce::Font::plain);
+    //    }
 };

@@ -8,176 +8,177 @@
 #include "ProcessorBase.h"
 #include "Utilities.h"
 
-class GardnerSmallRoom :public ReverbProcessorBase
+class GardnerSmallRoom : public ReverbProcessorBase
 {
-public:
+  public:
     GardnerSmallRoom();
-    
+
     ~GardnerSmallRoom() override;
-    
+
     void prepare(const juce::dsp::ProcessSpec& spec) override;
-    
+
     void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override;
-    
+
     void reset() override;
-    
+
     ReverbProcessorParameters& getParameters() override;
-    
+
     void setParameters(const ReverbProcessorParameters& params) override;
-private:
+
+  private:
     // parameter struct
     ReverbProcessorParameters parameters;
-    
-    juce::dsp::DelayLine<float> delay1 { 22050 };
-    juce::dsp::DelayLine<float> delay2 { 22050 };
-    juce::dsp::DelayLine<float> delay3 { 22050 };
-    juce::dsp::DelayLine<float> delay4 { 22050 };
-    juce::dsp::DelayLine<float> delay5 { 22050 };
-    juce::dsp::DelayLine<float> delay6 { 22050 };
-    
+
+    juce::dsp::DelayLine<float> delay1{22050};
+    juce::dsp::DelayLine<float> delay2{22050};
+    juce::dsp::DelayLine<float> delay3{22050};
+    juce::dsp::DelayLine<float> delay4{22050};
+    juce::dsp::DelayLine<float> delay5{22050};
+    juce::dsp::DelayLine<float> delay6{22050};
+
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
-    
+
     OscillatorParameters lfoParameters;
     SignalGenData lfoOutput;
     std::vector<LFO> lfo;
-        
+
     float allpassOutputInner = 0;
     float allpassOutputOuter = 0;
     float feedforwardInner = 0;
     float feedforwardOuter = 0;
     float feedbackInner = 0;
     float feedbackOuter = 0;
-    std::vector<float> channelFeedback {0, 0};
-    std::vector<float> channelOutput {0, 0};
-    
-    std::vector<float> channelDelayOffset {0, 7};
-    
+    std::vector<float> channelFeedback{0, 0};
+    std::vector<float> channelOutput{0, 0};
+
+    std::vector<float> channelDelayOffset{0, 7};
+
     int sampleRate = 44100;
 };
-
 
 //==============================================================================
 class GardnerMediumRoom : public ReverbProcessorBase
 {
-public:
+  public:
     GardnerMediumRoom();
-    
+
     ~GardnerMediumRoom() override;
-    
+
     void prepare(const juce::dsp::ProcessSpec& spec) override;
-    
+
     void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override;
-    
+
     void reset() override;
-    
+
     ReverbProcessorParameters& getParameters() override;
-    
+
     void setParameters(const ReverbProcessorParameters& params) override;
-private:
+
+  private:
     // parameter struct
     ReverbProcessorParameters parameters;
-    
-    juce::dsp::DelayLine<float> delay1 { 22050 };
-    juce::dsp::DelayLine<float> delay2 { 22050 };
-    juce::dsp::DelayLine<float> delay3 { 22050 };
-    juce::dsp::DelayLine<float> delay4 { 22050 };
-    juce::dsp::DelayLine<float> delay5 { 22050 };
-    juce::dsp::DelayLine<float> delay6 { 22050 };
-    juce::dsp::DelayLine<float> delay7 { 22050 };
-    juce::dsp::DelayLine<float> delay8 { 22050 };
-    juce::dsp::DelayLine<float> delay9 { 22050 };
-    juce::dsp::DelayLine<float> delay10 { 22050 };
-    
+
+    juce::dsp::DelayLine<float> delay1{22050};
+    juce::dsp::DelayLine<float> delay2{22050};
+    juce::dsp::DelayLine<float> delay3{22050};
+    juce::dsp::DelayLine<float> delay4{22050};
+    juce::dsp::DelayLine<float> delay5{22050};
+    juce::dsp::DelayLine<float> delay6{22050};
+    juce::dsp::DelayLine<float> delay7{22050};
+    juce::dsp::DelayLine<float> delay8{22050};
+    juce::dsp::DelayLine<float> delay9{22050};
+    juce::dsp::DelayLine<float> delay10{22050};
+
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
-    
+
     OscillatorParameters lfoParameters;
     SignalGenData lfoOutput;
     std::vector<LFO> lfo;
-        
+
     float allpassOutputInner = 0;
     float allpassOutputOuter = 0;
     float feedforwardInner = 0;
     float feedforwardOuter = 0;
     float feedbackInner = 0;
     float feedbackOuter = 0;
-    std::vector<float> channelFeedback {0, 0};
-    std::vector<float> channelOutput {0, 0};
-    
-    std::vector<float> channelDelayOffset {0, 15};
-    
+    std::vector<float> channelFeedback{0, 0};
+    std::vector<float> channelOutput{0, 0};
+
+    std::vector<float> channelDelayOffset{0, 15};
+
     int sampleRate = 44100;
 };
-
 
 //==============================================================================
 class GardnerLargeRoom : public ReverbProcessorBase
 {
-public:
+  public:
     GardnerLargeRoom();
-    
+
     ~GardnerLargeRoom() override;
-    
+
     void prepare(const juce::dsp::ProcessSpec& spec) override;
-    
+
     void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override;
-    
+
     void reset() override;
-    
+
     ReverbProcessorParameters& getParameters() override;
-    
+
     void setParameters(const ReverbProcessorParameters& params) override;
-private:
+
+  private:
     // parameter struct
     ReverbProcessorParameters parameters;
-    
-    juce::dsp::DelayLine<float> delay1 { 22050 };
-    juce::dsp::DelayLine<float> delay2 { 22050 };
-    juce::dsp::DelayLine<float> delay3 { 22050 };
-    juce::dsp::DelayLine<float> delay4 { 22050 };
-    juce::dsp::DelayLine<float> delay5 { 22050 };
-    juce::dsp::DelayLine<float> delay6 { 22050 };
-    juce::dsp::DelayLine<float> delay7 { 22050 };
-    juce::dsp::DelayLine<float> delay8 { 22050 };
-    juce::dsp::DelayLine<float> delay9 { 22050 };
-    juce::dsp::DelayLine<float> delay10 { 22050 };
-    juce::dsp::DelayLine<float> delay11 { 22050 };
-    
+
+    juce::dsp::DelayLine<float> delay1{22050};
+    juce::dsp::DelayLine<float> delay2{22050};
+    juce::dsp::DelayLine<float> delay3{22050};
+    juce::dsp::DelayLine<float> delay4{22050};
+    juce::dsp::DelayLine<float> delay5{22050};
+    juce::dsp::DelayLine<float> delay6{22050};
+    juce::dsp::DelayLine<float> delay7{22050};
+    juce::dsp::DelayLine<float> delay8{22050};
+    juce::dsp::DelayLine<float> delay9{22050};
+    juce::dsp::DelayLine<float> delay10{22050};
+    juce::dsp::DelayLine<float> delay11{22050};
+
     juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
-    
+
     OscillatorParameters lfoParameters;
     SignalGenData lfoOutput;
     std::vector<LFO> lfo;
-        
+
     float allpassOutputInner = 0;
     float allpassOutputOuter = 0;
     float feedforwardInner = 0;
     float feedforwardOuter = 0;
     float feedbackInner = 0;
     float feedbackOuter = 0;
-    std::vector<float> channelFeedback {0, 0};
-    std::vector<float> channelOutput {0, 0};
-    
-    std::vector<float> channelDelayOffset {0, 23};
-    
+    std::vector<float> channelFeedback{0, 0};
+    std::vector<float> channelOutput{0, 0};
+
+    std::vector<float> channelDelayOffset{0, 23};
+
     int sampleRate = 44100;
 };
 
-//class GardnerSmallRoom : public ProcessorBase
+// class GardnerSmallRoom : public ProcessorBase
 //{
-//public:
+// public:
 //	GardnerSmallRoom();
-//	
+//
 //	//==============================================================================
 //	void prepareToPlay(double sampleRate, int samplesPerBlock) override;
-//	
+//
 //	//==============================================================================
 //	void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override;
-//	
+//
 //	void reset() override;
-//	
+//
 //	//==============================================================================
 //	const juce::String getName() const override;
-//	
+//
 //	//==============================================================================
 //	void setSize(float newSize) override;
 //	void setDecay(float newDecay) override;
@@ -186,19 +187,19 @@ private:
 //	void setPreDelay(float newPreDelay) override;
 //	void setEarlyLateMix(float newMix) override;
 //	void setDryWetMix(float newMix) override;
-//	
-//private:
+//
+// private:
 //	juce::dsp::DelayLine<float> delay1 { 22050 };
 //	juce::dsp::DelayLine<float> delay2 { 22050 };
 //	juce::dsp::DelayLine<float> delay3 { 22050 };
 //	juce::dsp::DelayLine<float> delay4 { 22050 };
 //	juce::dsp::DelayLine<float> delay5 { 22050 };
 //	juce::dsp::DelayLine<float> delay6 { 22050 };
-//	
+//
 //	juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
-//	
+//
 //	juce::dsp::DryWetMixer<float> dryWetMixer;
-//	
+//
 //	float allpassOutputInner = 0;
 //	float allpassOutputOuter = 0;
 //	float feedforwardInner = 0;
@@ -207,9 +208,9 @@ private:
 //	float feedbackOuter = 0;
 //	std::vector<float> channelFeedback {0, 0};
 //	std::vector<float> channelOutput {0, 0};
-//	
+//
 //	std::vector<float> channelDelayOffset {0, 7};
-//	
+//
 //	float mPreDelayTime = 441;
 //	float mSize = 1;
 //	float mDecay = 0.25;
@@ -217,25 +218,25 @@ private:
 //	float mDiffusion = 0.75;
 //	float mEarlyLateMix = 1;
 //	float mDryWetMix = 0.25;
-//};
+// };
 
 ////==============================================================================
-//class GardnerMediumRoom : public ProcessorBase
+// class GardnerMediumRoom : public ProcessorBase
 //{
-//public:
+// public:
 //	GardnerMediumRoom();
-//	
+//
 //	//==============================================================================
 //	void prepareToPlay(double sampleRate, int samplesPerBlock) override;
-//	
+//
 //	//==============================================================================
 //	void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override;
-//	
+//
 //	void reset() override;
-//	
+//
 //	//==============================================================================
 //	const juce::String getName() const override;
-//	
+//
 //	//==============================================================================
 //	void setSize(float newSize) override;
 //	void setDecay(float newDecay) override;
@@ -244,8 +245,8 @@ private:
 //	void setPreDelay(float newPreDelay) override;
 //	void setEarlyLateMix(float newMix) override;
 //	void setDryWetMix(float newMix) override;
-//	
-//private:
+//
+// private:
 //	juce::dsp::DelayLine<float> delay1 { 22050 };
 //	juce::dsp::DelayLine<float> delay2 { 22050 };
 //	juce::dsp::DelayLine<float> delay3 { 22050 };
@@ -256,11 +257,11 @@ private:
 //	juce::dsp::DelayLine<float> delay8 { 22050 };
 //	juce::dsp::DelayLine<float> delay9 { 22050 };
 //	juce::dsp::DelayLine<float> delay10 { 22050 };
-//	
+//
 //	juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
-//	
+//
 //	juce::dsp::DryWetMixer<float> dryWetMixer;
-//	
+//
 //	float allpassOutputInner = 0;
 //	float allpassOutputOuter = 0;
 //	float feedforwardInner = 0;
@@ -269,9 +270,9 @@ private:
 //	float feedbackOuter = 0;
 //	std::vector<float> channelFeedback {0, 0};
 //	std::vector<float> channelOutput {0, 0};
-//	
+//
 //	std::vector<float> channelDelayOffset {0, 15};
-//	
+//
 //	float mPreDelayTime = 441;
 //	float mSize = 1;
 //	float mDecay = 0.25;
@@ -279,26 +280,26 @@ private:
 //	float mDiffusion = 0.75;
 //	float mEarlyLateMix = 1;
 //	float mDryWetMix = 0.25;
-//};
+// };
 
 ////==============================================================================
-//class GardnerLargeRoom : public ProcessorBase
+// class GardnerLargeRoom : public ProcessorBase
 //{
-//public:
+// public:
 //	GardnerLargeRoom();
-//	
+//
 //	//==============================================================================
 //	void prepareToPlay(double sampleRate, int samplesPerBlock) override;
-//	
+//
 //	//==============================================================================
 //	void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override;
-//	
+//
 //	//==============================================================================
 //	void reset() override;
-//	
+//
 //	//==============================================================================
 //	const juce::String getName() const override { return "GardnerLargeRoom"; }
-//	
+//
 //	//==============================================================================
 //	void setSize(float newSize) override;
 //	void setDecay(float newDecay) override;
@@ -307,8 +308,8 @@ private:
 //	void setPreDelay(float newPreDelay) override;
 //	void setEarlyLateMix(float newMix) override;
 //	void setDryWetMix(float newMix) override;
-//	
-//private:
+//
+// private:
 //	juce::dsp::DelayLine<float> delay1 { 22050 };
 //	juce::dsp::DelayLine<float> delay2 { 22050 };
 //	juce::dsp::DelayLine<float> delay3 { 22050 };
@@ -320,11 +321,11 @@ private:
 //	juce::dsp::DelayLine<float> delay9 { 22050 };
 //	juce::dsp::DelayLine<float> delay10 { 22050 };
 //	juce::dsp::DelayLine<float> delay11 { 22050 };
-//	
+//
 //	juce::dsp::FirstOrderTPTFilter<float> dampingFilter;
-//	
+//
 //	juce::dsp::DryWetMixer<float> dryWetMixer;
-//	
+//
 //	float allpassOutputInner = 0;
 //	float allpassOutputOuter = 0;
 //	float feedforwardInner = 0;
@@ -333,9 +334,9 @@ private:
 //	float feedbackOuter = 0;
 //	std::vector<float> channelFeedback {0, 0};
 //	std::vector<float> channelOutput {0, 0};
-//	
+//
 //	std::vector<float> channelDelayOffset {0, 23};
-//	
+//
 //	float mPreDelayTime = 441;
 //	float mSize = 1;
 //	float mDecay = 0.25;
@@ -343,4 +344,4 @@ private:
 //	float mDiffusion = 0.75;
 //	float mEarlyLateMix = 1;
 //	float mDryWetMix = 0.25;
-//};
+// };
