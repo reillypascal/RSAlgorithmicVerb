@@ -4,9 +4,9 @@ Implements a number of different reverb algorithms, including plate and hall rev
 
 <!-- ![Plugin interface for a reverb plugin, with two rows of knobs; 1 larger knob for decay time; and a dropdown to select reverb algorithm in the bottom right. There is a desaturated magenta rounded rectangle around the knob area.](https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/fd7959eb-73e9-4335-b7dd-5f516fd45e06) -->
 
-https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/25fd80de-cff3-4200-b1a6-74c84107e8cc
+<https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/25fd80de-cff3-4200-b1a6-74c84107e8cc>
 
-https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/352c736c-eec0-4abc-bbc5-bacccbba41c1
+<https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/352c736c-eec0-4abc-bbc5-bacccbba41c1>
 
 <!-- https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/a4c77f4b-dfc9-4437-9d90-56dca72af94c -->
 
@@ -16,16 +16,17 @@ https://github.com/reillypascal/RSAlgorithmicVerb/assets/94489575/352c736c-eec0-
 - Note that you will likely need to disable Gatekeeper for the plugins on macOS. To do this for AU, type...
 
 ```sh
-spctl --add "/Library/Audio/Plug-Ins/Components/RSAlgorithmicVerb.component"
+xattr -rc "/Library/Audio/Plug-Ins/Components/RSAlgorithmicVerb.component"
 ```
 
 ...for VST3...
 
 ```sh
-spctl --add "/Library/Audio/Plug-Ins/VST3/RSAlgorithmicVerb.vst3"
+xattr -rc "/Library/Audio/Plug-Ins/VST3/RSAlgorithmicVerb.vst3"
 ```
 
 <!--...or for AAX...
+
 ```sh
 spctl --add "/Library/Application Support/Avid/Audio/Plug-Ins/RSAlgorithmicVerb.aaxplugin"
 ``` -->
@@ -33,7 +34,7 @@ spctl --add "/Library/Application Support/Avid/Audio/Plug-Ins/RSAlgorithmicVerb.
 - You can also add the file path by typing...
 
 ```sh
-spctl --add
+xattr -rc 
 ```
 
 ...(with a space at the end) and dragging the plugin file into the terminal, which will automatically add the file path.
@@ -57,12 +58,12 @@ spctl --add
 
 # Building from Source
 
-## Build Dependencies:
+## Build Dependencies
 
-- JUCE (https://juce.com/download/)
+- JUCE (<https://juce.com/download/>)
 - Either:
-  - Projucer (https://docs.juce.com/master/tutorial_new_projucer_project.html) (for creating Xcode/Visual Studio projects or Linux Makefiles in order to build)
-  - CMake
+    - Projucer (<https://docs.juce.com/master/tutorial_new_projucer_project.html>) (for creating Xcode/Visual Studio projects or Linux Makefiles in order to build)
+    - CMake
 
 ## Compiling with the Projucer
 
