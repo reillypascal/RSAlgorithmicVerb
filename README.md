@@ -113,8 +113,6 @@ cmake -B Builds -G "Visual Studio 17 2022"
 
 `launch.json` sets up the ability to launch an app of your choice (e.g., REAPER, JUCE's AudioPluginHost, etc.) as part of a debugging session. Change the path for the app in `launch.json` to match the one on your system.
 
-<!-- You can configure which app in your editor; e.g., for Zed, see [the debugger documentation](https://zed.dev/docs/debugger#configuration). -->
-
 You can also use [Pluginval](https://github.com/Tracktion/pluginval). After installing Pluginval and adding the binary to your PATH, run `pluginval --strictness-level 5 <path-to-plugin>`. Strictness level 5 is the baseline, and it can go up to 10 for more rigorous testing.
 
 Pluginval uses aufx under the hood for AU plugins on macOS. You can run auval directly with `auval -strict -v aufx Rsav Rspi` if this plugin is installed on the computer.
